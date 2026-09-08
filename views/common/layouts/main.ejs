@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2310b981' viewBox='0 0 16 16'><path d='M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z'/></svg>">
+    <title>Santosh Park | <%=title%></title>
+    <!-- Custom CSS -->
+    <link href="/template/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
+    <link href="/template/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
+    <!-- <link href="/template/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" /> -->
+    <!-- Custom CSS -->
+    <link href="/template/dist/css/custome.css" rel="stylesheet">
+    <link href="/template/dist/css/style.min.css" rel="stylesheet">
+    <link href="/template/style.css" rel="stylesheet">
+
+
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <!-- Lottie Library -->
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.7.1"></script>
+
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <link href="/template/assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+
+  <!-- Bootstrap 4 CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/css/bootstrap.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap 4 JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+  <style>
+    /* .cust-toggle .toggle{
+    width: 20% !important;
+  } */
+
+  .cust-toggle1 .toggle{
+    width: 50% !important;
+  }
+
+  
+
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+
+
+
+/* 
+    @media print {
+  .btn-excel-print {
+    display: none !important;
+  }
+} */
+
+
+  </style>
+
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+       
+
+
+        <%- include('../partials/topbar') %>
+
+
+
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+       
+
+
+        <%-include('../partials/sidebar')%>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+          
+
+
+
+          <%- include("../../"+page_path) %>
+
+
+
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <!-- <footer class="footer text-center text-muted">
+                All Rights Reserved by sss. Designed and Developed by <a
+                    href="">WrapPixel</a>.
+            </footer> -->
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+
+
+
+
+       <!-- The Modal -->
+      <style>
+/* Modal Glass & Shadow */
+.modal-content {
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+/* Header Gradient */
+.modal-header {
+  border-bottom: none;
+  background: linear-gradient(135deg, #065f46, #10b981);
+  color: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  justify-content: center;
+  position: relative;
+}
+
+/* Title Icon */
+.modal-title i {
+  margin-right: 0.5rem;
+}
+
+/* Close Button */
+.modal-header .close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 28px;
+  color: #fff;
+  opacity: 0.8;
+  transition: 0.3s;
+}
+.modal-header .close:hover { opacity: 1; }
+
+/* Modal Body */
+.modal-body {
+  background: rgba(250, 250, 250, 0.9);
+  padding: 2rem;
+  border-radius: 0 0 20px 20px;
+}
+
+/* Form Labels */
+.modal-body label {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Form Inputs */
+.modal-body .form-control, .modal-body select, .modal-body textarea {
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease;
+}
+.modal-body .form-control:focus, .modal-body select:focus, .modal-body textarea:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+  outline: none;
+}
+
+/* Submit Button */
+.modal-body .btn-primary {
+  background: linear-gradient(135deg, #065f46, #10b981);
+  border: none;
+  padding: 0.7rem 2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: 0.3s ease;
+}
+.modal-body .btn-primary:hover {
+  background: linear-gradient(135deg, #10b981, #065f46);
+  transform: scale(1.05);
+}
+
+/* Footer */
+.modal-footer {
+  background: linear-gradient(135deg, #a7f3d0, #6ee7b7);
+  border-top: none;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* Let Bootstrap handle modal animation */
+</style>
+
+<div class="modal fade" id="myAccount" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered"><!-- smaller modal -->
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i data-feather="user" class="svg-icon mr-2"></i>
+          My Profile&nbsp; 
+          (<%= user.userData.user_name %>)
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-3"><!-- reduced padding -->
+          <form action="/save_my_profile" method="post">
+            <div class="row justify-content-center">
+              <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="phone">Phone No:</label>
+                    <input type="text" name="phone" id="phone" class="form-control" readonly value="<%= user.userData.user_mobile_no %>">
+                  </div>
+                  </div>
+                  <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="email_id">Uer ID:</label>
+                    <input type="text" name="email_id" id="email_id" class="form-control" readonly value="<%= user.userData.user_id %>">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </form>
+      </div>
+
+    </div>
+  </div>
+<!-- </div> -->
+
+
+
+<!--change password modal-->
+
+<style>
+/* Modal Glass Effect */
+.modal-content {
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Modal Header */
+.modal-header {
+  border-bottom: none;
+  text-align: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #065f46, #10b981);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.modal-header .close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: #fff;
+  opacity: 0.8;
+  font-size: 28px;
+  transition: 0.3s;
+}
+.modal-header .close:hover { opacity: 1; }
+
+/* Modal Body */
+.modal-body {
+  padding: 2rem;
+  background: #ddd;
+  border-radius: 0 0 20px 20px;
+}
+
+/* Labels */
+.modal-body label {
+  font-weight: 600;
+  color: #444;
+}
+
+/* Inputs with eye */
+.password-wrapper {
+  position: relative;
+}
+.password-wrapper .form-control {
+  border-radius: 10px;
+  padding: 0.6rem 2.5rem 0.6rem 1rem; /* space for eye */
+  border: 1px solid #ccc;
+  transition: 0.3s ease;
+}
+.password-wrapper .form-control:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+.password-wrapper .toggle-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 18px;
+}
+.password-wrapper .toggle-eye:hover {
+  color: #000;
+}
+
+/* Submit Button */
+.modal-body .btn-primary {
+  background: linear-gradient(135deg, #065f46, #10b981);
+  border: none;
+  padding: 0.7rem 2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: 0.3s ease;
+  display: block;
+  margin: 2rem auto 0;
+}
+.modal-body .btn-primary:hover {
+  background: linear-gradient(135deg, #10b981, #065f46);
+  transform: scale(1.05);
+}
+
+</style>
+
+<!-- Modal -->
+<div class="modal fade" id="changepwd" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      
+      <!-- Header -->
+      <div class="modal-header">
+        <h4 class="modal-title"><i class="fa fa-key"></i> Change Password</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form action="/superadmin_password" method="post" id="myForm">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="old_pwd">Old Password</label>
+              <div class="password-wrapper">
+                <input type="password" name="old_pwd" id="old_pwd" class="form-control" placeholder="Enter old password" required>
+                <i class="fa fa-eye toggle-eye" onclick="togglePassword('old_pwd', this)"></i>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="new_pwd">New Password</label>
+              <div class="password-wrapper">
+                <input type="password" name="new_pwd" id="new_pwd" class="form-control" placeholder="Enter new password" required>
+                <i class="fa fa-eye toggle-eye" onclick="togglePassword('new_pwd', this)"></i>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="con_pwd">Confirm Password</label>
+              <div class="password-wrapper">
+                <input type="password" name="con_pwd" id="con_pwd" class="form-control" placeholder="Confirm password" required>
+                <i class="fa fa-eye toggle-eye" onclick="togglePassword('con_pwd', this)"></i>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePassword(fieldId, icon) {
+  const field = document.getElementById(fieldId);
+  if (field.type === "password") {
+    field.type = "text";
+    icon.classList.remove("fa-eye");
+    icon.classList.add("fa-eye-slash");
+  } else {
+    field.type = "password";
+    icon.classList.remove("fa-eye-slash");
+    icon.classList.add("fa-eye");
+  }
+}
+</script>
+
+
+
+    <script src="/template/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/template/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="/template/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <!-- apps -->
+    <script src="/template/dist/js/app-style-switcher.js"></script>
+    <script src="/template/dist/js/feather.min.js"></script>
+    <script src="/template/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="/template/dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="/template/dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <script src="/template/assets/extra-libs/c3/d3.min.js"></script>
+    <script src="/template/assets/extra-libs/c3/c3.min.js"></script>
+    <script src="/template/assets/libs/chartist/dist/chartist.min.js"></script>
+    <script src="/template/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script src="/template/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="/template/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="/template/dist/js/pages/dashboards/dashboard1.min.js"></script>
+    <script src="/template/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/template/dist/js/pages/datatable/datatable-basic.init.js"></script>
+    <script>
+     $('#dataTable').DataTable()
+  </script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    
+<% if (error.length > 0) { %>
+    <script>
+      toastr.error('<%= error %>')
+    </script>
+  <% } else if (success.length > 0) { %>
+    <script>
+      toastr.success('<%= success %>')
+    </script>
+  <% }else if (info.length > 0) { %>
+    <script>
+      toastr.info('<%= info %>')
+    </script>
+  <% }else if (warning.length > 0) { %>
+    <script>
+      toastr.warning('<%= warning %>')
+    </script>
+  <% } %>
+
+  <script>
+
+    $("#myprofile").click(function(){
+      var loc_id = $('#loc_id').val();
+
+      $.ajax({
+      type: "GET",
+      url: "/location_details",
+      data: { loc_id: loc_id },
+      success: function (response) {
+        // console.log(response);
+           $('#loc_id').empty();
+           $('#loc_id').append(`<option value="">Select Location Name</option>`)
+            var loca_id = '<%= user.user_data ? user.user_data.location_id : "" %>'
+           response.msg.forEach((item, i) => {
+            var _selected = false
+            if(loca_id == item.location_id) _selected = true
+            // console.log(item.location_id);
+            $('#loc_id').append($('<option>', {value: item.location_id, text: item.loction, selected: _selected}))
+           });
+      },
+      error: function (error) {
+        // console.log(error);
+        // Hide the details section on error
+      },
+    });
+    });
+
+    
+
+    function createDate(inputDate){
+        const date = new Date(inputDate);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    }
+    
+    function createDateTime(inputDate){
+        const date = new Date(inputDate);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hr = String(date.getHours()).padStart(2, '0');
+        const min = String(date.getMinutes()).padStart(2, '0');
+        const sec = String(date.getSeconds()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hr}:${min}:${sec}`;
+    }
+  </script>
+</body>
+
+</html>

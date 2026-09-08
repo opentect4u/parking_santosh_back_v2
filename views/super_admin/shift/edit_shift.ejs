@@ -1,0 +1,199 @@
+<div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3"
+          style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <div class="d-flex align-items-center">
+            <div id="back" class="back-btn-custom me-4" title="Go Back" style="margin-right: 24px !important;">
+              <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="text-white rounded"
+              style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+              <i class="fa fa-edit fs-5"></i>
+            </div>
+            <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">Shift Edit Details</h4>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form action="/superadmin/save_shift" id="myForm" method="post" class="p-4 mb-4 mt-3 mx-3"
+          style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+          <div class="row g-3 align-items-end">
+            <!-- Row 1 -->
+            <div class="col-md-3">
+              <label for="cust_id" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-map-marker-alt"></i> Location Name</label>
+              <% let selectedCust=customer.find(c=> c.customer_id == data[0].customer_id); %>
+                <input type="text" class="form-control text-center readonly-field"
+                  value="<%= selectedCust ? selectedCust.customer_name : '' %>" readonly
+                  style="background-color: #e9ecef; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            </div>
+
+            <div class="col-md-3">
+              <label for="shift_name" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-clock"></i> Shift Name</label>
+              <input type="text" class="form-control text-center" name="shift_name" id="shift_name"
+                value="<%= data[0].shift_name %>" placeholder="Enter Shift Name" required
+                style="border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+            </div>
+
+            <div class="col-md-3">
+              <label for="frm_time" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-hourglass-start"></i> From Time</label>
+              <input type="time" class="form-control text-center" name="frm_time" id="frm_time"
+                value="<%= data[0].f_time %>" required
+                style="border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+            </div>
+
+            <div class="col-md-3">
+              <label for="to_time" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-hourglass-end"></i> To Time</label>
+              <input type="time" class="form-control text-center" name="to_time" id="to_time"
+                value="<%= data[0].t_time %>" required
+                style="border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+            </div>
+          </div>
+
+          <!-- Hidden Fields -->
+          <input type="hidden" name="id" value="<%= id %>">
+          <input type="hidden" name="cust_id" value="<%= customer_id %>">
+
+          <div class="row mt-5 justify-content-center">
+            <div class="col-md-4 text-center">
+              <button type="submit" id="submitBtn" class="btn btn-gradient w-100" style="height: 45px; border-radius: 6px;" disabled>
+                <i class="fa fa-save me-2"></i> Update Shift Details
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="simple-footer mt-4">
+    <b>Santosh Parking © <span id="footerYear"></b></span>
+  </footer>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $("#back").click(function () {
+      window.location.href = "/superadmin/shift";
+    });
+
+    // Keep the Shift sidebar item activated
+    const shiftSidebarLink = $('ul#sidebarnav a[href="/superadmin/shift"]');
+    if (shiftSidebarLink.length) {
+      shiftSidebarLink.addClass("active");
+      shiftSidebarLink.closest(".sidebar-item").addClass("selected");
+    }
+
+    // Dirty checking for Update button
+    const initialShiftName = $('#shift_name').val();
+    let initialFrmTime = $('#frm_time').val() || "";
+    let initialToTime = $('#to_time').val() || "";
+    
+    // Normalize time strings to HH:MM (remove seconds if present from DB)
+    if (initialFrmTime.length >= 5) initialFrmTime = initialFrmTime.substring(0, 5);
+    if (initialToTime.length >= 5) initialToTime = initialToTime.substring(0, 5);
+
+    function checkChanges() {
+      const currentShiftName = $('#shift_name').val();
+      let currentFrmTime = $('#frm_time').val() || "";
+      let currentToTime = $('#to_time').val() || "";
+
+      if (currentFrmTime.length >= 5) currentFrmTime = currentFrmTime.substring(0, 5);
+      if (currentToTime.length >= 5) currentToTime = currentToTime.substring(0, 5);
+
+      if (currentShiftName !== initialShiftName || 
+          currentFrmTime !== initialFrmTime || 
+          currentToTime !== initialToTime) {
+        $('#submitBtn').prop('disabled', false);
+      } else {
+        $('#submitBtn').prop('disabled', true);
+      }
+    }
+
+    $('#shift_name, #frm_time, #to_time').on('input change', checkChanges);
+  });
+</script>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    padding: 12px 0;
+    margin-left: 0;
+  }
+
+  /* Back Button styling */
+  .back-btn-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .back-btn-custom:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+    transform: translateX(-2px);
+  }
+
+  /* Form Controls */
+  .form-control {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:hover {
+    border-color: #059669 !important;
+  }
+
+  .form-control:focus {
+    border-color: #065f46 !important;
+    box-shadow: 0 0 6px rgba(6, 95, 70, 0.3) !important;
+    outline: none !important;
+  }
+
+  .readonly-field {
+    background-color: #e9ecef !important;
+    cursor: not-allowed;
+  }
+
+  /* Button Styles */
+  .btn-gradient {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  }
+</style>

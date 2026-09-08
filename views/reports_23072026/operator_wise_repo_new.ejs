@@ -1,0 +1,584 @@
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3" style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+                  <div class="d-flex align-items-center">
+                    <div class="text-white rounded"
+                      style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+                      <i class="fas fa-user-tie fs-5"></i>
+                    </div>
+                    <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;"><%= title %></h4>
+                  </div>
+                </div>
+                <!-- Search Form -->
+        <div class="p-4 mb-4 mt-3 mx-3" style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+          <div class="row g-3 align-items-end">
+            <!-- From Date -->
+            <div class="col-md-3">
+              <label for="frm_dt" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-calendar-alt"></i> From Date</label>
+              <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            </div>
+            <!-- To Date -->
+            <div class="col-md-3">
+              <label for="to_dt" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-calendar-alt"></i> To Date</label>
+              <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            </div>
+            <!-- Customer Select -->
+            <div class="col-md-3">
+              <label for="custId" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-map-marker-alt"></i> Location Name</label>
+              <select name="custId" class="form-control" id="custId" required style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                <option value="">Select Location Name</option>
+                <% if (data.msg && data.msg.length > 0) { %>
+                  <% data.msg.forEach(customer => { %>
+                    <option value="<%= customer.customer_id %>"><%= customer.customer_name %></option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </div>
+            <!-- Search Button -->
+            <div class="col-md-3 text-center">
+              <div class="d-flex justify-content-center">
+                <button type="button" class="btn flex-grow-1 text-white" id="btnSubmit" style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                  <i class="fa fa-search me-2"></i> Fetch Details
+                </button>
+                <a href="/report/operator_wise_repo_new" class="btn shadow-sm" style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;" title="Refresh">
+                  <i class="fas fa-sync-alt"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+                <div class="dateWiseDataTable mt-5" id="resultDiv" style="display: none;">
+                    <h5 class="text-center text-secondary mb-3">
+                        <span id="searchCred"></span>
+                    </h5>
+                    <div class="table-responsive shadow-sm rounded-3">
+                        <table id="operator-wise-datatable" class="table table-bordered table-hover align-middle w-100">
+                            <thead class="table-fixed-header">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Machine Sl. No.</th>
+                                    <th scope="col">Vehicle Type</th>
+                                    <th scope="col">Count</th>
+                                    <th scope="col">Operator Name</th>
+                                    <th scope="col">Base Amount</th>
+                                    <th scope="col">Advance Amount</th>
+                                    <th scope="col">CGST</th>
+                                    <th scope="col">SGST</th>
+                                    <th scope="col">IGST</th>
+                                    <th scope="col">Paid Amount</th>
+                                    <th scope="col">Net Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td scope="col" colspan="3" class="text-end"><b>Grand Total</b></td>
+                                    <td scope="col" id="tot_cnt"><b>0</b></td>
+                                    <td scope="col"></td>
+                                    <td scope="col" id="tot_base"><b>0.00</b></td>
+                                    <td scope="col" id="tot_advance"><b>0.00</b></td>
+                                    <td scope="col" id="tot_cgst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_sgst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_igst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_paid"><b>0.00</b></td>
+                                    <td scope="col" id="tot_net"><b>0.00</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="text-end mt-3">
+                            <button class="btn btn-gradient-print btn-sm px-4 shadow-sm me-2 no-print" onclick="printDiv()" style="height: 38px; border-radius: 6px;">
+                                <i class="fa fa-print me-2"></i> Print
+                            </button>
+                            <button class="btn btn-success btn-sm px-4 shadow-sm no-print" onclick="downloadExcel()" style="height: 38px; border-radius: 6px;">
+                                <i class="fa fa-file-excel me-2"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="simple-footer mt-4 text-center">
+    <b>Santosh Parking © <span id="footerYear"></span></b>
+</footer>
+
+<style>
+  /* Custom Select2 Styling to match premium design */
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #065f46 transparent transparent transparent !important;
+    border-width: 6px 5px 0 5px !important;
+  }
+
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+
+  /* Dropdown Menu Styling */
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+  }
+
+  html body .select2-results__option {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: #374151 !important;
+    transition: all 0.2s ease !important;
+    text-align: center !important;
+  }
+
+  html body .select2-results__option:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+
+  /* DataTables Pagination Green styling */
+  .page-item.active .page-link {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: white !important;
+  }
+  .page-link {
+    color: #065f46 !important;
+  }
+  .page-link:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+
+
+  html body .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+
+  html body .select2-search--dropdown .select2-search__field {
+    border-radius: 4px !important;
+    border: 1px solid #065f46 !important;
+    padding: 6px 10px !important;
+  }
+
+  html body .select2-search__field:focus {
+    outline: none !important;
+  }
+
+  html body .select2-container {
+    width: 100% !important;
+  }
+
+
+    .table-fixed-header th {
+        background-color: #064e3b;
+        color: #ffffff;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+
+    .table tfoot tr {
+        background-color: #e2e8f0;
+        color: #1f2937;
+        font-weight: 700;
+    }
+
+    .btn-gradient-print {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        color: rgb(20, 14, 14);
+        border: none;
+        border-radius: 3px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-success {
+        background: linear-gradient(90deg, #064e3b, #022c22);
+        color: white;
+        border-radius: 3px;
+        border: none;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(90deg, #064e3b, #047857);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        transition: all 0.3s;
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(90deg, #047857, #064e3b);
+    }
+
+    .input-custom, .select-custom {
+        border: 1px solid #ced4da;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+
+    .input-custom:focus, .select-custom:focus {
+        box-shadow: 0 0 5px rgba(6, 78, 59, 0.3);
+        border-color: #064e3b;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function () {
+      $('#custId').select2({
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+    };
+    document.body.appendChild(script);
+  });
+</script>
+<script>
+    document.getElementById("footerYear").textContent = new Date().getFullYear();
+
+    $(document).ready(function() {
+        let table;
+
+        $('#custId').on('change', function() {
+            if(table) table.clear().draw();
+            $('#resultDiv').hide();
+        });
+
+        $('#btnSubmit').on('click', function() {
+            var frm_dt = $('#frm_dt').val();
+            var to_dt = $('#to_dt').val();
+            var custId = $('#custId').val();
+            var custName = $("#custId option:selected").text();
+
+            if(frm_dt && to_dt && custId) {
+                if(table) {
+                    table.destroy();
+                    $('#operator-wise-datatable tbody').empty();
+                }
+
+                $('#resultDiv').show();
+                $('#searchCred').html(`<b>Operator Wise Report of ${custName} from ${createDate(frm_dt)} to ${createDate(to_dt)}</b>`);
+
+                table = $('#operator-wise-datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    searching: false,
+                    lengthChange: true,
+                    pageLength: 50,
+                    ajax: {
+                        url: "/report/get_operator_wise_repo_new",
+                        type: "POST",
+                        data: function(d) {
+                            d.frm_dt = $('#frm_dt').val();
+                            d.to_dt = $('#to_dt').val();
+                            d.custId = $('#custId').val();
+                        },
+                        beforeSend: function () {
+                            $(".preloader").fadeIn();
+                        },
+                        complete: function () {
+                            $(".preloader").fadeOut();
+                        }
+                    },
+                    drawCallback: function(settings) {
+                        if (settings.json && settings.json.grandTotals) {
+                            let gt = settings.json.grandTotals;
+                            $('#tot_base').text(parseFloat(gt.base_amt || 0).toFixed(2));
+                            $('#tot_advance').text(parseFloat(gt.advance_amt || 0).toFixed(2));
+                            $('#tot_cgst').text(parseFloat(gt.cgst || 0).toFixed(2));
+                            $('#tot_sgst').text(parseFloat(gt.sgst || 0).toFixed(2));
+                            $('#tot_igst').text(parseFloat(gt.igst || 0).toFixed(2));
+                            $('#tot_paid').text(parseFloat(gt.paid_amt || 0).toFixed(2));
+                            
+                            let grand_net = parseFloat(gt.base_amt || 0) + parseFloat(gt.advance_amt || 0) + parseFloat(gt.cgst || 0) + parseFloat(gt.sgst || 0) + parseFloat(gt.igst || 0);
+                            $('#tot_net').text(grand_net.toFixed(2));
+                        }
+                        
+                        let pageTotalCnt = 0;
+                        let api = this.api();
+                        api.rows({ page: 'current' }).every(function () {
+                            let data = this.data();
+                            pageTotalCnt += parseInt(data.tot_vehi || 0);
+                        });
+                        $('#tot_cnt').text(pageTotalCnt);
+                    },
+                    columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        { data: "mc_srl_no_out" },
+                        { data: "vehicleType" },
+                        { data: "tot_vehi" },
+                        { data: "opratorName" },
+                        { data: "base_amt", render: function(data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "advance_amt", render: function(data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "cgst", render: function(data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "sgst", render: function(data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "igst", render: function(data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "paid_amt", render: function(data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: null, render: function(data, type, row) { 
+                            return (parseFloat(row.base_amt || 0) + parseFloat(row.advance_amt || 0) + parseFloat(row.cgst || 0) + parseFloat(row.sgst || 0) + parseFloat(row.igst || 0)).toFixed(2);
+                        } }
+                    ]
+                });
+            }
+        });
+    });
+
+    function downloadExcel() {
+        var frm_dt = $('#frm_dt').val();
+        var to_dt = $('#to_dt').val();
+        var custId = $('#custId').val();
+        var custName = $("#custId option:selected").text();
+
+        if(!frm_dt || !to_dt || !custId) {
+            alert("Please select filters and search first.");
+            return;
+        }
+
+        $(".preloader").fadeIn();
+        $.ajax({
+            url: "/report/get_operator_wise_repo_excel",
+            type: "POST",
+            data: { frm_dt: frm_dt, to_dt: to_dt, custId: custId },
+            success: function(response) {
+                $(".preloader").fadeOut();
+                if(response.suc > 0 && response.data.length > 0) {
+                    var excelData = [];
+                    var tot_cnt = 0, tot_base = 0, tot_advance = 0, tot_cgst = 0, tot_sgst = 0, tot_igst = 0, tot_paid = 0, tot_net = 0;
+
+                    for(var i=0; i<response.data.length; i++) {
+                        var row = response.data[i];
+                        tot_cnt += parseInt(row.tot_vehi || 0);
+                        tot_base += parseFloat(row.base_amt || 0);
+                        tot_advance += parseFloat(row.advance_amt || 0);
+                        tot_cgst += parseFloat(row.cgst || 0);
+                        tot_sgst += parseFloat(row.sgst || 0);
+                        tot_igst += parseFloat(row.igst || 0);
+                        tot_paid += parseFloat(row.paid_amt || 0);
+                        
+                        var row_net = parseFloat(row.base_amt || 0) + parseFloat(row.advance_amt || 0) + parseFloat(row.cgst || 0) + parseFloat(row.sgst || 0) + parseFloat(row.igst || 0);
+                        tot_net += row_net;
+
+                        excelData.push({
+                            "Sl No": i + 1,
+                            "Machine Sl. No.": row.mc_srl_no_out,
+                            "Vehicle Type": row.vehicleType,
+                            "Count": row.tot_vehi,
+                            "Operator Name": row.opratorName,
+                            "Base Amount": parseFloat(row.base_amt || 0).toFixed(2),
+                            "Advance Amount": parseFloat(row.advance_amt || 0).toFixed(2),
+                            "CGST": parseFloat(row.cgst || 0).toFixed(2),
+                            "SGST": parseFloat(row.sgst || 0).toFixed(2),
+                            "IGST": parseFloat(row.igst || 0).toFixed(2),
+                            "Paid Amount": parseFloat(row.paid_amt || 0).toFixed(2),
+                            "Net Amount": row_net.toFixed(2)
+                        });
+                    }
+
+                    excelData.push({
+                        "Sl No": "",
+                        "Machine Sl. No.": "Grand Total",
+                        "Vehicle Type": "",
+                        "Count": tot_cnt,
+                        "Operator Name": "",
+                        "Base Amount": tot_base.toFixed(2),
+                        "Advance Amount": tot_advance.toFixed(2),
+                        "CGST": tot_cgst.toFixed(2),
+                        "SGST": tot_sgst.toFixed(2),
+                        "IGST": tot_igst.toFixed(2),
+                        "Paid Amount": tot_paid.toFixed(2),
+                        "Net Amount": tot_net.toFixed(2)
+                    });
+
+                    var ws = XLSX.utils.json_to_sheet(excelData);
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Operator Wise Report");
+                    XLSX.writeFile(wb, "Operator_Wise_Report_" + custName + ".xlsx");
+                } else {
+                    alert("No data available for Excel export.");
+                }
+            },
+            error: function() {
+                $(".preloader").fadeOut();
+                alert("Error generating Excel.");
+            }
+        });
+    }
+
+    function printDiv() {
+        var frm_dt = $('#frm_dt').val();
+        var to_dt = $('#to_dt').val();
+        var custId = $('#custId').val();
+        var custName = $("#custId option:selected").text();
+
+        if(!frm_dt || !to_dt || !custId) return;
+
+        $(".preloader").fadeIn();
+        $.ajax({
+            url: "/report/get_operator_wise_repo_excel",
+            type: "POST",
+            data: { frm_dt: frm_dt, to_dt: to_dt, custId: custId },
+            success: function(response) {
+                $(".preloader").fadeOut();
+                if(response.suc > 0 && response.data.length > 0) {
+                    
+                    var tableHtml = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h2>Operator Wise Report</h2>
+                        <h4>Location: ${custName}</h4>
+                        <p>From: ${createDate(frm_dt)} To: ${createDate(to_dt)}</p>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Sl No</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Machine No</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Vehicle Type</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Count</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Operator</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Base Amt</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Adv Amt</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">CGST</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">SGST</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">IGST</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Paid Amt</th>
+                                <th style="border: 1px solid #000; padding: 8px; background-color: #e2e8f0;">Net Amt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+
+                    var tot_cnt = 0, tot_base = 0, tot_advance = 0, tot_cgst = 0, tot_sgst = 0, tot_igst = 0, tot_paid = 0, tot_net = 0;
+
+                    for(var i=0; i<response.data.length; i++) {
+                        var row = response.data[i];
+                        tot_cnt += parseInt(row.tot_vehi || 0);
+                        tot_base += parseFloat(row.base_amt || 0);
+                        tot_advance += parseFloat(row.advance_amt || 0);
+                        tot_cgst += parseFloat(row.cgst || 0);
+                        tot_sgst += parseFloat(row.sgst || 0);
+                        tot_igst += parseFloat(row.igst || 0);
+                        tot_paid += parseFloat(row.paid_amt || 0);
+                        
+                        var row_net = parseFloat(row.base_amt || 0) + parseFloat(row.advance_amt || 0) + parseFloat(row.cgst || 0) + parseFloat(row.sgst || 0) + parseFloat(row.igst || 0);
+                        tot_net += row_net;
+
+                        tableHtml += `
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;">${i+1}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;">${row.mc_srl_no_out}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;">${row.vehicleType}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;">${row.tot_vehi}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;">${row.opratorName}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${parseFloat(row.base_amt || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${parseFloat(row.advance_amt || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${parseFloat(row.cgst || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${parseFloat(row.sgst || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${parseFloat(row.igst || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${parseFloat(row.paid_amt || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${row_net.toFixed(2)}</td>
+                        </tr>
+                        `;
+                    }
+
+                    tableHtml += `
+                        <tr style="background-color: #f8f9fa; font-weight: bold;">
+                            <td colspan="3" style="border: 1px solid #000; padding: 6px; text-align: right;">Grand Total:</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;">${tot_cnt}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;"></td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_base.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_advance.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_cgst.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_sgst.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_igst.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_paid.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_net.toFixed(2)}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    `;
+
+                    var WindowObject = window.open('', 'Print-Window');
+                    WindowObject.document.open();
+                    WindowObject.document.writeln('<!DOCTYPE html><html><head><title>Operator Wise Report</title></head><body>');
+                    WindowObject.document.writeln(tableHtml);
+                    WindowObject.document.writeln('<script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }<\/script>');
+                    WindowObject.document.writeln('</body></html>');
+                    WindowObject.document.close();
+
+                } else {
+                    alert("No data available to print.");
+                }
+            },
+            error: function() {
+                $(".preloader").fadeOut();
+                alert("Error fetching data for print.");
+            }
+        });
+    }
+
+    function createDate(dateString) {
+        var date = new Date(dateString);
+        var day = ("0" + date.getDate()).slice(-2);
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+    }
+</script>

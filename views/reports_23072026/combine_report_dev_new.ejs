@@ -1,0 +1,613 @@
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3" style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+                  <div class="d-flex align-items-center">
+                    <div class="text-white rounded"
+                      style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+                      <i class="fas fa-desktop fs-5"></i>
+                    </div>
+                    <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;"><%= title %></h4>
+                  </div>
+                </div>
+                
+                <!-- Search Form -->
+                <div class="p-4 mb-4 mt-3 mx-3" style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+                  <div class="row g-4 align-items-end mb-3">
+                    <!-- From Date -->
+                    <div class="col-md-4">
+                      <label for="frm_dt" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-calendar-alt"></i> From Date</label>
+                      <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                    </div>
+                    <!-- To Date -->
+                    <div class="col-md-4">
+                      <label for="to_dt" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-calendar-alt"></i> To Date</label>
+                      <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                    </div>
+                    <!-- Customer Select -->
+                    <div class="col-md-4">
+                      <label for="custId" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-map-marker-alt"></i> Location Name</label>
+                      <select name="custId" class="form-control" id="custId" required style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                        <option value="">Select Location</option>
+                        <% if (data.msg && data.msg.length > 0) { %>
+                          <% data.msg.forEach(customer => { %>
+                            <option value="<%= customer.customer_id %>"><%= customer.customer_name %></option>
+                          <% }) %>
+                        <% } %>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="row g-4 align-items-end">
+                    <!-- Device ID -->
+                    <div class="col-md-4">
+                        <label for="device_id" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-microchip"></i> Device ID</label>
+                        <select name="device_id" id="device_id" class="form-control" style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                            <option value="">Select Device ID</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Search Button -->
+                    <div class="col-md-4 text-center">
+                      <div class="d-flex justify-content-center">
+                        <button type="button" class="btn flex-grow-1 text-white" id="btnSubmit" style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                          <i class="fa fa-search me-2"></i> Fetch Details
+                        </button>
+                        <a href="/report/combine_repo_dev_new" class="btn shadow-sm" style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;" title="Refresh">
+                          <i class="fas fa-sync-alt"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="dateWiseDataTable mt-5" id="resultDiv" style="display: none;">
+                    <h5 class="text-center text-secondary mb-3">
+                        <span id="searchCred"></span>
+                    </h5>
+                    <div class="table-responsive shadow-sm rounded-3">
+                        <table id="combine-dev-wise-datatable" class="table table-bordered table-hover align-middle w-100">
+                            <thead class="table-fixed-header">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Machine Sl. No.</th>
+                                    <th scope="col">Vehicle Type</th>
+                                    <th scope="col">Operator Name</th>
+                                    <th scope="col">Base Amount</th>
+                                    <th scope="col">Advance Amount</th>
+                                    <th scope="col">CGST</th>
+                                    <th scope="col">SGST</th>
+                                    <th scope="col">IGST</th>
+                                    <th scope="col">Paid Amount</th>
+                                    <th scope="col">Net Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td scope="col" colspan="4" class="text-end"><b>Grand Total</b></td>
+                                    <td scope="col" id="tot_base"><b>0.00</b></td>
+                                    <td scope="col" id="tot_advance"><b>0.00</b></td>
+                                    <td scope="col" id="tot_cgst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_sgst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_igst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_paid"><b>0.00</b></td>
+                                    <td scope="col" id="tot_net"><b>0.00</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="text-end mt-3">
+                            <button class="btn btn-gradient-print btn-sm px-4 shadow-sm me-2 no-print" onclick="printDiv()" style="height: 38px; border-radius: 6px;">
+                                <i class="fa fa-print me-2"></i> Print
+                            </button>
+                            <button class="btn btn-success btn-sm px-4 shadow-sm no-print" onclick="downloadExcel()" style="height: 38px; border-radius: 6px;">
+                                <i class="fa fa-file-excel me-2"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="simple-footer mt-4 text-center">
+    <b>Santosh Parking © <span id="footerYear"></span></b>
+</footer>
+
+<style>
+  .form-control:focus {
+    box-shadow: none !important;
+    border-color: #065f46 !important;
+  }
+  html body .select2-container.select2-container--focus .select2-selection--single,
+  html body .select2-container.select2-container--open .select2-selection--single {
+    box-shadow: none !important;
+    border-color: #065f46 !important;
+  }
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    width: 100%;
+  }
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  }
+  html body .select2-results__option {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: #374151 !important;
+    transition: all 0.2s ease !important;
+  }
+  html body .select2-results__option:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+  html body .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #065f46 !important;
+    color: white !important;
+  }
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+  html body .select2-container--default .select2-results__option[aria-selected=true] {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+  /* DataTables Pagination Green styling */
+  .page-item.active .page-link {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: white !important;
+  }
+  .page-link {
+    color: #065f46 !important;
+  }
+  .page-link:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+  table.dataTable tbody tr {
+    transition: background-color 0.2s ease;
+  }
+  table.dataTable tbody tr:hover {
+    background-color: #f1f8f5 !important;
+  }
+  .table-fixed-header {
+    background-color: #065f46;
+    color: white;
+  }
+  .table-fixed-header th {
+    background-color: #065f46 !important;
+    color: white !important;
+  }
+  .table tfoot tr {
+    background-color: #e2e8f0;
+    color: #1f2937;
+    font-weight: 700;
+  }
+  .btn-gradient-print {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    color: rgb(20, 14, 14);
+    border: none;
+    border-radius: 3px;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+  .btn-success {
+    background: linear-gradient(90deg, #064e3b, #022c22);
+    color: white;
+    border-radius: 3px;
+    border: none;
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  window.addEventListener('load', function () {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function () {
+      $('#custId, #device_id').select2({
+        allowClear: false,
+        width: '100%'
+      });
+    };
+    document.body.appendChild(script);
+  });
+</script>
+
+<script>
+    document.getElementById("footerYear").textContent = new Date().getFullYear();
+
+    $(document).ready(function() {
+        let table;
+
+        // Dynamically load devices when customer is selected
+        $('#custId').on('change', function () {
+            var custId = $(this).val();
+            if (custId) {
+                $.ajax({
+                    method: "POST",
+                    url: "/report/get_devices_by_location",
+                    data: JSON.stringify({ custId }),
+                    contentType: "application/json",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#device_id").html('<option value="">Loading...</option>');
+                    },
+                    success: function (res) {
+                        let devices = res.msg || res; // Handle both {suc: 1, msg: [...]} and [...]
+                        if (devices && devices.length > 0) {
+                            let options = '<option value="">Select Device ID</option>';
+                            devices.forEach(dev => {
+                                options += `<option value="${dev.app_id}">${dev.app_id}</option>`;
+                            });
+                            $("#device_id").html(options).trigger('change');
+                        } else {
+                            $("#device_id").html('<option value="">No Devices Found</option>').trigger('change');
+                        }
+                    },
+                    error: function () {
+                        $("#device_id").html('<option value="">Error loading devices</option>').trigger('change');
+                    }
+                });
+            } else {
+                $("#device_id").html('<option value="">Select Device ID</option>').trigger('change');
+            }
+        });
+
+        // Initialize DataTable
+        function fetchDatatable() {
+            var frm_dt = $('#frm_dt').val();
+            var to_dt = $('#to_dt').val();
+            var custId = $('#custId').val();
+            var device_id = $('#device_id').val();
+            var custName = $("#custId option:selected").text();
+
+            if(!frm_dt || !to_dt || !custId || !device_id) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields',
+                    text: 'Please select all filters before fetching details.',
+                });
+                return;
+            }
+
+            $('#searchCred').html(`Combine report(device wise) of location <b>${custName}</b> from <b>${frm_dt.split('T')[0]}</b> to <b>${to_dt.split('T')[0]}</b>`);
+            $('#resultDiv').fadeIn();
+
+            if ($.fn.DataTable.isDataTable('#combine-dev-wise-datatable')) {
+                $('#combine-dev-wise-datatable').DataTable().destroy();
+            }
+
+            table = $('#combine-dev-wise-datatable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "searching": false,
+                "ordering": false,
+                "lengthChange": true,
+                "pageLength": 50,
+                "ajax": {
+                    "url": "/report/get_combine_repo_dev_new",
+                    "type": "POST",
+                    "data": { frm_dt, to_dt, custId, device_id }
+                },
+                "columns": [
+                    { 
+                        "data": null, 
+                        "render": function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        } 
+                    },
+                    { "data": "device_id" },
+                    { "data": "vehicleType" },
+                    { "data": "operator_name" },
+                    { 
+                        "data": "base_amt", 
+                        "render": function(data) { return data ? parseFloat(data).toFixed(2) : "0.00"; }
+                    },
+                    { 
+                        "data": "advance_amt", 
+                        "render": function(data) { return data ? parseFloat(data).toFixed(2) : "0.00"; }
+                    },
+                    { 
+                        "data": "cgst", 
+                        "render": function(data) { return data ? parseFloat(data).toFixed(2) : "0.00"; }
+                    },
+                    { 
+                        "data": "sgst", 
+                        "render": function(data) { return data ? parseFloat(data).toFixed(2) : "0.00"; }
+                    },
+                    { 
+                        "data": "igst", 
+                        "render": function(data) { return data ? parseFloat(data).toFixed(2) : "0.00"; }
+                    },
+                    { 
+                        "data": "paid_amt", 
+                        "render": function(data) { return data ? parseFloat(data).toFixed(2) : "0.00"; }
+                    },
+                    { 
+                        "data": null,
+                        "render": function(data, type, row) {
+                            let base = parseFloat(row.base_amt) || 0;
+                            let adv = parseFloat(row.advance_amt) || 0;
+                            let cgst = parseFloat(row.cgst) || 0;
+                            let sgst = parseFloat(row.sgst) || 0;
+                            let igst = parseFloat(row.igst) || 0;
+                            return (base + adv + cgst + sgst + igst).toFixed(2);
+                        }
+                    }
+                ],
+                "drawCallback": function(settings) {
+                    if (settings.json && settings.json.grandTotals) {
+                        let gt = settings.json.grandTotals;
+                        let base = parseFloat(gt.base_amt) || 0;
+                        let adv = parseFloat(gt.advance_amt) || 0;
+                        let cgst = parseFloat(gt.cgst) || 0;
+                        let sgst = parseFloat(gt.sgst) || 0;
+                        let igst = parseFloat(gt.igst) || 0;
+                        let paid = parseFloat(gt.paid_amt) || 0;
+                        
+                        $('#tot_base').html(`<b>${base.toFixed(2)}</b>`);
+                        $('#tot_advance').html(`<b>${adv.toFixed(2)}</b>`);
+                        $('#tot_cgst').html(`<b>${cgst.toFixed(2)}</b>`);
+                        $('#tot_sgst').html(`<b>${sgst.toFixed(2)}</b>`);
+                        $('#tot_igst').html(`<b>${igst.toFixed(2)}</b>`);
+                        $('#tot_paid').html(`<b>${paid.toFixed(2)}</b>`);
+                        $('#tot_net').html(`<b>${(base + adv + cgst + sgst + igst).toFixed(2)}</b>`);
+                    } else {
+                        $('#tot_base, #tot_advance, #tot_cgst, #tot_sgst, #tot_igst, #tot_paid, #tot_net').html('<b>0.00</b>');
+                    }
+                }
+            });
+        }
+
+        $('#btnSubmit').on('click', function () {
+            fetchDatatable();
+        });
+    });
+
+    function downloadExcel() {
+        var frm_dt = $('#frm_dt').val();
+        var to_dt = $('#to_dt').val();
+        var custId = $('#custId').val();
+        var device_id = $('#device_id').val();
+        var custName = $("#custId option:selected").text();
+
+        if(!frm_dt || !to_dt || !custId || !device_id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: 'Please select all filters before downloading Excel.',
+            });
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/report/get_combine_repo_dev_new",
+            data: { frm_dt, to_dt, custId, device_id, start: 0, length: 10000 },
+            success: function(response) {
+                if (response.suc > 0 && response.data.length > 0) {
+                    let excelData = [];
+                    let gt_base = 0, gt_adv = 0, gt_cgst = 0, gt_sgst = 0, gt_igst = 0, gt_paid = 0, gt_net = 0;
+
+                    response.data.forEach((row, index) => {
+                        let base = parseFloat(row.base_amt) || 0;
+                        let adv = parseFloat(row.advance_amt) || 0;
+                        let cgst = parseFloat(row.cgst) || 0;
+                        let sgst = parseFloat(row.sgst) || 0;
+                        let igst = parseFloat(row.igst) || 0;
+                        let paid = parseFloat(row.paid_amt) || 0;
+                        let net = base + adv + cgst + sgst + igst;
+
+                        gt_base += base;
+                        gt_adv += adv;
+                        gt_cgst += cgst;
+                        gt_sgst += sgst;
+                        gt_igst += igst;
+                        gt_paid += paid;
+                        gt_net += net;
+
+                        excelData.push({
+                            "Sl No.": index + 1,
+                            "Machine Sl. No.": row.device_id,
+                            "Vehicle Type": row.vehicleType,
+                            "Operator Name": row.operator_name,
+                            "Base Amount": base.toFixed(2),
+                            "Advance Amount": adv.toFixed(2),
+                            "CGST": cgst.toFixed(2),
+                            "SGST": sgst.toFixed(2),
+                            "IGST": igst.toFixed(2),
+                            "Paid Amount": paid.toFixed(2),
+                            "Net Amount": net.toFixed(2)
+                        });
+                    });
+
+                    excelData.push({
+                        "Sl No.": "",
+                        "Machine Sl. No.": "",
+                        "Vehicle Type": "",
+                        "Operator Name": "Grand Total",
+                        "Base Amount": gt_base.toFixed(2),
+                        "Advance Amount": gt_adv.toFixed(2),
+                        "CGST": gt_cgst.toFixed(2),
+                        "SGST": gt_sgst.toFixed(2),
+                        "IGST": gt_igst.toFixed(2),
+                        "Paid Amount": gt_paid.toFixed(2),
+                        "Net Amount": gt_net.toFixed(2)
+                    });
+
+                    let ws = XLSX.utils.json_to_sheet(excelData);
+                    let wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Combine_Report_Device");
+                    XLSX.writeFile(wb, `Combine_Report_Device_${frm_dt.split('T')[0]}_to_${to_dt.split('T')[0]}.xlsx`);
+                } else {
+                    Swal.fire('No Data', 'No records found for the selected criteria to download.', 'info');
+                }
+            },
+            error: function() {
+                Swal.fire('Error', 'Failed to fetch data for Excel export.', 'error');
+            }
+        });
+    }
+
+    function printDiv() {
+        var frm_dt = $('#frm_dt').val();
+        var to_dt = $('#to_dt').val();
+        var custId = $('#custId').val();
+        var device_id = $('#device_id').val();
+        var custName = $("#custId option:selected").text();
+
+        if(!frm_dt || !to_dt || !custId || !device_id) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: 'Please select all filters before printing.',
+            });
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/report/get_combine_repo_dev_new",
+            data: { frm_dt, to_dt, custId, device_id, start: 0, length: 10000 },
+            success: function(response) {
+                if (response.suc > 0 && response.data.length > 0) {
+                    let printHtml = `
+                    <html>
+                    <head>
+                        <title>Combine Report (Device)</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; }
+                            .header { text-align: center; margin-bottom: 20px; }
+                            .header h2 { margin: 0; padding: 0; }
+                            .header h4 { margin: 5px 0; font-weight: normal; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+                            th, td { border: 1px solid #000; padding: 6px; text-align: center; }
+                            th { background-color: #f2f2f2; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h2>Combine Report (Device)</h2>
+                            <h4>Combine report(device wise) of location ${custName} from ${frm_dt.split('T')[0]} to ${to_dt.split('T')[0]}</h4>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Machine Sl. No.</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Operator Name</th>
+                                    <th>Base Amount</th>
+                                    <th>Advance Amount</th>
+                                    <th>CGST</th>
+                                    <th>SGST</th>
+                                    <th>IGST</th>
+                                    <th>Paid Amount</th>
+                                    <th>Net Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    let gt_base = 0, gt_adv = 0, gt_cgst = 0, gt_sgst = 0, gt_igst = 0, gt_paid = 0, gt_net = 0;
+
+                    response.data.forEach((row, index) => {
+                        let base = parseFloat(row.base_amt) || 0;
+                        let adv = parseFloat(row.advance_amt) || 0;
+                        let cgst = parseFloat(row.cgst) || 0;
+                        let sgst = parseFloat(row.sgst) || 0;
+                        let igst = parseFloat(row.igst) || 0;
+                        let paid = parseFloat(row.paid_amt) || 0;
+                        let net = base + adv + cgst + sgst + igst;
+
+                        gt_base += base;
+                        gt_adv += adv;
+                        gt_cgst += cgst;
+                        gt_sgst += sgst;
+                        gt_igst += igst;
+                        gt_paid += paid;
+                        gt_net += net;
+
+                        printHtml += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${row.device_id}</td>
+                                <td>${row.vehicleType}</td>
+                                <td>${row.operator_name}</td>
+                                <td>${base.toFixed(2)}</td>
+                                <td>${adv.toFixed(2)}</td>
+                                <td>${cgst.toFixed(2)}</td>
+                                <td>${sgst.toFixed(2)}</td>
+                                <td>${igst.toFixed(2)}</td>
+                                <td>${paid.toFixed(2)}</td>
+                                <td>${net.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+
+                    printHtml += `
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" style="text-align: right; font-weight: bold;">Grand Total</td>
+                                    <td><b>${gt_base.toFixed(2)}</b></td>
+                                    <td><b>${gt_adv.toFixed(2)}</b></td>
+                                    <td><b>${gt_cgst.toFixed(2)}</b></td>
+                                    <td><b>${gt_sgst.toFixed(2)}</b></td>
+                                    <td><b>${gt_igst.toFixed(2)}</b></td>
+                                    <td><b>${gt_paid.toFixed(2)}</b></td>
+                                    <td><b>${gt_net.toFixed(2)}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </body>
+                    </html>
+                    `;
+
+                    let printWin = window.open('', '_blank');
+                    printWin.document.write(printHtml);
+                    printWin.document.close();
+                    printWin.focus();
+                    setTimeout(function() {
+                        printWin.print();
+                        printWin.close();
+                    }, 250);
+                } else {
+                    Swal.fire('No Data', 'No records found for the selected criteria to print.', 'info');
+                }
+            },
+            error: function() {
+                Swal.fire('Error', 'Failed to fetch data for printing.', 'error');
+            }
+        });
+    }
+</script>

@@ -1,0 +1,383 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+        <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3" style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <div class="d-flex align-items-center">
+            <div class="text-white rounded"
+              style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+              <i class="fas fa-map-marker-alt fs-5"></i>
+            </div>
+            <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">Manage Locations</h4>
+          </div>
+        </div>
+
+        <div class="card-body pt-0">
+
+          <div class="table-responsive mt-3">
+            <table id="dataTable" class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden border-0">
+              <thead class="text-white text-center" style="background: linear-gradient(45deg, #3a8b64, #367e61);">
+                <tr>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">SL. NO.</th>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">LOCATION NAME</th>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">ACTION</th>
+                </tr>
+              </thead>
+              <tbody style="border-top: none;">
+                <% if(data && data.length> 0) { %>
+                  <% data.forEach(function(item,index) { %>
+                    <tr style="border-bottom: 1px solid #f1f3f5;">
+                      <td class="text-center text-dark py-3">
+                        <%=(index+1)%>
+                      </td>
+                      <td class="text-center text-dark py-3 fw-bold" style="color: #065f46;">
+                        <%=item.customer_name %>
+                      </td>
+                      <td class="text-center py-3">
+                        <a href="edit_customer?id=<%= item.customer_id %>" class="btn btn-sm"
+                          style="background-color: #e6f4ea; color: #065f46; border: 1px solid #065f46; border-radius: 6px;"><i
+                            class="fa fa-edit"></i></a>
+                      </td>
+                    </tr>
+                    <% }); %>
+                      <% } else { %>
+                        <tr>
+                          <td colspan="3" class="text-danger text-center py-4">No data available</td>
+                        </tr>
+                        <% } %>
+              </tbody>
+            </table>
+          </div>
+          <footer class="simple-footer mt-4">
+            <b>Hertz Communications © <span id="footerYear"></b></span>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+    <div class="modal-content rounded-4 shadow-lg border-0 glass-bgt">
+      <!-- Modal Header -->
+      <div class="modal-header border-0">
+        <h3 class="modal-title fw-bold text-dark">
+          <i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add
+            Customer</b>
+        </h3>
+        <!-- <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button> -->
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form action="/superadmin/customer_save" method="post" id="myForm">          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cust_name" class="text-dark"><b>Customer Name</b></label>
+                <input type="text" class="form-control" id="cust_name" name="cust_name"
+                  placeholder="Enter Customer Name.....">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="loc_name" class="text-dark"><b>Location Name</b></label>
+                <input type="text" class="form-control" id="loc_name" name="loc_name"
+                  placeholder="Enter Location Name.....">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="dev_mode" class="text-dark"><b>Mode</b></label>
+                <input type="text" class="form-control" id="dev_mode" name="dev_mode" value="Dual" readonly>
+                <input type="hidden" name="dev_mode" value="D">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="no_device" class="text-dark"><b>No. of Device</b></label>
+                <input type="text" class="form-control" id="no_device" name="no_device" placeholder="ex-1,2,3.....">
+              </div>
+            </div>
+
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cust_type" class="text-dark"><b>Customer Type</b></label>
+                <input type="text" class="form-control" id="cust_type" name="cust_type" value="Parking" readonly>
+                <input type="hidden" name="cust_type" value="P">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="dev_mode" class="text-dark"><b>Device Type</b></label>
+
+                <div class="dropdown">
+                  <button class="dropdown-btn" id="devDropdownBtn">Select device type</button>
+                  <div class="dropdown-menu" id="devDropdownMenu">
+                    <div class="dropdown-item" data-value="M">Mobile</div>
+                    <div class="dropdown-item" data-value="H">Handheld</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- <div class="col-md-12">
+              <div class="form-group">
+                <label for="password" class="text-dark"><b>Password</b></label>
+                <input type="text" class="form-control" id="password" name="password" placeholder="Enter Password here...">
+              </div>
+            </div> -->
+
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="cust_add" class="text-dark"><b>Customer Address</b></label>
+                <textarea class="form-control" rows="3" id="cust_add" name="cust_add"
+                  placeholder="Enter Address here....."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <input type="hidden" name="id" value="<%= data.id %>">
+            <!-- <input type="hidden" name="cust_id" value="<%= data.customer_id %>"> -->
+            <input type="submit" value="SUBMIT" class="btn btn-primary px-5 py-2"
+              style="border-radius: 30px; background: linear-gradient(135deg, #065f46, #10b981); border: none; color: white; font-weight: 600;" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-body .form-control {
+    border-radius: 10px;
+    padding: 1.6rem 1rem;
+    border: 1px solid #ccc;
+    transition: 0.3s ease;
+  }
+
+  .modal-lg-custom {
+    max-width: 50%;
+    /* or set a specific width like 1000px */
+    max-height: 50%;
+  }
+
+  .modal-lg-custom .modal-content {
+    border-radius: 20px;
+    /* optional, keep glass effect */
+  }
+
+  #dataTable {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  #dataTable thead th {
+    background: linear-gradient(45deg, #3a8b64, #367e61) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+
+  #dataTable tbody tr:hover {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    transition: 0.3s;
+  }
+
+  /* Gradient Button */
+  .btn-gradient {
+    background: linear-gradient(135deg, #065f46, #10b981);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 30px;
+    transition: 0.3s;
+  }
+
+  .btn-gradient:hover {
+    background: linear-gradient(135deg, #10b981, #065f46);
+    transform: scale(1.05);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Card Gradient Title */
+  .text-gradient {
+    background: linear-gradient(to right, #022c22, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .custom-header {
+    background: linear-gradient(45deg, #3a8b64, #367e61) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+
+  .custom-header th,
+  .custom-header th *,
+  #dataTable thead th,
+  #dataTable thead th * {
+    color: #ffffff !important;
+  }
+
+  .table thead th {
+    border: none;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(16, 185, 129, 0.08);
+    transition: 0.3s;
+    /* border-radius: 14px; */
+  }
+
+  /* Modal Glassmorphism */
+  .glass-bg {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .dropdown-btn {
+    padding: 12px 16px;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
+    color: #022c22;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
+    border-radius: 12px;
+    margin-top: 5px;
+    z-index: 1000;
+  }
+
+  .dropdown-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    background: transparent;
+    color: #022c22;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+
+  .dropdown-item:hover {
+    background: #d1fae5;
+  }
+
+  .text-gradient {
+    background: linear-gradient(to right, #022c22, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* .modal-body .btn-primary {
+    background: linear-gradient(135deg, #e7b8d9, #7799d8);
+    border: none;
+    padding: 0.7rem 2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: 0.3s ease;
+    display: block;
+    margin: 1rem auto 0;
+    margin-right: 36vw;
+} */
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    /* color: #6b7280;   soft gray */
+    color: black;
+    padding: 12px 0;
+    margin-left: 52vw;
+  }
+
+  /* DataTables Pagination */
+  .page-item.active .page-link {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: white !important;
+  }
+
+  .page-link {
+    color: #065f46 !important;
+  }
+
+  .page-link:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+</style>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+
+<script>
+  $(document).ready(function () {
+    $("#myBtn").click(function () {
+      $("#myModal").modal();
+    });
+  });
+</script>
+
+<script>
+  const btn = document.getElementById("devDropdownBtn");
+  const menu = document.getElementById("devDropdownMenu");
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+  });
+
+  document.querySelectorAll("#devDropdownMenu .dropdown-item").forEach(item => {
+    item.addEventListener("click", () => {
+      const text = item.textContent.trim();
+      btn.textContent = text;
+      btn.dataset.value = item.dataset.value; // store value
+      menu.style.display = "none";
+    });
+  });
+
+  document.addEventListener("click", () => {
+    menu.style.display = "none";
+  });
+</script>

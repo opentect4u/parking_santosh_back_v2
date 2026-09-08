@@ -1,0 +1,90 @@
+2026-08-05 16:34:06 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 16:34:06 
+----------------------------------------------
+2026-08-05 16:37:40 info: Santosh Kumar Jena Created Operator [CustID: 1] Fields: customer_id: '1', operator_name: 'Owner Test', mobile: '9090900433', device_id: '87fcbee697374605', password: [created], allow_flag: 'Y' 
+----------------------------------------------
+2026-08-05 16:38:21 info: Santosh Kumar Jena Created Operator [CustID: 1] Fields: customer_id: '1', dev_mode: 'D', app_id: '87fcbee697374605', gst_flag: 'N', device_type: 'M', report_flag: 'Y', total_collection: 'Y', redirection_flag: 'N', grace_period_flag: 'N', grace_value: '00', adv_pay: 'Y', adv_value: '00', pay_mode_flag: 'N', qr_code_flag: 'Y', day_wise_rate: 'Y' 
+----------------------------------------------
+2026-08-05 16:42:36 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 276] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-05 16:46:19 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 16:46:19 
+----------------------------------------------
+2026-08-05 16:53:45 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 16:53:45 
+----------------------------------------------
+2026-08-05 16:54:32 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 276] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-05 16:55:31 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 276] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-05 16:56:27 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 276] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-05 17:08:31 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 276] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-05 17:55:00 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 17:55:00 
+----------------------------------------------
+2026-08-05 17:57:05 info: Santosh Kumar Jena Created Vehicle [CustID: 1] Fields: customer_id: '1', vehicle_id: '3', vehicle_rate: '100' 
+----------------------------------------------
+2026-08-05 18:01:55 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 266] Fields changed: total_collection: 'Y' → 'N', adv_pay: 'Y' → 'N', adv_value: '0' → '0' 
+----------------------------------------------
+2026-08-05 18:14:35 info: Santosh Kumar Jena Updated Vehicle [CustID: 1, ID: 5] Fields changed: no_of_days: '30' → '20', vehicle_rate: '100.00' → '50.00' 
+----------------------------------------------
+2026-08-05 18:15:24 info: Santosh Kumar Jena Updated Vehicle [CustID: 1, ID: 5] Fields changed: no_of_days: '20' → '31', vehicle_rate: '50.00' → '110.00' 
+----------------------------------------------
+2026-08-05 18:24:20 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 18:24:20 
+----------------------------------------------
+2026-08-05 18:26:03 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 18:26:03 
+----------------------------------------------
+2026-08-05 18:34:03 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 18:34:03 
+----------------------------------------------
+2026-08-05 18:35:07 info: Santosh Kumar Jena Updated Operator [CustID: 3, ID: 9] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-05 18:41:01 info: Santosh Kumar Jena Created Vehicle [CustID: 3] Fields: customer_id: '3', vehicle_id: '10', vehicle_rate: '150.00' 
+----------------------------------------------
+2026-08-05 18:41:19 info: Santosh Kumar Jena Created Vehicle [CustID: 3] Fields: customer_id: '3', vehicle_id: '10', vehicle_rate: '250' 
+----------------------------------------------
+2026-08-05 21:33:27 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-05 21:33:27 
+----------------------------------------------
+2026-08-06 10:48:09 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-06 10:48:09 
+----------------------------------------------
+2026-08-06 11:47:57 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 266] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-06 11:50:32 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-06 11:50:32 
+----------------------------------------------
+2026-08-06 11:51:08 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 266] Fields changed: password: [updated] 
+----------------------------------------------
+2026-08-10 15:58:12 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-10 15:58:12 
+----------------------------------------------
+2026-08-11 12:16:18 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-11 12:16:18 
+----------------------------------------------
+2026-08-11 12:22:27 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 1] Fields changed: header5: 'null' → '', header6: 'null' → '', header7: 'null' → '', header8: 'null' → '', footer5: 'null' → '', footer6: 'null' → '', footer7: 'null' → '', footer8: 'null' → '', IN_on_off: 'Y' → 'N', header1_flag: '1' → '1', header2_flag: '1' → '1', header3_flag: '1' → '1', header4_flag: '1' → '1', header5_flag: '0' → '0', header6_flag: '0' → '0', header7_flag: '0' → '0', header8_flag: '0' → '0', footer1_flag: '1' → '1', footer2_flag: '1' → '1', footer3_flag: '1' → '1', footer4_flag: '1' → '1', footer5_flag: '0' → '0', footer6_flag: '0' → '0', footer7_flag: '0' → '0', footer8_flag: '0' → '0' 
+----------------------------------------------
+2026-08-11 12:33:36 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 1] Fields changed: OUT_on_off: 'Y' → 'N', header1_flag: '1' → '1', header2_flag: '1' → '1', header3_flag: '1' → '1', header4_flag: '1' → '1', header5_flag: '0' → '0', header6_flag: '0' → '0', header7_flag: '0' → '0', header8_flag: '0' → '0', footer1_flag: '1' → '1', footer2_flag: '1' → '1', footer3_flag: '1' → '1', footer4_flag: '1' → '1', footer5_flag: '0' → '0', footer6_flag: '0' → '0', footer7_flag: '0' → '0', footer8_flag: '0' → '0' 
+----------------------------------------------
+2026-08-11 12:34:42 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 1] Fields changed: IN_on_off: 'N' → 'Y', header1_flag: '1' → '1', header2_flag: '1' → '1', header3_flag: '1' → '1', header4_flag: '1' → '1', header5_flag: '0' → '0', header6_flag: '0' → '0', header7_flag: '0' → '0', header8_flag: '0' → '0', footer1_flag: '1' → '1', footer2_flag: '1' → '1', footer3_flag: '1' → '1', footer4_flag: '1' → '1', footer5_flag: '0' → '0', footer6_flag: '0' → '0', footer7_flag: '0' → '0', footer8_flag: '0' → '0' 
+----------------------------------------------
+2026-08-11 12:38:02 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 1] Fields changed: OUT_on_off: 'N' → 'Y', header1_flag: '1' → '1', header2_flag: '1' → '1', header3_flag: '1' → '1', header4_flag: '1' → '1', header5_flag: '0' → '0', header6_flag: '0' → '0', header7_flag: '0' → '0', header8_flag: '0' → '0', footer1_flag: '1' → '1', footer2_flag: '1' → '1', footer3_flag: '1' → '1', footer4_flag: '1' → '1', footer5_flag: '0' → '0', footer6_flag: '0' → '0', footer7_flag: '0' → '0', footer8_flag: '0' → '0' 
+----------------------------------------------
+2026-08-11 15:32:41 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 265] Fields changed: gst_flag: 'N' → 'Y', adv_value: '0' → '0' 
+----------------------------------------------
+2026-08-11 15:36:14 info: Santosh Kumar Jena Updated Admin [CustID: 1, ID: 2] Fields changed: gst_mode: 'CS' → 'I', total_gst: '5.00' → '5', cgst: '2.50' → '0', sgst: '2.50' → '0', igst: '0.00' → '5' 
+----------------------------------------------
+2026-08-12 15:56:16 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-12 15:56:16 
+----------------------------------------------
+2026-08-12 17:03:24 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-12 17:03:24 
+----------------------------------------------
+2026-08-12 17:05:35 info: Santosh Kumar Jena Updated Vehicle [CustID: 1, ID: 3] Fields changed: no_of_days: '30' → '30', vehicle_rate: '100.00' → '177.00' 
+----------------------------------------------
+2026-08-12 17:06:06 info: Santosh Kumar Jena Created Vehicle [CustID: 1] Fields: customer_id: '1', vehicle_id: '1', vehicle_rate: '177.00' 
+----------------------------------------------
+2026-08-12 17:06:31 info: Santosh Kumar Jena Created Vehicle [CustID: 1] Fields: customer_id: '1', vehicle_id: '1', vehicle_rate: '177.00' 
+----------------------------------------------
+2026-08-12 17:06:52 info: Santosh Kumar Jena Created Vehicle [CustID: 1] Fields: customer_id: '1', vehicle_id: '1', vehicle_rate: '177.00' 
+----------------------------------------------
+2026-08-12 17:45:25 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-12 17:45:25 
+----------------------------------------------
+2026-08-12 18:01:11 info: Santosh Kumar Jena Updated Operator [CustID: 1, ID: 265] Fields changed: gst_flag: 'Y' → 'N', adv_value: '0' → '0' 
+----------------------------------------------
+2026-08-14 14:26:08 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-14 14:26:08 
+----------------------------------------------
+2026-08-19 22:33:24 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-19 22:33:23 
+----------------------------------------------
+2026-08-20 17:52:39 info: LOGIN SUCCESSFULLY - User: santosh_parking, Name: Santosh Kumar Jena, Customer: null, Time: 2026-08-20 17:52:39 
+----------------------------------------------

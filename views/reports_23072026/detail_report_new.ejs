@@ -1,0 +1,2042 @@
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    /* Custom Select2 Styling to match premium design */
+    html body .select2-container .select2-selection--single {
+        border: 1px solid #065f46 !important;
+        border-radius: 8px !important;
+        height: 45px !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__rendered {
+        color: #000000 !important;
+        font-weight: normal !important;
+        font-size: 16px !important;
+        line-height: normal !important;
+        padding-left: 0 !important;
+        text-align: center !important;
+        width: 100%;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__placeholder {
+        color: #000000 !important;
+        font-weight: normal !important;
+        font-size: 16px !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__arrow {
+        height: 43px !important;
+        right: 12px !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__arrow b {
+        border-color: #065f46 transparent transparent transparent !important;
+        border-width: 6px 5px 0 5px !important;
+    }
+
+    html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+        border-color: transparent transparent #065f46 transparent !important;
+        border-width: 0 5px 6px 5px !important;
+    }
+
+    /* Dropdown Menu Styling */
+    html body .select2-dropdown {
+        border: 1px solid #065f46 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        overflow: hidden !important;
+    }
+
+    html body .select2-results__option {
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        color: #374151 !important;
+        transition: all 0.2s ease !important;
+        text-align: center !important;
+    }
+
+    html body .select2-results__option:hover {
+        background-color: #ecfdf5 !important;
+        color: #065f46 !important;
+    }
+
+    html body .select2-search--dropdown .select2-search__field {
+        border-radius: 4px !important;
+        border: 1px solid #065f46 !important;
+        padding: 6px 10px !important;
+    }
+
+    html body .select2-search__field:focus {
+        outline: none !important;
+    }
+
+    html body .select2-container .select2-results__option--highlighted[data-selected] {
+        background-color: #065f46 !important;
+        color: #ffffff !important;
+    }
+
+    html body .select2-container .select2-results__option[aria-selected="true"] {
+        background-color: rgba(6, 95, 70, 0.1) !important;
+        color: #065f46 !important;
+    }
+
+    html body .select2-container {
+        width: 100% !important;
+    }
+
+    /* Pagination Color Override */
+    .page-item.active .page-link {
+        background-color: #065f46 !important;
+        border-color: #065f46 !important;
+        color: white !important;
+    }
+
+    .page-link {
+        color: #065f46 !important;
+    }
+
+    .page-link:hover {
+        background-color: #e6f4ea !important;
+        color: #065f46 !important;
+    }
+
+    /* Floating Arrows */
+    .floating-arrows {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: none;
+        /* Hidden by default */
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1000;
+    }
+
+    .floating-arrows button {
+        background-color: #065f46;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .floating-arrows button:hover {
+        background-color: #059669;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Print Preview Optimizations */
+    @media print {
+        @page {
+            size: landscape;
+            margin: 1cm;
+        }
+
+        /* Hide everything above the table */
+        .navbar,
+        .sidebar,
+        header,
+        footer,
+        #vehicleSearchSection,
+        .card-header,
+        #filtersRow,
+        .row,
+        .d-flex.align-items-center {
+            display: none !important;
+        }
+
+        /* Explicitly hide the button container and all buttons */
+        #printExcelBtnContainer,
+        #btnExcel,
+        .exclbutton1,
+        button,
+        .btn {
+            display: none !important;
+        }
+
+        /* Hide DataTables UI elements */
+        .dataTables_length,
+        .dataTables_filter,
+        .dataTables_info,
+        .dataTables_paginate {
+            display: none !important;
+        }
+
+        /* Reposition the table to the top left of the printed page */
+        #resultDiv {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            display: block !important;
+        }
+
+        /* Override horizontal scrolling to show all columns on paper */
+        .table-responsive {
+            overflow: visible !important;
+            width: 100% !important;
+        }
+
+        /* Clean up table styling for paper */
+        .table {
+            border: 1px solid #000 !important;
+            font-size: 10px !important;
+            /* Smaller font to fit 17 columns */
+            width: 100% !important;
+        }
+
+        .table th,
+        .table td {
+            padding: 4px !important;
+        }
+
+        .shadow-sm,
+        .shadow-lg,
+        .card {
+            box-shadow: none !important;
+            border: none !important;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3"
+                    style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+                    <div class="d-flex align-items-center">
+                        <div class="text-white rounded"
+                            style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+                            <i class="fas fa-file-invoice fs-5"></i>
+                        </div>
+                        <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">
+                            <%= title %>
+                        </h4>
+                    </div>
+                </div>
+
+                <!-- Search Form -->
+                <div class="p-4 mb-4 mt-3 mx-3"
+                    style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+                    <div class="row g-3 align-items-end">
+                        <!-- From Date -->
+                        <div class="col-md-3">
+                            <label for="frm_dt" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-calendar-alt"></i> From Date</label>
+                            <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                        </div>
+
+                        <!-- To Date -->
+                        <div class="col-md-3">
+                            <label for="to_dt" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-calendar-alt"></i> To Date</label>
+                            <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                        </div>
+
+                        <!-- Customer Select -->
+                        <% if (user.userData.user_type==='S' ) { %>
+                            <div class="col-md-3">
+                                <label for="custId" class="text-dark mb-2" style="font-size: 14px;"><i
+                                        class="fas fa-map-marker-alt"></i> Location Name</label>
+                                <select name="custId" class="form-control" id="custId" required
+                                    style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                    <option value="">Select Location Name</option>
+                                    <% if (data.msg && data.msg.length> 0) { %>
+                                        <% data.msg.forEach(customer=> { %>
+                                            <option value="<%= customer.customer_id %>">
+                                                <%= customer.customer_name %>
+                                            </option>
+                                            <% }) %>
+                                                <% } %>
+                                </select>
+                            </div>
+                            <% } else if (user.userData.user_type==='A' ) { %>
+                                <input type="hidden" id="custId" name="custId" value="<%= user.userData.customer_id %>">
+                                <% } %>
+
+                                    <!-- Pay Mode -->
+                                    <div class="col-md-3">
+                                        <label for="pay_mode" class="text-dark mb-2" style="font-size: 14px;"><i
+                                                class="fas fa-money-bill-wave"></i> Pay Mode</label>
+                                        <select name="pay_mode" class="form-control" id="pay_mode" required
+                                            style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                            <option value="">Select Pay Mode</option>
+                                            <option value="C">CASH</option>
+                                            <option value="U">UPI</option>
+                                            <option value="A" selected>All</option>
+                                        </select>
+                                    </div>
+                    </div>
+                    <div class="row g-3 mt-4 align-items-center">
+                        <!-- Operator Select -->
+                        <!-- <div class="col-md-3">
+                            <label for="operator_id" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-user"></i> Operator Name</label>
+                            <select name="operator_id" class="form-control" id="operator_id" required
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                <option value="">Select Operator Name</option>
+                                <option value="A" selected>All Operators</option>
+                                <% if (operators.msg && operators.msg.length> 0) { %>
+                                    <% operators.msg.forEach(operator=> { %>
+                                        <option value="<%= operator.operator_id %>">
+                                            <%= operator.operator_name %>
+                                        </option>
+                                        <% }) %>
+                                            <% } %>
+                            </select>
+                        </div> -->
+
+                        <!-- Search Button -->
+                        <div class="col-md-12 text-center">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <button type="button" class="btn text-white px-5" id="btnSubmit"
+                                    style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                                    <i class="fa fa-search me-2"></i> Fetch Details
+                                </button>
+                                <a href="/report/detail_report_new" class="btn shadow-sm"
+                                    style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;"
+                                    title="Refresh">
+                                    <i class="fas fa-sync-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Search Section (hidden initially) -->
+                <div class="p-3 mb-2 mx-3" id="vehicleSearchSection"
+                    style="display:none; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="vehicleSearch" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-car"></i> Search Vehicle No.</label>
+                            <input type="text" id="vehicleSearch" class="form-control" placeholder="Enter Vehicle No."
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                        </div>
+
+                        <div class="col-md-8 text-start">
+                            <div class="d-flex justify-content-start align-items-center">
+                                <button type="button" class="btn text-white px-5" id="btnVehicleSearch"
+                                    style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                                    <i class="fa fa-search me-2"></i> Search Vehicle
+                                </button>
+                                <button type="button" class="btn shadow-sm" id="btnVehicleReset"
+                                    style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #dc3545; border: 1px solid #dc3545; text-decoration: none; flex-shrink: 0;"
+                                    title="Reset">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- <div class="card-body" id="resultDiv"> -->
+                <div class="dateWiseDataTable mt-5" id="resultDiv" style="display: none;">
+                    <h5 class="text-center text-secondary mb-3">
+                        <span id="searchCred"></span>
+                    </h5>
+                    <div class="d-flex justify-content-end mb-2" id="printExcelBtnContainer">
+                        <button class="btn btn-success btn-sm exclbutton1" id="btnExcel">
+                            <i class="fa fa-file-excel"></i> &nbsp; Download All Data
+                        </button>
+                    </div>
+                    <div class="shadow-sm rounded-3 table-responsive">
+                        <table class="table table-bordered table-hover align-middle text-nowrap" id="cust-datatable">
+                            <thead class="table-fixed-header">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Receipt No.</th>
+                                    <th scope="col">Receipt No.(short)</th>
+                                    <th scope="col">Date Time In</th>
+                                    <th scope="col">Machine Sl. No. In</th>
+                                    <th scope="col">Vehicle Type</th>
+                                    <th scope="col">Vehicle No.</th>
+                                    <th scope="col">Date Time Out</th>
+                                    <th scope="col">Machine Sl. No. Out</th>
+                                    <th scope="col">Base Amount</th>
+                                    <th scope="col">Advance Amount</th>
+                                    <th scope="col">CGST</th>
+                                    <th scope="col">SGST</th>
+                                    <th scope="col">Paid Amount</th>
+                                    <!-- <th scope="col">MIS Charges</th> -->
+                                    <th scope="col">Net Amount</th>
+                                    <th scope="col">Mode</th>
+                                    <th scope="col">Operator Name</th>
+                                </tr>
+                            </thead>
+                            <tbody> </tbody>
+
+                            <tfoot>
+                                <tr>
+                                    <td colspan="9">Pagewise Total</td>
+                                    <td scope="col" id="base_amt"><b>0</b></td>
+                                    <td scope="col" id="advance_amt"><b>0</b></td>
+                                    <td scope="col" id="cgst"><b>0</b></td>
+                                    <td scope="col" id="sgst"><b>0</b></td>
+                                    <td scope="col" id="paid_amt"><b>0</b></td>
+                                    <!-- <td scope="col" id="other_chrges"><b>0</b></td> -->
+                                    <td scope="col" id="tot_amt"><b>0</b></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="display: none;">
+                                    <td scope="col" colspan="3">Grand Total UPI</td>
+                                    <td scope="col" class="text-left" id="tot_upi" colspan="14"></td>
+                                </tr>
+                                <tr style="display: none;">
+                                    <td scope="col" colspan="3">Grand Total Cash</td>
+                                    <td scope="col" class="text-left" id="tot_cash" colspan="14"></td>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+
+                        <!-- <div class="text-end mt-3">
+      <button class="btn btn-gradient-print btn-sm px-4 shadow-sm" onclick="printDiv()">
+        <i class="fa fa-print me-2"></i> Print
+      </button>
+    </div> -->
+
+                        <div class="text-end mt-3">
+                            <button class="btn btn-gradient-print btn-sm px-4 shadow-sm me-2 no-print"
+                                onclick="printDiv()">
+                                <i class="fa fa-print me-2"></i> Print
+                            </button>
+                            <button class="btn btn-success btn-sm px-4 shadow-sm no-prints" onclick="downloadExcel()">
+                                <i class="fa fa-file-excel me-2"></i> Excel
+                            </button>
+                        </div>
+                        <button id="goTopBtn" title="Go to Top">
+                            <i class="fa fa-arrow-up"></i>
+                        </button>
+                        <button id="goDownBtn" title="Go to Top">
+                            <i class="fa fa-arrow-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="simple-footer mt-4">
+    <b>Santosh Parking © <span id="footerYear"></b></span>
+</footer>
+
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+    }
+
+    @media print {
+        .no-prints {
+            display: none !important;
+        }
+    }
+
+    .table-fixed-header th {
+        background-color: #064e3b;
+        /* Your fixed color */
+        color: #ffffff;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+
+    /* table {
+    table-layout: fixed; 
+}
+
+tfoot td {
+    text-align: right;
+    min-width: 80px;
+} */
+
+    /* Optional: keep footer visible too */
+    .table tfoot tr {
+        background-color: #e2e8f0;
+        color: #1f2937;
+        font-weight: 700;
+    }
+
+    .btn-gradient-print {
+        background: linear-gradient(90deg, #c98a1f, #cf9c1a);
+        /* Warm gradient */
+        color: rgb(20, 14, 14);
+        border: none;
+        border-radius: 3px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-gradient-print:hover {
+        /* background: linear-gradient(90deg, #feb47b, #ff7e5f); */
+        /* transform: scale(1.05); */
+        /* box-shadow: 0 4px 15px rgba(255, 126, 95, 0.4); */
+    }
+
+    .input-custom,
+    .select-custom {
+        transition: all 0.3s;
+        border: 1px solid #ced4da;
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+
+    .input-custom:focus,
+    .select-custom:focus {
+        box-shadow: 0 0 10px rgba(6, 78, 59, 0.3);
+        border-color: #064e3b;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(90deg, #064e3b, #04523b);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        transition: all 0.3s;
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(90deg, #047857, #064e3b);
+        transform: scale(1.05);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(6, 78, 59, 0.1);
+    }
+
+    #btnSubmit {
+        height: calc(2.25rem + 2px);
+        /* default .form-select height */
+        font-size: 0.95rem;
+    }
+
+    .btn-success {
+        background: linear-gradient(90deg, #064e3b, #022c22);
+        color: white;
+        border-radius: 3px;
+        border: none;
+    }
+
+    #btnVehicleSearch {
+        height: calc(2.25rem + 3px);
+        /* default .form-select height */
+        font-size: 0.95rem;
+    }
+
+    #goTopBtn,
+    #goDownBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 999;
+        background-color: #064e3b;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        display: none;
+        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    #goTopBtn {
+        bottom: 90px;
+    }
+
+    /* Bottom button appears above top button */
+    #goDownBtn {
+        bottom: 30px;
+    }
+
+    #goTopBtn:hover,
+    #goDownBtn:hover {
+        background-color: #022c22;
+    }
+
+    #pageLoader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(3px);
+        display: none;
+        z-index: 9999;
+    }
+
+    .loader {
+        width: 120px;
+        height: 40px;
+        margin: 20% auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #cust-datatable tbody td {
+        color: #000;
+    }
+
+    .circle {
+        width: 20px;
+        height: 20px;
+        background: #047857;
+        border-radius: 50%;
+        animation: bounce 0.6s infinite alternate;
+    }
+
+    .circle:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .circle:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+        to {
+            transform: translateY(-20px);
+            background: #022c22;
+        }
+    }
+
+    .shadow {
+        width: 20px;
+        height: 4px;
+        background: #bbb;
+        border-radius: 50%;
+        filter: blur(2px);
+        animation: shadow 0.6s infinite alternate;
+    }
+
+    .shadow:nth-child(5) {
+        animation-delay: 0.2s;
+    }
+
+    .shadow:nth-child(6) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes shadow {
+        to {
+            transform: scale(0.7);
+            background: #999;
+        }
+    }
+
+    .simple-footer {
+        text-align: center;
+        font-size: 14px;
+        /* color: #6b7280;   soft gray */
+        color: black;
+        padding: 12px 0;
+        margin-left: 57vw;
+    }
+
+    /* Custom Select2 Styling */
+    html body .select2-container .select2-selection--single {
+        border: 1px solid #064e3b !important;
+        border-radius: 8px !important;
+        height: 45px !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__rendered {
+        color: #000000 !important;
+        font-weight: normal !important;
+        font-size: 16px !important;
+        line-height: normal !important;
+        padding-left: 0 !important;
+        text-align: center !important;
+        width: 100%;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__placeholder {
+        color: #000000 !important;
+        font-weight: normal !important;
+        font-size: 16px !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__arrow {
+        height: 43px !important;
+        right: 12px !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__arrow b {
+        border-color: #064e3b transparent transparent transparent !important;
+        border-width: 6px 5px 0 5px !important;
+    }
+
+    html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+        border-color: transparent transparent #064e3b transparent !important;
+        border-width: 0 5px 6px 5px !important;
+    }
+
+    html body .select2-dropdown {
+        border: 1px solid #064e3b !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+        overflow: hidden !important;
+        margin-top: 4px;
+        background-color: #ffffff !important;
+    }
+
+    .select2-search--dropdown {
+        padding: 10px !important;
+    }
+
+    html body .select2-results__option {
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        color: #374151 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    html body .select2-results__option:hover {
+        background-color: #ecfdf5 !important;
+        color: #064e3b !important;
+    }
+
+    html body .select2-search--dropdown .select2-search__field {
+        border-radius: 6px !important;
+        border: 1px solid #064e3b !important;
+        padding: 8px 12px !important;
+        font-size: 14px;
+    }
+
+    html body .select2-search__field:focus {
+        outline: none !important;
+        box-shadow: 0 0 0 2px rgba(6, 78, 59, 0.2) !important;
+    }
+
+    html body .select2-results__option--highlighted[aria-selected] {
+        background-color: #064e3b !important;
+        color: white !important;
+    }
+
+    html body .select2-container {
+        width: 100% !important;
+    }
+</style>
+
+
+<script>
+    document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<!-- <script>
+function downloadExcel() {
+    var table = document.querySelector("#resultDiv table");
+
+    if (!table) {
+        alert("No data available to export!");
+        return;
+    }
+
+    var workbook = XLSX.utils.book_new();
+    var worksheet = XLSX.utils.table_to_sheet(table);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Detail Report");
+
+    XLSX.writeFile(workbook, "Detail_Report.xlsx");
+}
+</script> -->
+
+
+<script>
+    function downloadExcel() {
+        var table = document.querySelector("#cust-datatable");
+
+        if (!table) {
+            alert("No data available to export!");
+            return;
+        }
+
+        var workbook = XLSX.utils.book_new();
+        var rows = [];
+
+        table.querySelectorAll("tr").forEach(tr => {
+            let row = [];
+            let cells = tr.querySelectorAll("th, td");
+
+            cells.forEach(cell => {
+                let colspan = cell.colSpan || 1;
+
+                // push actual value
+                row.push(cell.innerText.trim());
+
+                // push empty cells for colspan
+                for (let i = 1; i < colspan; i++) {
+                    row.push("");
+                }
+            });
+
+            rows.push(row);
+        });
+
+        var worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+        // Force TEXT format (optional)
+        Object.keys(worksheet).forEach(key => {
+            if (key.startsWith("!")) return;
+            let col = key.replace(/[0-9]/g, "");
+            if (["B", "C", "G"].includes(col)) {
+                worksheet[key].t = "s";
+            }
+        });
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Detail Report");
+        XLSX.writeFile(workbook, "Detail_Report.xlsx");
+    }
+</script>
+
+
+
+<script src="https://raw.githubusercontent.com/phstc/jquery-dateFormat/master/dist/dateFormat.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#resultDiv').hide();
+    });
+
+    window.addEventListener('load', function () {
+        // Dynamically load Select2 AFTER the main layout jQuery has fully loaded
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+        script.onload = function () {
+            $('#custId').select2({ placeholder: "Select Location Name", allowClear: true, width: '100%' });
+            $('#pay_mode').select2({ placeholder: "Select Pay Mode", allowClear: true, width: '100%' });
+            $('#operator_id').select2({ placeholder: "Select Operator Name", allowClear: true, width: '100%' });
+        };
+        document.body.appendChild(script);
+    });
+</script>
+
+<!-- <script>
+        $('#btnSubmit').on('click', function(){
+            var frm_dt = $('#frm_dt').val()
+            var to_dt = $('#to_dt').val()
+            var custId = $('#custId').val()
+            var pay_mode = $('#pay_mode').val()
+
+            if(frm_dt != '' && to_dt != '' && custId != '' && pay_mode != '' ){
+                $.ajax({
+                    method: "POST",
+                    url: "/report/get_details_report_new",
+                    data: { frm_dt, to_dt, custId, pay_mode },
+                    dataType: "html",
+                    beforeSend: function () {
+                        $(".preloader").fadeIn();
+                    },
+                    success: function (result) {
+                        var res = JSON.parse(result);
+                        console.log(res,'res');
+                        
+                        var base_amt_tot = 0;
+                        var paid_amt_tot = 0;
+                        var advance_amt_tot = 0;
+                        var cgst_tot = 0;
+                        var sgst_tot = 0;
+                        var total_amt_tot = 0;
+                        var tot_amt_tot = 0 ;
+                        var tot_upi = 0, tot_cash = 0;
+                        $('#resultDiv').show()
+                        $('#resultDiv table tbody').empty()
+                        // console.log(res)
+                        if(res.suc > 0){
+                            if(res.msg.length > 0){
+                                $('#searchCred').text(`Detail Report from ${createDate(frm_dt)} to ${createDate(to_dt)}`)
+                                let i = 1;
+                                for(let dt of res.msg){
+                                    base_amt_tot += dt.base_amt
+                                    advance_amt_tot += dt.advance_amt
+                                    cgst_tot += dt.cgst
+                                    sgst_tot += dt.sgst
+                                    paid_amt_tot += dt.paid_amt
+                                    total_amt_tot = (dt.paid_amt+dt.advance_amt)
+                                    tot_amt_tot += total_amt_tot
+
+                                    if(dt.pay_mode == 'C')
+                                        tot_cash += total_amt_tot
+
+                                    if(dt.pay_mode == 'U')
+                                        tot_upi += total_amt_tot
+console.log(cgst_tot,sgst_tot,'oiuy');
+
+                                    $('#resultDiv table tbody').append(`
+                                    <tr>
+                                        <td>${i}</td>
+                                        <td>${dt.receipt_no}</td>
+                                        <td>${createDateTime(dt.date_time_in)}</td>
+                                        <td>${dt.device_id}</td>
+                                        <td>${dt.vehicle_name}</td>
+                                        <td>${dt.vehicle_no}</td>
+                                        <td>${createDateTime(dt.date_time_out)}</td>
+                                        <td>${dt.device_id_out}</td>
+                                        <td>${dt.base_amt.toFixed(2)}</td>
+                                        <td>${dt.advance_amt}</td>
+                                        <td>${dt.cgst.toFixed(2)}</td>
+                                        <td>${dt.sgst.toFixed(2)}</td>
+                                        <td>${dt.paid_amt}</td>
+                                        <td>${total_amt_tot}</td>
+                                        <td>${dt.pay_mode == 'U' ? 'UPI' : dt.pay_mode == 'C' ? 'CASH' : ''}</td>
+                                        <td>${dt.operator_name}</td>
+                                    </tr>
+                                    `)
+                                    i++
+                                // console.log(dt.cgst.toFixed(2),dt.sgst.toFixed(2),'lll');
+                                }                                
+                                 $('#base_amt').text(base_amt_tot.toFixed(2))    
+                                $('#advance_amt').text(advance_amt_tot)
+                                $('#cgst').text(cgst_tot.toFixed(2))
+                                $('#sgst').text(sgst_tot.toFixed(2))
+                                $('#paid_amt').text(paid_amt_tot)
+                                $('#tot_amt').text(tot_amt_tot)
+
+                                if(pay_mode == 'A'){
+                                    $('#tot_upi').parent().show()
+                                    $('#tot_cash').parent().show()
+                                    $('#tot_upi').text(tot_upi)
+                                    $('#tot_cash').text(tot_cash)
+                                }else{
+                                    $('#tot_upi').parent().hide()
+                                    $('#tot_cash').parent().hide()
+                                    $('#tot_upi').text('')
+                                    $('#tot_cash').text('')
+                                }
+                            }else{
+                                $('#resultDiv table tbody').append('<tr><td colspan="16" class="text-center text-danger">No Data Found</td></tr>')
+                                $('#base_amt').text(base_amt_tot.toFixed(2))
+                                $('#advance_amt').text(advance_amt_tot)
+                                $('#cgst').text(cgst_tot.toFixed(2))
+                                $('#sgst').text(sgst_tot.toFixed(2))
+                                $('#paid_amt').text(paid_amt_tot)
+                                $('#tot_amt').text(tot_amt_tot)
+                            }
+                        }
+                    },
+                    complete: function () {
+                        $(".preloader").fadeOut();
+                    }
+                })
+            }
+        })
+    </script> -->
+
+<!-- 
+    <script>
+        $('#btnSubmit').on('click', function(){
+    var frm_dt = $('#frm_dt').val();
+    var to_dt = $('#to_dt').val();
+    var custId = $('#custId').val();
+    var pay_mode = $('#pay_mode').val();
+    var operator_id = $('#operator_id').val();
+    var custName = $("#custId option:selected").text(); // Get selected location name
+
+    if(frm_dt && to_dt && custId && pay_mode, operator_id){
+                $('#resultDiv').show();
+                $('#resultDiv table tbody').empty();
+
+                $('#searchCred').html(`<b>Detail Report of ${custName} from ${createDate(frm_dt)} to ${createDate(to_dt)}</b>`);
+
+        $.ajax({
+            method: "POST",
+            url: "/report/get_details_report_new",
+            data: { frm_dt, to_dt, custId, pay_mode, operator_id },
+            dataType: "json",  // IMPORTANT: tells jQuery to parse JSON automatically
+            beforeSend: function () {
+                $(".preloader").fadeIn();
+            },
+            success: function(res){
+                console.log(res); // DEBUG: check data in console
+
+                if(res.suc > 0 && res.msg.length > 0){
+                // existing table population logic...
+                 $('#vehicleSearchSection').show();   // ✅ show vehicle search
+                //  $('#vehicleSearchButtons').show(); 
+                } else {
+                $('#vehicleSearchSection').hide();
+                $('#resultDiv table tbody').html('<tr><td colspan="16" class="text-center text-danger">No Data Found</td></tr>');
+                $('#resultDiv').show();
+                // $('#vehicleSearchButtons').hide(); 
+                }
+
+                 // 2️⃣ Vehicle search filter
+    $('#btnVehicleSearch').on('click', function(){
+        var searchVal = $('#vehicleSearch').val().trim().toLowerCase();
+        if(searchVal === ''){
+            alert('Please enter a vehicle number');
+            return;
+        }
+       var rowsShown = 0;
+
+        $('#resultDiv table tbody tr').each(function(){
+            var vehicleNo = $(this).find('td:nth-child(6)').text().toLowerCase(); // 6th col = Vehicle No
+            if(vehicleNo.includes(searchVal)){
+                $(this).show();
+                rowsShown++;
+            } else {
+                $(this).hide();
+            }
+        });
+        // If no rows match, show "No Data Found"
+    if(rowsShown === 0) {
+        $('#resultDiv table tbody').html('<tr><td colspan="16" class="text-center text-danger">No Data Found</td></tr>');
+    }
+    });
+
+    // 3️⃣ Vehicle reset -> show all rows again
+    $('#btnVehicleReset').on('click', function(){
+        $('#vehicleSearch').val('');
+        $('#resultDiv table tbody tr').show();
+    });
+
+
+                // $('#resultDiv').show();
+                // $('#resultDiv table tbody').empty();
+
+                  let base_amt_tot = 0, advance_amt_tot = 0, cgst_tot = 0, sgst_tot = 0, paid_amt_tot = 0, other_chrges_tot = 0, tot_amt_tot = 0;
+                    let tot_upi = 0, tot_cash = 0;
+
+
+                if(res.suc > 0 && res.msg.length > 0){
+                    // $('#searchCred').html(`<b>Detail Report from ${createDate(frm_dt)} to ${createDate(to_dt)}</b>`);
+
+                    let i = 1;
+
+                    res.msg.forEach(dt => {
+                        const base = parseFloat(dt.base_amt);
+                        const advance = parseFloat(dt.advance_amt);
+                        const cgst = parseFloat(dt.cgst);
+                        const sgst = parseFloat(dt.sgst);
+                        // const paid = parseFloat(dt.paid_amt);
+                        const other_charges = parseFloat(dt.other_charges);
+                        // const total_amt = paid + advance; 
+                        const total_amt = base + advance + cgst + sgst + other_charges; // Adjust logic as needed
+
+                        base_amt_tot += base;
+                        advance_amt_tot += advance;
+                        cgst_tot += cgst;
+                        sgst_tot += sgst;
+                        // paid_amt_tot += paid;
+                        other_chrges_tot += other_charges;
+                        tot_amt_tot += total_amt;
+
+                        if(dt.pay_mode == 'C') tot_cash += total_amt;
+                        if(dt.pay_mode == 'U') tot_upi += total_amt;
+
+                        let dateTimeOut = dt.date_time_out && dt.date_time_out !== dt.date_time_in ? createDateTime(dt.date_time_out) : '';
+                        
+                         // ✅ check if date_time_in == date_time_out
+
+                        $('#resultDiv table tbody').append(`
+                            <tr>
+                                <td class=text-dark>${i}</td>
+                                <td class="text-dark">${dt.receipt_no == null ? '' : String(dt.receipt_no).slice(-5)}</td>
+                                <td class=text-dark>${createDateTime(dt.date_time_in)}</td>
+                                <td class=text-dark>${dt.device_id}</td>
+                                <td class=text-dark>${dt.vehicle_name}</td>
+                                <td class=text-dark>${dt.vehicle_no}</td>
+                                 <td class=text-dark>${dateTimeOut}</td>
+                                <td class=text-dark>${dt.device_id_out}</td>
+                                <td class=text-dark>${base.toFixed(2)}</td>
+                                <td class=text-dark>${advance.toFixed(2)}</td>
+                                <td class=text-dark>${cgst.toFixed(2)}</td>
+                                <td class=text-dark>${sgst.toFixed(2)}</td>
+                                <td class=text-dark>${other_charges.toFixed(2)}</td>
+                                <td class=text-dark>${total_amt.toFixed(2)}</td>
+                                <td class=text-dark>${dt.pay_mode == 'U' ? 'UPI' : dt.pay_mode == 'C' ? 'CASH' : ''}</td>
+                                <td class=text-dark>${dt.operator_name}</td>
+                            </tr>
+                        `);
+                        i++;
+                    });
+
+                    // ✅ After rows are appended, hide/show column based on hasDifferentDate
+// if (!hasDifferentDate) {
+//     $('#resultDiv table tr').each(function () {
+//         $(this).find("th:nth-child(" + colIndex + "), td:nth-child(" + colIndex + ")").hide();
+//     });
+//      $(".firFtTotCol").removeAttr('colspan').attr('colspan', 7)
+//                         $(".othFtTotCol").removeAttr('colspan').attr('colspan', 13)
+// } else {
+//     $('#resultDiv table tr').each(function () {
+//         $(this).find("th:nth-child(" + colIndex + "), td:nth-child(" + colIndex + ")").show();
+//     });
+//      $(".firFtTotCol").removeAttr('colspan').attr('colspan', 8)
+//                         $(".othFtTotCol").removeAttr('colspan').attr('colspan', 14)
+// }
+
+                } else {
+                    $('#resultDiv table tbody').html('<tr><td colspan="16" class="text-center text-danger">No Data Found</td></tr>');
+                }
+
+                // Update footer totals
+
+                    $('#base_amt').text(base_amt_tot.toFixed(2));
+                    $('#advance_amt').text(advance_amt_tot.toFixed(2));
+                    $('#cgst').text(cgst_tot.toFixed(2));
+                    $('#sgst').text(sgst_tot.toFixed(2));
+                    $('#other_chrges').text(other_chrges_tot.toFixed(2));
+                    // $('#paid_amt').text(paid_amt_tot.toFixed(2));
+                    $('#tot_amt').text(tot_amt_tot.toFixed(2)).show();
+
+    //                 $('#base_amt').text(base_amt_tot.toFixed(2));
+    // $('#advance_amt').text(advance_amt_tot.toFixed(2));
+    // $('#cgst').text(cgst_tot.toFixed(2));
+    // $('#sgst').text(sgst_tot.toFixed(2));
+    // $('#other_chrges').text(other_chrges_tot.toFixed(2));
+    // $('#tot_amt').text(tot_amt_tot.toFixed(2));
+
+
+    if(pay_mode == 'A'){
+        $('#tot_upi').parent().show();
+        $('#tot_cash').parent().show();
+        $('#tot_upi').text(tot_upi.toFixed(2));
+        $('#tot_cash').text(tot_cash.toFixed(2));
+    } else if(pay_mode == 'U'){
+        $('#tot_upi').parent().show();
+        $('#tot_cash').parent().hide();
+        $('#tot_upi').text(tot_upi.toFixed(2));
+        $('#tot_cash').text('');
+    } else if(pay_mode == 'C'){
+        $('#tot_upi').parent().hide();
+        $('#tot_cash').parent().show();
+        $('#tot_upi').text('');
+        $('#tot_cash').text(tot_cash.toFixed(2));
+    }
+            },
+            complete: function () {
+                $(".preloader").fadeOut();
+            }
+        });
+    }
+});
+
+    </script> -->
+
+<div id="pageLoader">
+    <div class="loader">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+    </div>
+</div>
+
+<!-- <script>
+        $('#btnVehicleReset').on('click', function(){
+    $('#vehicleSearch').val('');
+    $('#resultDiv table tbody tr').show();
+});
+
+        // 1️⃣ Clear vehicle search and totals when location changes
+    $('#custId').on('change', function() {
+        $('#vehicleSearch').val('');               // Clear vehicle search input
+        $('#resultDiv table tbody tr').empty();     // Show all rows again
+        $('#vehicleSearchSection').hide();         // Hide vehicle search section until new search
+        $('#base_amt, #advance_amt, #cgst, #sgst, #other_chrges, #tot_amt, #tot_upi, #tot_cash').text('0.00'); // Reset totals
+    });
+
+
+        $('#btnSubmit').on('click', function(){
+    var frm_dt = $('#frm_dt').val();
+    var to_dt = $('#to_dt').val();
+    var custId = $('#custId').val();
+    var pay_mode = $('#pay_mode').val();
+    var operator_id = $('#operator_id').val();
+    var custName = $("#custId option:selected").text(); // Get selected location name
+
+    if(frm_dt && to_dt && custId && pay_mode, operator_id){
+                $('#resultDiv').show();
+                $('#resultDiv table tbody').empty();
+                $('#searchCred').html(`<b>Detail Report of ${custName} from ${createDate(frm_dt)} to ${createDate(to_dt)}</b>`);
+
+        $.ajax({
+            method: "POST",
+            url: "/report/get_details_report_new",
+            data: { frm_dt, to_dt, custId, pay_mode, operator_id },
+            dataType: "json",  // IMPORTANT: tells jQuery to parse JSON automatically
+            beforeSend: function () {
+                $(".preloader").fadeIn();
+            },
+            success: function(res){
+                console.log(res); // DEBUG: check data in console
+
+                let allRows = []; // Store all fetched rows for vehicle search
+                let base_amt_tot = 0, advance_amt_tot = 0, cgst_tot = 0, sgst_tot = 0, paid_amt_tot = 0, other_chrges_tot = 0, tot_amt_tot = 0;
+                let tot_upi = 0, tot_cash = 0;
+
+                if(res.suc > 0 && res.msg.length > 0){
+                 $('#vehicleSearchSection').show();   // ✅ show vehicle search
+
+                    let i = 1;
+                    res.msg.forEach(dt => {
+                        const base = parseFloat(dt.base_amt);
+                        const advance = parseFloat(dt.advance_amt);
+                        const cgst = parseFloat(dt.cgst);
+                        const sgst = parseFloat(dt.sgst);
+                        const other_charges = parseFloat(dt.other_charges);
+                        const total_amt = base + advance + cgst + sgst + other_charges; // Adjust logic as needed
+
+                        base_amt_tot += base;
+                        advance_amt_tot += advance;
+                        cgst_tot += cgst;
+                        sgst_tot += sgst;
+                        other_chrges_tot += other_charges;
+                        tot_amt_tot += total_amt;
+
+                        if(dt.pay_mode == 'C') tot_cash += total_amt;
+                        if(dt.pay_mode == 'U') tot_upi += total_amt;
+
+                        let dateTimeOut = dt.date_time_out && dt.date_time_out !== dt.date_time_in ? createDateTime(dt.date_time_out) : '';
+                        
+                         // ✅ check if date_time_in == date_time_out
+
+                        // Create row HTML
+                        let rowHtml = `
+                            <tr>
+                                <td class=text-dark>${i}</td>
+                                <td class="text-dark">${dt.receipt_no}</td>
+                                <td class="text-dark">${dt.receipt_no == null ? '' : String(dt.receipt_no).slice(-5)}</td>
+                                <td class=text-dark>${createDateTime(dt.date_time_in)}</td>
+                                <td class=text-dark>${dt.device_id}</td>
+                                <td class=text-dark>${dt.vehicle_name}</td>
+                                <td class=text-dark>${dt.vehicle_no}</td>
+                                <td class=text-dark>${dateTimeOut}</td>
+                                <td class=text-dark>${dt.device_id_out}</td>
+                                <td class=text-dark>${base.toFixed(2)}</td>
+                                <td class=text-dark>${advance.toFixed(2)}</td>
+                                <td class=text-dark>${cgst.toFixed(2)}</td>
+                                <td class=text-dark>${sgst.toFixed(2)}</td>
+                                <td class=text-dark>${other_charges.toFixed(2)}</td>
+                                <td class=text-dark>${total_amt.toFixed(2)}</td>
+                                <td class=text-dark>${dt.pay_mode == 'U' ? 'UPI' : dt.pay_mode == 'C' ? 'CASH' : ''}</td>
+                                <td class=text-dark>${dt.operator_name}</td>
+                            </tr>
+                        `;
+                        $('#resultDiv table tbody').append(rowHtml);
+                        // Push to allRows for vehicle search
+                        allRows.push({
+                            vehicle_no: dt.vehicle_no.toLowerCase(),
+                            totals: { base, advance, cgst, sgst, other_charges, total_amt, pay_mode: dt.pay_mode },
+                            html: rowHtml
+                        });
+
+                        i++;
+                    });
+                } else {
+                    $('#vehicleSearchSection').hide();
+                    $('#resultDiv table tbody').html('<tr><td colspan="17" class="text-center text-danger">No Data Found</td></tr>');
+                }
+
+                // Update footer totals
+                updateTotals(base_amt_tot, advance_amt_tot, cgst_tot, sgst_tot, other_chrges_tot, tot_amt_tot, tot_upi, tot_cash, pay_mode);
+
+
+                // Vehicle search filter
+                $('#btnVehicleSearch').off('click').on('click', function(){
+                    var searchVal = $('#vehicleSearch').val().trim().toLowerCase();
+                    if(searchVal === ''){
+                        alert('Please enter a vehicle number');
+                        return;
+                    }
+
+                    let filteredRows = allRows.filter(r => r.vehicle_no.includes(searchVal));
+                    $('#resultDiv table tbody').empty();
+
+                    if(filteredRows.length === 0){
+                        $('#resultDiv table tbody').html('<tr><td colspan="16" class="text-center text-danger">No Data Found</td></tr>');
+                        updateTotals(0,0,0,0,0,0,0,0, pay_mode); // totals = 0
+                    } else {
+                        let base_tot = 0, advance_tot = 0, cgst_tot = 0, sgst_tot = 0, other_tot = 0, total_amt_tot = 0;
+                        let cash_tot = 0, upi_tot = 0;
+                        filteredRows.forEach((r,i)=>{
+                            $('#resultDiv table tbody').append(r.html);
+                            base_tot += r.totals.base;
+                            advance_tot += r.totals.advance;
+                            cgst_tot += r.totals.cgst;
+                            sgst_tot += r.totals.sgst;
+                            other_tot += r.totals.other_charges;
+                            total_amt_tot += r.totals.total_amt;
+
+                            if(r.totals.pay_mode == 'C') cash_tot += r.totals.total_amt;
+                            if(r.totals.pay_mode == 'U') upi_tot += r.totals.total_amt;
+                        });
+                        updateTotals(base_tot, advance_tot, cgst_tot, sgst_tot, other_tot, total_amt_tot, upi_tot, cash_tot, pay_mode);
+                    }
+                });
+
+    //                 $('#base_amt').text(base_amt_tot.toFixed(2));
+    //                 $('#advance_amt').text(advance_amt_tot.toFixed(2));
+    //                 $('#cgst').text(cgst_tot.toFixed(2));
+    //                 $('#sgst').text(sgst_tot.toFixed(2));
+    //                 $('#other_chrges').text(other_chrges_tot.toFixed(2));
+    //                 // $('#paid_amt').text(paid_amt_tot.toFixed(2));
+    //                 $('#tot_amt').text(tot_amt_tot.toFixed(2)).show();
+
+
+    // if(pay_mode == 'A'){
+    //     $('#tot_upi').parent().show();
+    //     $('#tot_cash').parent().show();
+    //     $('#tot_upi').text(tot_upi.toFixed(2));
+    //     $('#tot_cash').text(tot_cash.toFixed(2));
+    // } else if(pay_mode == 'U'){
+    //     $('#tot_upi').parent().show();
+    //     $('#tot_cash').parent().hide();
+    //     $('#tot_upi').text(tot_upi.toFixed(2));
+    //     $('#tot_cash').text('');
+    // } else if(pay_mode == 'C'){
+    //     $('#tot_upi').parent().hide();
+    //     $('#tot_cash').parent().show();
+    //     $('#tot_upi').text('');
+    //     $('#tot_cash').text(tot_cash.toFixed(2));
+    // }
+            },
+            complete: function () {
+                $(".preloader").fadeOut();
+            }
+        });
+    }
+});
+
+// Function to update footer totals
+function updateTotals(base, advance, cgst, sgst, other, total_amt, tot_upi, tot_cash, pay_mode){
+    $('#base_amt').text(base.toFixed(2));
+    $('#advance_amt').text(advance.toFixed(2));
+    $('#cgst').text(cgst.toFixed(2));
+    $('#sgst').text(sgst.toFixed(2));
+    $('#other_chrges').text(other.toFixed(2));
+    $('#tot_amt').text(total_amt.toFixed(2));
+
+    if(pay_mode == 'A'){
+        $('#tot_upi').parent().show();
+        $('#tot_cash').parent().show();
+        $('#tot_upi').text(tot_upi.toFixed(2));
+        $('#tot_cash').text(tot_cash.toFixed(2));
+    } else if(pay_mode == 'U'){
+        $('#tot_upi').parent().show();
+        $('#tot_cash').parent().hide();
+        $('#tot_upi').text(tot_upi.toFixed(2));
+        $('#tot_cash').text('0.00');
+    } else if(pay_mode == 'C'){
+        $('#tot_upi').parent().hide();
+        $('#tot_cash').parent().show();
+        $('#tot_upi').text('0.00');
+        $('#tot_cash').text(tot_cash.toFixed(2));
+    }
+}
+
+    </script> -->
+
+
+<script>
+    window.addEventListener('load', function () {
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+        script.onload = function () {
+            $('#custId').select2({
+                placeholder: "Select Location Name",
+                allowClear: true,
+                width: '100%'
+            });
+            $('#pay_mode').select2({
+                placeholder: "Select Pay Mode",
+                allowClear: true,
+                width: '100%',
+                minimumResultsForSearch: Infinity // Hides search box for small dropdowns
+            });
+            $('#operator_id').select2({
+                placeholder: "Select Operator Name",
+                allowClear: true,
+                width: '100%'
+            });
+        };
+        document.body.appendChild(script);
+    });
+</script>
+
+<script>
+    let table; // Global reference for dataTable
+
+    // Clear the table when location changes
+    $('#custId').on('change', function () {
+        if (table) {
+            table.clear().draw();
+        }
+        $('#resultDiv').hide();
+    });
+
+    $('#btnVehicleReset').on('click', function () {
+        $('#vehicleSearch').val('');
+        // $('#resultDiv table tbody tr').show();
+        table.ajax.reload();
+    });
+
+    // 1️⃣ Clear vehicle search and totals when location changes
+    $('#custId').on('change', function () {
+        $('#vehicleSearch').val('');               // Clear vehicle search input
+        $('#resultDiv table tbody tr').empty();     // Show all rows again
+        $('#vehicleSearchSection').hide();         // Hide vehicle search section until new search
+        $('#base_amt, #advance_amt, #cgst, #sgst, #other_chrges, #tot_amt, #tot_upi, #tot_cash').text('0.00'); // Reset totals
+    });
+
+
+    $('#btnSubmit').on('click', function () {
+        var frm_dt = $('#frm_dt').val();
+        var to_dt = $('#to_dt').val();
+        var custId = $('#custId').val();
+        var pay_mode = $('#pay_mode').val();
+        var operator_id = "A"; // Default to All Operators since dropdown is hidden
+        var custName = $("#custId option:selected").text();
+        var vehicle_no = $('#vehicleSearch').val();
+
+        if (frm_dt !== '' && to_dt !== '' && custId !== '' && pay_mode !== '') {
+
+            if (table) {
+                table.destroy();     // destroy previous instance
+                $('#cust-datatable tbody').empty();
+            }
+
+            $('#resultDiv').show();
+            $('#vehicleSearchSection').hide();
+            $('#resultDiv table tbody').empty();
+            $('#searchCred').html(`<b>Detail Report of ${custName} from ${createDate(frm_dt)} to ${createDate(to_dt)}</b>`);
+
+            table = $('#cust-datatable').DataTable({
+                processing: true,
+                serverSide: true,
+                searching: false,
+                lengthChange: true,
+                pageLength: 50,
+
+                ajax: {
+                    url: "/report/get_details_report_new",
+                    type: "POST",
+                    data: function (d) {
+                        d.frm_dt = $('#frm_dt').val();
+                        d.to_dt = $('#to_dt').val();
+                        d.custId = $('#custId').val();
+                        d.pay_mode = $('#pay_mode').val();
+                        d.operator_id = $('#operator_id').val();
+
+                        d.vehicle_no = $('#vehicleSearch').val();
+                    },
+                    // dataType: "json",
+                    beforeSend: function () {
+                        $('#pageLoader').fadeIn();
+                    },
+                    complete: function () {
+                        $('#pageLoader').fadeOut();
+                    }
+                },
+                drawCallback: function (settings) {
+                    console.log("DRAW CALLBACK FIRED"); // 👈 DEBUG
+                    $('#vehicleSearchSection').show(); // Always show once initialized so users can reset bad searches
+                },
+                columns: [
+                    {
+                        data: null,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }
+                    },
+                    { data: "receipt_no" },
+                    {
+                        data: "receipt_no",
+                        render: d => d ? String(d).slice(-5) : ''
+                    },
+                    { data: "date_time_in" },
+                    { data: "device_id" },
+                    { data: "vehicle_name" },
+                    { data: "vehicle_no" },
+                    { data: "date_time_out" },
+                    { data: "device_id_out" },
+                    {
+                        data: "base_amt",
+                        render: d => Number(d).toFixed(2)
+                    },
+                    {
+                        data: "advance_amt",
+                        render: d => Number(d).toFixed(2)
+                    },
+                    {
+                        data: "cgst",
+                        render: d => Number(d).toFixed(2)
+                    },
+                    {
+                        data: "sgst",
+                        render: d => Number(d).toFixed(2)
+                    },
+                    {
+                        data: "paid_amt",
+                        render: d => Number(d).toFixed(2)
+                    },
+                    {
+                        data: null,
+                        render: d => Number(d.paid_amt).toFixed(2)
+                    },
+                    {
+                        data: "pay_mode",
+                        render: d => d === 'U' ? 'UPI' : d === 'C' ? 'CASH' : ''
+                    },
+                    { data: "operator_name" }
+                ],
+                footerCallback: function (row, data, start, end, display) {
+                    var api = this.api();
+
+                    var json = api.ajax.json();
+
+                    if (json && json.totals) {
+                        $('#base_amt').text(Number(json.totals.base_amt).toFixed(2));
+                        $('#advance_amt').text(Number(json.totals.advance_amt).toFixed(2));
+                        $('#cgst').text(Number(json.totals.cgst).toFixed(2));
+                        $('#sgst').text(Number(json.totals.sgst).toFixed(2));
+                        $('#paid_amt').text(Number(json.totals.paid_amt).toFixed(2));
+                        // $('#other_chrges').text(Number(json.totals.other_charges).toFixed(2));
+                        $('#tot_amt').text(Number(json.totals.tot_amt).toFixed(2));
+
+                        if (pay_mode == 'A') {
+                            $('#tot_upi').parent().show();
+                            $('#tot_cash').parent().show();
+                            $('#tot_upi').text(Number(json.grandTotals.tot_upi).toFixed(2));
+                            $('#tot_cash').text(Number(json.grandTotals.tot_cash).toFixed(2));
+                        } else if (pay_mode == 'U') {
+                            $('#tot_upi').parent().show();
+                            $('#tot_cash').parent().hide();
+                            $('#tot_upi').text(Number(json.grandTotals.tot_upi).toFixed(2));
+                            $('#tot_cash').text('0.00');
+                        } else if (pay_mode == 'C') {
+                            $('#tot_upi').parent().hide();
+                            $('#tot_cash').parent().show();
+                            $('#tot_upi').text('0.00');
+                            $('#tot_cash').text(Number(json.grandTotals.tot_cash).toFixed(2));
+                        }
+                    }
+                }
+            });
+            $('#resultDiv').show();
+        }
+    });
+
+    /* ADD LOADER ON PAGINATION */
+    $('#cust-datatable').on('page.dt', function () {
+        $('#pageLoader').fadeIn();
+    });
+
+    $('#cust-datatable').on('draw.dt', function () {
+        $('#pageLoader').fadeOut();
+    });
+</script>
+
+<script>
+    $('#btnVehicleSearch').on('click', function () {
+        if (!$('#vehicleSearch').val().trim()) {
+            alert("Please enter vehicle number");
+            return;
+        }
+        table.ajax.reload();   // ✅ triggers server-side search
+    });
+</script>
+
+<!-- <script>
+    function printDiv() {
+
+        var divToPrint = document.getElementById('resultDiv');
+
+        var WindowObject = window.open('', 'Print-Window');
+        WindowObject.document.open();
+        WindowObject.document.writeln('<!DOCTYPE html>');
+        WindowObject.document.writeln('<html><head><title></title><style type="text/css">');
+
+
+        WindowObject.document.writeln('@media print { .center { text-align: center;}' +
+            '                                         .inline { display: inline; }' +
+            '                                         .underline { text-decoration: underline; }' +
+            '                                         .left { margin-left: 315px;} ' +
+            '                                         .right { margin-right: 375px; display: inline; }' +
+            '                                          table { border-collapse: collapse; font-size: 10px;}' +
+            '                                          th, td { border: 1px solid black; border-collapse: collapse; padding: 6px; font-family: Arial, Helvetica, sans-serif;}' +
+            '                                           th, td {text-align: left;}' +
+            '.table .thead-dark th {color: #fff; background-color: #1c2d41;}'+
+            ' tfoot{font-weight: 700; color: #000;}'+
+            ' .printBtnDate{display: none;}'+
+            '                                         .border { border: 1px solid black; } ' +
+            '                                         .bottom { bottom: 5px; width: 100%; position: fixed ' +
+            '                                       ' +
+            '                                   } } </style>');
+        WindowObject.document.writeln('</head><body onload="window.print()">');
+        WindowObject.document.writeln(divToPrint.innerHTML);
+        WindowObject.document.writeln('</body></html>');
+        WindowObject.document.close();
+        // setTimeout(function () {
+        //     WindowObject.close();
+        // }, 10);
+
+    }
+</script> -->
+
+<!-- <script>
+  $('#custId').on('change', function () {
+    var custId = $(this).val();
+
+    if (custId) {
+        $.ajax({
+            method: "POST",
+            url: "/report/get_operators_by_location",
+            data: { custId },
+            dataType: "json",
+            beforeSend: function () {
+                $("#operator_id").html('<option value="">Loading...</option>');
+            },
+            success: function (res) {
+    if (res.msg && res.msg.suc > 0 && res.msg.msg.length > 0) {
+        let options = '<option value="">Select Operator Name</option>';
+        options += '<option value="A">All Operators</option>'; // keep All Operators
+        res.msg.msg.forEach(op => {
+            options += `<option value="${op.operator_id}">${op.operator_name}</option>`;
+        });
+        $("#operator_id").html(options);
+         $("#operator_id").val("A");
+    } else {
+        $("#operator_id").html('<option value="">No Operator Found</option>');
+    }
+},
+            error: function () {
+                $("#operator_id").html('<option value="">Error loading operators</option>');
+            }
+        });
+    } else {
+        $("#operator_id").html('<option value="">Select Operator Name</option>');
+    }
+});
+
+</script> -->
+
+<script>
+    if (user.userData.user_type == 'S') {
+
+        // Hide From Date, To Date, Pay Mode, Operator
+        $('#filtersRow').find('.col-md-3').hide();
+        $('#operatorRow').find('.col-md-4').hide();
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Get user_type from server-side
+
+        // if(user_type == 'S') {
+
+        //     // Hide From Date, To Date, Pay Mode, Operator
+        //     $('#filtersRow').find('.col-md-3').hide();
+        //     $('#operatorRow').find('.col-md-4').hide();
+        // }
+
+        // Operator load on Location change
+        $('#custId').on('change', function () {
+            var custId = $(this).val();
+            if (custId) {
+                $.ajax({
+                    method: "POST",
+                    url: "/report/get_operators_by_location",
+                    contentType: "application/json",
+                    // data: { custId },
+                    data: JSON.stringify({ custId }),
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#operator_id").html('<option value="">Loading...</option>');
+                    },
+                    success: function (res) {
+                        console.log(res); // 👈 check actual response in browser console
+                        if (res.msg && res.msg.suc > 0 && res.msg.msg && res.msg.msg.length > 0) {
+                            //  if (res.suc > 0 && res.msg.msg.length > 0) {
+                            let options = '<option value="">Select Operator Name</option>';
+                            options += '<option value="A">All Operators</option>';
+                            res.msg.msg.forEach(op => {
+                                options += `<option value="${op.operator_id}">${op.operator_name}</option>`;
+                            });
+                            $("#operator_id").html(options).val("A");
+                        } else {
+                            $("#operator_id").html('<option value="">No Operator Found</option>');
+                        }
+                    },
+                    error: function () {
+                        $("#operator_id").html('<option value="">Error loading operators</option>');
+                    }
+                });
+            } else {
+                $("#operator_id").html('<option value="">Select Operator Name</option>');
+            }
+        });
+    });
+</script>
+
+<script>
+    $("#btnExcel").on("click", function () {
+
+        var frm_dt = $("#frm_dt").val();
+        var to_dt = $("#to_dt").val();
+        var pay_mode = $("#pay_mode").val();
+        var custId = $("#custId").val();
+        var operator_id = "A";
+
+        if (!frm_dt || !to_dt || !pay_mode || !custId) {
+            alert("Please select all filters before downloading!");
+            return;
+        }
+
+        $.ajax({
+            url: "/report/get_details_report_excel",
+            type: "POST",
+            data: { frm_dt, to_dt, pay_mode, custId, operator_id },
+            beforeSend: function () {
+                $(".preloader").fadeIn();
+            },
+            success: function (res) {
+                if (res.suc === 1) {
+                    generateExcel(res.data);
+                } else {
+                    alert("No Data Found!");
+                }
+            },
+            complete: function () {
+                $(".preloader").fadeOut();
+            }
+        });
+    });
+
+    function generateExcel(data) {
+
+        let rows = [];
+
+        let total_base = 0, total_adv = 0, total_cgst = 0, total_sgst = 0, total_paid_amt = 0,
+            total_paid = 0, total_cash = 0, total_upi = 0;
+
+        // HEADER
+        rows.push([
+            "#", "Receipt No", "Receipt No", "Date Time In", "Machine In",
+            "Vehicle Type", "Vehicle No", "Date Time Out",
+            "Machine Out", "Base Amt", "Advance Amt",
+            "CGST", "SGST", "Paid Amt", "Net Amt", "Mode", "Operator Name"
+        ]);
+
+        // DETAILS ROWS
+        data.forEach((dt, i) => {
+
+            let netAmt = Number(dt.paid_amt);
+
+            rows.push([
+                i + 1,
+                dt.receipt_no,
+                dt.receipt_no ? String(dt.receipt_no).slice(-5) : "",
+                dt.date_time_in,
+                dt.device_id,
+                dt.vehicle_name,
+                dt.vehicle_no,
+                dt.date_time_out,
+                dt.device_id_out,
+                dt.base_amt,
+                dt.advance_amt,
+                dt.cgst,
+                dt.sgst,
+                dt.paid_amt,
+                netAmt,
+                dt.pay_mode === "U" ? "UPI" : dt.pay_mode === "C" ? "CASH" : "",
+                dt.operator_name
+            ]);
+
+            total_base += Number(dt.base_amt);
+            total_adv += Number(dt.advance_amt);
+            total_cgst += Number(dt.cgst);
+            total_sgst += Number(dt.sgst);
+            total_paid_amt += Number(dt.paid_amt);
+            total_paid += Number(netAmt);
+
+            if (dt.pay_mode === "C") total_cash += Number(netAmt);
+            if (dt.pay_mode === "U") total_upi += Number(netAmt);
+        });
+
+        // BLANK ROW
+        rows.push([]);
+
+        // EXACT TOTAL ROW LIKE YOUR SCREENSHOT
+        rows.push([
+            "Total",     // Column A
+            "", "", "", "", "", "", "", "",   // B–I empty
+            total_base,   // Base Amt (column J)
+            total_adv,    // Advance Amt (column K)
+            total_cgst,   // CGST (column L)
+            total_sgst,   // SGST (column M)
+            total_paid_amt,   // Paid Amt (column N)
+            total_paid,   // Net Amt (column O)
+            "",
+            ""
+        ]);
+
+        // NEXT ROW: TOTAL UPI
+        rows.push([
+            "Total UPI:", total_upi
+        ]);
+
+        // NEXT ROW: TOTAL CASH
+        rows.push([
+            "Total Cash:", total_cash
+        ]);
+
+        // GENERATE
+        let workbook = XLSX.utils.book_new();
+        let worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+        // FORCE COLUMN B (Receipt No) AS TEXT
+        let totalRows = rows.length;
+        for (let i = 2; i <= totalRows; i++) {
+            let cellRef = "B" + i;   // B2, B3, B4...
+            if (worksheet[cellRef]) {
+                worksheet[cellRef].z = "@"; // force text format
+                worksheet[cellRef].t = "s"; // mark as text type
+            }
+        }
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Detail Report");
+
+        XLSX.writeFile(workbook, "Detail_Report_All.xlsx");
+    }
+</script>
+
+<!-- <script>
+function printDiv() {
+    var divToPrint = document.getElementById('resultDiv');
+
+    // Temporarily remove scroll styling
+    var tableWrapper = divToPrint.querySelector('.table-responsive');
+    var originalStyle = tableWrapper.getAttribute('style');
+    tableWrapper.style.maxHeight = 'none';
+    tableWrapper.style.overflowY = 'visible';
+
+    var WindowObject = window.open('', 'Print-Window');
+    WindowObject.document.open();
+    WindowObject.document.writeln('<!DOCTYPE html>');
+    WindowObject.document.writeln('<html><head><title>Print</title><style type="text/css">');
+
+    WindowObject.document.writeln(`
+        @media print {
+            table { border-collapse: collapse; font-size: 10px; width: 100%; }
+            th, td { border: 1px solid black; padding: 6px; font-family: Arial, Helvetica, sans-serif; text-align: left; }
+            .table .thead-dark th { color: #fff; background-color: #1c2d41; }
+            tfoot { font-weight: 700; color: #000; }
+
+             /* Hide elements with no-print or no-prints class */
+            .no-print, .no-prints { display: none !important; }
+        }
+    `);
+
+    WindowObject.document.writeln('</style></head><body onload="window.print()">');
+    WindowObject.document.writeln(divToPrint.innerHTML);
+    WindowObject.document.writeln('</body></html>');
+    WindowObject.document.close();
+
+     setTimeout(function () {
+            WindowObject.close();
+        }, 10);
+
+    // Restore original styling
+    tableWrapper.setAttribute('style', originalStyle);
+}
+</script> -->
+
+<script>
+    function printDiv() {
+        var frm_dt = $("#frm_dt").val();
+        var to_dt = $("#to_dt").val();
+        var pay_mode = $("#pay_mode").val();
+        var custId = $("#custId").val();
+        var operator_id = "A";
+
+        if (!frm_dt || !to_dt || !pay_mode || !custId) {
+            alert("Please select all filters before printing!");
+            return;
+        }
+
+        $.ajax({
+            url: "/report/get_details_report_excel",
+            type: "POST",
+            data: { frm_dt, to_dt, pay_mode, custId, operator_id },
+            beforeSend: function () {
+                $("#pageLoader").fadeIn();
+            },
+            success: function (res) {
+                if (res.suc === 1) {
+                    generatePrintWindow(res.data);
+                } else {
+                    alert("No Data Found!");
+                }
+            },
+            complete: function () {
+                $("#pageLoader").fadeOut();
+            }
+        });
+    }
+
+    function generatePrintWindow(data) {
+        let total_base = 0, total_adv = 0, total_cgst = 0, total_sgst = 0, total_paid = 0;
+        let total_cash = 0, total_upi = 0;
+
+        let rowsHTML = "";
+        data.forEach((dt, i) => {
+            let netAmt = Number(dt.paid_amt);
+            total_base += Number(dt.base_amt);
+            total_adv += Number(dt.advance_amt);
+            total_cgst += Number(dt.cgst);
+            total_sgst += Number(dt.sgst);
+            total_paid += Number(netAmt);
+            if (dt.pay_mode === "C") total_cash += Number(netAmt);
+            if (dt.pay_mode === "U") total_upi += Number(netAmt);
+
+            rowsHTML += `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${dt.receipt_no}</td>
+                    <td>${dt.receipt_no ? String(dt.receipt_no).slice(-5) : ""}</td>
+                    <td>${dt.date_time_in}</td>
+                    <td>${dt.device_id}</td>
+                    <td>${dt.vehicle_name}</td>
+                    <td>${dt.vehicle_no}</td>
+                    <td>${dt.date_time_out}</td>
+                    <td>${dt.device_id_out}</td>
+                    <td>${Number(dt.base_amt).toFixed(2)}</td>
+                    <td>${Number(dt.advance_amt).toFixed(2)}</td>
+                    <td>${Number(dt.cgst).toFixed(2)}</td>
+                    <td>${Number(dt.sgst).toFixed(2)}</td>
+                    <td>${Number(dt.paid_amt).toFixed(2)}</td>
+                    <td>${netAmt.toFixed(2)}</td>
+                    <td>${dt.pay_mode === "U" ? "UPI" : dt.pay_mode === "C" ? "CASH" : ""}</td>
+                    <td>${dt.operator_name}</td>
+                </tr>
+            `;
+        });
+
+        let tableHTML = `
+            <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse; font-size: 10px; text-align: left; font-family: Arial, sans-serif;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th>#</th><th>Receipt No.</th><th>Receipt No(short)</th><th>Date Time In</th><th>Machine In</th>
+                        <th>Vehicle Type</th><th>Vehicle No.</th><th>Date Time Out</th><th>Machine Out</th>
+                        <th>Base Amt</th><th>Advance Amt</th><th>CGST</th><th>SGST</th><th>Paid Amt</th><th>Net Amt</th>
+                        <th>Mode</th><th>Operator Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rowsHTML}
+                </tbody>
+                <tfoot>
+                    <tr style="font-weight: bold; background-color: #f2f2f2;">
+                        <td colspan="9" style="text-align: right;">Total</td>
+                        <td>${total_base.toFixed(2)}</td>
+                        <td>${total_adv.toFixed(2)}</td>
+                        <td>${total_cgst.toFixed(2)}</td>
+                        <td>${total_sgst.toFixed(2)}</td>
+                        <td>${total_paid.toFixed(2)}</td>
+                        <td>${total_paid.toFixed(2)}</td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr style="font-weight: bold;">
+                        <td colspan="14" style="text-align: right;">Grand Total UPI</td>
+                        <td colspan="3">${total_upi.toFixed(2)}</td>
+                    </tr>
+                    <tr style="font-weight: bold;">
+                        <td colspan="14" style="text-align: right;">Grand Total Cash</td>
+                        <td colspan="3">${total_cash.toFixed(2)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        `;
+
+        var WindowObject = window.open('', 'Print-Window');
+        WindowObject.document.open();
+        WindowObject.document.writeln('<!DOCTYPE html><html><head><title>Print Report</title>');
+        WindowObject.document.writeln('<style>@media print { @page { size: landscape; margin: 1cm; } }</style>');
+        WindowObject.document.writeln('</head><body onload="window.print(); setTimeout(function(){ window.close(); }, 500);">');
+
+        let searchCred = document.getElementById('searchCred') ? document.getElementById('searchCred').innerText : 'Detail Report';
+        WindowObject.document.writeln('<h3 style="text-align:center; font-family: Arial, sans-serif;">' + searchCred + '</h3>');
+        WindowObject.document.writeln(tableHTML);
+        WindowObject.document.writeln('</body></html>');
+        WindowObject.document.close();
+    }
+</script>
+
+<!-- Floating Scroll Arrows -->
+<div class="floating-arrows no-print" id="floatingArrowsContainer">
+    <button id="btn-scroll-up" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <button id="btn-scroll-down" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})"
+        title="Go to bottom">
+        <i class="fas fa-arrow-down"></i>
+    </button>
+</div>
+
+<script>
+    window.addEventListener('scroll', function () {
+        var upBtn = document.getElementById('btn-scroll-up');
+        var downBtn = document.getElementById('btn-scroll-down');
+        var arrowContainer = document.getElementById('floatingArrowsContainer');
+        var resultDiv = document.getElementById('resultDiv');
+
+        // Only show arrows if the data table is visible and page is scrollable
+        if (resultDiv && resultDiv.style.display !== 'none' && document.documentElement.scrollHeight > window.innerHeight + 100) {
+            arrowContainer.style.display = 'flex';
+
+            var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            var bottomPosition = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+            if (scrollPosition <= 50) {
+                // At top
+                upBtn.style.display = 'none';
+                downBtn.style.display = 'flex';
+            } else if (scrollPosition >= bottomPosition - 50) {
+                // At bottom
+                upBtn.style.display = 'flex';
+                downBtn.style.display = 'none';
+            } else {
+                // In middle
+                upBtn.style.display = 'flex';
+                downBtn.style.display = 'flex';
+            }
+        } else {
+            arrowContainer.style.display = 'none';
+        }
+    });
+
+    // Trigger once on load to set initial state
+    window.dispatchEvent(new Event('scroll'));
+</script>

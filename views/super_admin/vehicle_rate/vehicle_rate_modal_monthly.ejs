@@ -1,0 +1,169 @@
+<!-- Modal body -->
+<div class="modal-body">
+    <form action="/superadmin/vehicle_rate_save_monthly" method="post" id="myForm_monthly">
+      <div class="row">
+        <div class="form-group col-md-3">
+          <label for="cust_name_monthly" class="text-dark">Location Name:</label>
+          <select name="cust_name" class="form-control" id="cust_name_monthly">
+            <option value="">Select Location Name</option>
+          </select>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="veh_id_monthly" style="color: black;">Vehicle Name:</label>
+          <select name="veh_id" class="form-control" id="veh_id_monthly">
+            <option value="">Select Vehicle Name</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="no_of_days" class="text-dark">Number of days:</label>
+            <input type="number" min="0" class="form-control" id="no_of_days" name="no_of_days" placeholder="e.g. 0" required>
+          </div>
+        </div>
+     
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="park_fee" class="text-dark">Parking Fee:</label>
+            <input type="text" class="form-control" id="park_fee" name="park_fee"
+              placeholder="Enter Parking Fee....">
+          </div>
+        </div>
+
+      </div>
+      <input type="hidden" name="id" value="0">
+      <!-- <div class="row mt-3">
+        <div class="form-group col-md-3">
+          <input type="submit" value="SUBMIT" class="btn btn-primary"
+            style="border-radius: 6px;" />
+        </div>
+      </div> -->
+      <div class="text-center mt-3">
+  <input type="submit" value="Save Rate Configuration"  id="submitBtn" class="btn btn-primary" style="background: linear-gradient(45deg, #3a8b64, #367e61); border-radius: 6px;"/>
+</div>
+    </form>
+  </div>
+
+  <script>
+  var cust_list = <%- JSON.stringify(customer) %>;
+  var rate_type_modal = [{ id: 'D', name: 'Hourly', key: 'H' }, { id: 'F', name: 'Fixed', key: 'F' }];
+
+  function changeProcess_2(cust_id) {
+    var cust_dtls = cust_list.filter(dt => dt.customer_id == cust_id);
+    var filter_rate = rate_type_modal.filter(dt => dt.id == cust_dtls[0].dev_mod);
+    $('#rate_name').empty();
+
+    if (cust_dtls.length > 0) {
+      $('#rate_name').append($('<option>', { value: '', text: 'Select Rate Type' }));
+      $.each(rate_type_modal, function (i, dt) {
+        var selected = false;
+        if (cust_dtls[0].dev_mod == dt.id) selected = true;
+        $('#rate_name').append($('<option>', { value: dt.id, text: dt.name, selected: selected }));
+      });
+      $('#rate_type_modal').val(filter_rate.length > 0 ? filter_rate[0].key : cust_dtls[0].dev_mod);
+    } else {
+      alert('Please select dev mode in customer first');
+    }
+
+    // Fetch vehicles for the selected location
+      $.ajax({
+      type: "POST",
+      url: "/superadmin/vehicle_dt",
+      data: { cust_id: cust_id },
+      success: function (response) {
+        $('#veh_id_monthly').empty();
+        $('#veh_id_monthly').append(`<option value="">Select Vehicle Name</option>`);
+
+        response.SUCCESS.veh_id.msg.forEach(function (resData) {
+          $('#veh_id_monthly').append($('<option>', { value: resData.vehicle_id, text: resData.vehicle_name }));
+        });
+        if ($('#veh_id_monthly').hasClass('select2-hidden-accessible')) {
+          $('#veh_id_monthly').trigger('change.select2');
+        }
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
+  }
+
+  $(document).ready(function () {
+    // Superadmin: fetch vehicles when dropdown changes
+    $('#cust_name_monthly').on('change', function () {
+      var cust_id = $(this).val();
+      changeProcess_2(cust_id);
+    });
+
+    // Admin: fetch vehicles automatically based on user.userData.customer_id
+    <% if (user.userData.user_type === 'A') { %>
+      var admin_cust_id = '<%= user.userData.customer_id %>';
+
+      // Remove location dropdown for admin and add hidden input
+      $('#cust_name_monthly').replaceWith(
+        `<input type="hidden" name="cust_name" value="${admin_cust_id}">
+         <input type="text" class="form-control" value="<%= user.userData.customer_name %>" readonly>`
+      );
+
+      changeProcess_2(admin_cust_id);
+    <% } else { %>
+      // Superadmin: populate location dropdown from server
+      $.ajax({
+        type: "POST",
+        url: "/superadmin/cust_list_ajax",
+        data: {},
+        success: function (response) {
+          $('#cust_name_monthly').empty();
+          $('#cust_name_monthly').append(`<option value="">Select Location Name</option>`);
+          response.msg.forEach(function (resData) {
+            $('#cust_name_monthly').append(
+              $('<option>', { value: resData.customer_id, text: resData.customer_name })
+            );
+          });
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
+    <% } %>
+  });
+</script>
+
+ <script>
+  $(document).ready(function () {
+    // Fetch all customers when page loads
+      $.ajax({
+      type: "POST",
+      url: "/superadmin/cust_list_ajax",
+      data: {}, // no seller id now
+      success: function (response) {
+        $('#cust_name_monthly').empty();
+        $('#cust_name_monthly').append(`<option value="">Select Location Name</option>`);
+
+        response.msg.forEach(function (resData) {
+          $('#cust_name_monthly').append(
+            $('<option>', { value: resData.customer_id, text: resData.customer_name })
+          );
+        });
+        if ($('#cust_name_monthly').hasClass('select2-hidden-accessible')) {
+          $('#cust_name_monthly').trigger('change.select2');
+        }
+      },
+      error: function (error) {
+        console.log(error);
+      },
+    });
+  });
+</script>
+
+<style>
+  .modal-body .btn-primary {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    border: none;
+    padding: 0.7rem 2rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: 0.3s ease;
+    display: block;
+    margin: 1rem auto 0;
+}
+</style>

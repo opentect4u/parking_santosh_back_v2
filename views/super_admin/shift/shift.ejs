@@ -1,0 +1,498 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="card shadow-lg border-0 custom-card" style="border-radius: 20px; background-color: #ffffff;">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center p-4 border-bottom mb-3"
+          style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">
+            <i data-feather="corner-up-right" class="feather-icon text-dark me-2"></i><b>Manage Shift</b>
+          </h4>
+          <button type="button" class="btn btn-gradient px-4" id="myBtn" style="border-radius: 6px; height: 42px;">
+            <i class="fa fa-plus me-1"></i> Add Shift
+          </button>
+        </div>
+
+        <% if(user.userData.user_type=='S' ){ %>
+          <form action="/superadmin/shift" method="post" class="p-4 mb-4 mt-3 mx-4"
+            style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+            <div class="row g-3 align-items-end justify-content-center">
+              <div class="col-md-6">
+                <label for="cust_name" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                    class="fas fa-map-marker-alt"></i> Location Name</label>
+                <select name="cust_name" class="form-control" id="cust_name" required>
+                  <option value="">Select Location Name</option>
+                  <% customer.forEach(dt=> {
+                    var _selected = ''
+                    if(selected.cust_id == dt.customer_id) _selected = 'selected' %>
+                    <option value="<%= dt.customer_id %>" <%=_selected %>><%= dt.customer_name %>
+                    </option>
+                    <% })%>
+                </select>
+              </div>
+              <div class="col-md-4 text-center">
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-gradient flex-grow-1" id="submitBtn"
+                    style="height: 45px; border-radius: 6px;">
+                    <i class="fa fa-search me-2"></i> Fetch Details
+                  </button>
+                  <a href="/superadmin/shift" class="btn shadow-sm"
+                    style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;"
+                    title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </form>
+          <% } %>
+
+            <% if((user.userData.user_type=="S" && selected.cust_id> 0) || user.userData.user_type == "A"){ %>
+              <div class="p-4 pt-0">
+                <div class="table-responsive">
+                  <table id="dataTable" class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+                    <thead style="background-color: #065f46; color: white;">
+                      <tr>
+                        <th class="text-center text-white" style="border-top-left-radius: 10px; padding: 15px;">Sl No.
+                        </th>
+                        <th class="text-center text-white" style="padding: 15px;">Shift Name</th>
+                        <th class="text-center text-white" style="padding: 15px;">From Time</th>
+                        <th class="text-center text-white" style="padding: 15px;">To Time</th>
+                        <th class="text-center text-white" style="border-top-right-radius: 10px; padding: 15px;">Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody style="background-color: #ffffff;">
+                      <% if(data.length> 0){
+                        var i = 1
+                        data.forEach(dt => { %>
+                        <tr>
+                          <td class="text-center text-dark fw-bold">
+                            <%= i %>
+                          </td>
+                          <td class="text-center text-dark">
+                            <%= dt.shift_name %>
+                          </td>
+                          <td class="text-center text-dark">
+                            <%= dt.f_time %>
+                          </td>
+                          <td class="text-center text-dark">
+                            <%= dt.t_time %>
+                          </td>
+                          <td class="text-center text-dark">
+                            <a href='/superadmin/edit_shift?customer_id=<%= selected.cust_id %>&id=<%= dt.shift_id %>'
+                              class='btn btn-sm'
+                              style='background-color: #e6f4ea; color: #065f46; border: 1px solid #065f46; border-radius: 6px; padding: 6px 10px; transition: all 0.3s ease;'
+                              onmouseover="this.style.backgroundColor='#065f46'; this.style.color='#fff';"
+                              onmouseout="this.style.backgroundColor='#e6f4ea'; this.style.color='#065f46';">
+                              <i class='fa fa-edit'></i>
+                            </a>
+                          </td>
+                        </tr>
+                        <% i++; }) }else{ %>
+                          <tr>
+                            <td class="text-center text-danger py-4" colspan="5">No data found</td>
+                          </tr>
+                          <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="simple-footer mt-4">
+  <b>Santosh Parking © <span id="footerYear"></b></span>
+</footer>
+
+<!-- Add Shift Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+    <div class="modal-content rounded-4 shadow-lg border-0 glass-bg">
+      <!-- Modal Header -->
+      <div class="modal-header border-0 pb-3 pt-3 px-4"
+        style="background-color: #065f46; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+        <h3 class="modal-title fw-bold text-white w-100 text-center">
+          <i class="fas fa-plus-circle me-2"></i>Add Shift
+        </h3>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body p-4"
+        style="background-color: #f8f9fa; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+        <form action="/superadmin/save_shift" method="post" id="myForm" class="bg-white p-4 rounded-3 shadow-sm border"
+          style="border-color: #e9ecef !important;">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="cust_id" class="text-dark fw-bold mb-2" style="font-size: 14px;"><i
+                    class="fas fa-map-marker-alt"></i> Location Name</label>
+                <% if(user.userData.user_type==='S' ){ %>
+                  <select name="cust_id" class="form-control" id="cust_id" required>
+                    <option value="">Select Location Name</option>
+                    <% customer.forEach(dt=> { %>
+                      <option value="<%= dt.customer_id %>">
+                        <%= dt.customer_name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                  <% } else { %>
+                    <!-- Auto-select & show location name for others (e.g. A) -->
+                    <% let selectedCust=customer.find(c=> c.customer_id == user.userData.customer_id);
+                      %>
+                      <input type="hidden" name="cust_id" value="<%= user.userData.customer_id %>">
+                      <input type="text" class="form-control readonly-field text-center"
+                        value="<%= selectedCust ? selectedCust.customer_name : '' %>" readonly
+                        style="background-color: #e9ecef; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+                      <% } %>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="shift_name" class="text-dark fw-bold mb-2" style="font-size: 14px;"><i
+                    class="fas fa-clock"></i> Shift Name</label>
+                <input type="text" class="form-control text-center" id="shift_name" name="shift_name"
+                  placeholder="Enter Shift Name" required
+                  style="border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="frm_time" class="text-dark fw-bold mb-2" style="font-size: 14px;"><i
+                    class="fas fa-hourglass-start"></i> From Time</label>
+                <input type="time" name="frm_time" id="frm_time" class="form-control text-center" required
+                  style="border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group mb-3">
+                <label for="to_time" class="text-dark fw-bold mb-2" style="font-size: 14px;"><i
+                    class="fas fa-hourglass-end"></i> To Time</label>
+                <input type="time" name="to_time" id="to_time" class="form-control text-center" required
+                  style="border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <input type="hidden" name="id" value="0">
+            <div class="col-12 text-center">
+              <button type="submit" class="btn text-white px-5"
+                style="background-color: #065f46; border-radius: 6px; height: 45px; border: none; font-weight: 600;"><i
+                  class="fa fa-save me-2"></i> SUBMIT</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // Check if modal was intended to be open (e.g., validation failed)
+    $("#myBtn").click(function () {
+      $("#myModal").modal('show');
+    });
+
+    // Fallback for bootstrap dismiss
+    $(".btn-close").click(function () {
+      $("#myModal").modal('hide');
+    });
+
+    if ($.fn.DataTable.isDataTable('#dataTable')) {
+      $('#dataTable').DataTable().destroy();
+    }
+
+    $('#dataTable').DataTable({
+      "pageLength": 10,
+      "ordering": false,
+      "lengthChange": true,
+      "language": {
+        "search": "_INPUT_",
+        "searchPlaceholder": "Search records..."
+      },
+      "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+        '<"row"<"col-sm-12"tr>>' +
+        '<"row mt-3"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+    });
+  });
+</script>
+
+<script>
+  // Dynamically load Select2 to prevent jQuery errors
+  window.addEventListener('load', function () {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function () {
+      $('#cust_name').select2({
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#cust_id').select2({
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#myModal')
+      });
+    };
+    document.head.appendChild(script);
+  });
+</script>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    padding: 12px 0;
+    margin-left: 0;
+  }
+
+  .modal-lg-custom {
+    max-width: 700px;
+  }
+
+  /* Form Controls */
+  .form-control,
+  .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #065f46 !important;
+    box-shadow: 0 0 6px rgba(6, 95, 70, 0.3) !important;
+    outline: none !important;
+  }
+
+  .readonly-field {
+    background-color: #e9ecef !important;
+    cursor: not-allowed;
+  }
+
+  /* Gradient Button */
+  .btn-gradient {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  }
+
+  .text-gradient {
+    color: #065f46 !important;
+  }
+
+  /* Custom DataTables Pagination Styling */
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0 !important;
+    margin: 0 4px;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button a {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    color: #475569 !important;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button.active a {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 6px -1px rgba(6, 95, 70, 0.2);
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button:hover a {
+    background-color: #f1f5f9;
+    color: #065f46 !important;
+    border-color: #cbd5e1;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button.disabled a {
+    color: #94a3b8 !important;
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    cursor: not-allowed;
+  }
+
+  .dataTables_wrapper .dataTables_info {
+    color: #64748b;
+    font-size: 14px;
+    padding-top: 10px;
+  }
+
+  .dataTables_wrapper .dataTables_length select {
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    padding: 4px 24px 4px 8px;
+    color: #475569;
+  }
+
+  .dataTables_wrapper .dataTables_length select:focus {
+    border-color: #065f46;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.1);
+  }
+
+  .dataTables_wrapper .dataTables_filter input {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    padding: 6px 12px;
+    color: #475569;
+    transition: all 0.2s;
+  }
+
+  .dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #065f46;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.1);
+  }
+
+  /* Custom Select2 Styling */
+  html body .select2-container {
+    width: 100% !important;
+  }
+
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #065f46 transparent transparent transparent !important;
+    border-width: 6px 5px 0 5px !important;
+  }
+
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    margin-top: 4px;
+    background-color: #ffffff !important;
+  }
+
+  .select2-search--dropdown {
+    padding: 10px !important;
+  }
+
+  .select2-search--dropdown .select2-search__field {
+    border: 1px solid #065f46 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    font-size: 14px;
+  }
+
+  .select2-search--dropdown .select2-search__field:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.2) !important;
+  }
+
+  html body .select2-container .select2-results__option {
+    padding: 12px 16px !important;
+    font-weight: 500;
+    color: #6b7280 !important;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+    text-align: center !important;
+  }
+
+  html body .select2-container .select2-results__option:last-child {
+    border-bottom: none;
+  }
+
+  html body .select2-container .select2-results__option--highlighted[aria-selected],
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+
+  html body .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+
+  #cust_name,
+  #cust_id {
+    color: #000 !important;
+  }
+
+  #cust_name option:first-child,
+  #cust_id option:first-child {
+    color: #6c757d;
+  }
+</style>

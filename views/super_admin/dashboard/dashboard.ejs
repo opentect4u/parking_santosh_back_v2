@@ -1,0 +1,1391 @@
+<!-- =======================
+Dashboard Section
+======================= -->
+
+<div class="container-fluid">
+  <!-- <div class="location-banner d-flex justify-content-between align-items-center px-4 py-3 rounded-4 shadow-sm bg-gradient">
+  <h4 class="text-light fw-bold mb-0">🌍 Select Your Location</h4>
+  
+
+<select name="locations" class="dropdown-btn" id="dropdownBtn">
+  <option selected disabled>📍 Choose location...</option>
+  <% data.msg.forEach(dt => { %>
+    <option value="<%= dt.location_id %>">📍 <%= dt.loction %></option>
+  <% }) %>
+</select>
+
+</div> -->
+  <style>
+    /* Dashboard Banner */
+    .custom-banner {
+      background: #25894d;
+      /* dark emerald */
+      border-radius: 16px;
+      padding: 30px;
+      color: #fff;
+      margin-bottom: 40px;
+    }
+
+    .custom-banner .badge-pill {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 16px;
+    }
+
+    .custom-banner h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .custom-banner p {
+      font-size: 15px;
+      color: #d1fae5;
+      margin: 0;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border: 1px solid #f3f4f6;
+      height: 100%;
+    }
+
+    .stat-card .icon-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .icon-circle.green {
+      background: #d1fae5;
+      color: #10b981;
+    }
+
+    .icon-circle.teal {
+      background: #ccfbf1;
+      color: #14b8a6;
+    }
+
+    .icon-circle.purple {
+      background: #e0e7ff;
+      color: #6366f1;
+    }
+
+    .icon-circle.red {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .stat-card .stat-info h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 4px 0;
+    }
+
+    .stat-card .stat-info p {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* Premium Location Dropdown */
+    .custom-location-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-location-btn:hover,
+    .custom-location-btn:focus {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-location-btn::after {
+      content: '▼';
+      font-size: 10px;
+      margin-left: 8px;
+      opacity: 0.8;
+    }
+
+    .custom-location-menu {
+      background: #ffffff;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 8px;
+      min-width: 240px;
+      margin-top: 10px !important;
+    }
+
+    .custom-location-menu .dropdown-item {
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 500;
+      color: #374151;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .custom-location-menu .dropdown-item:hover {
+      background: #f3f4f6;
+      color: #10b981;
+    }
+  </style>
+
+  <div class="custom-banner d-flex justify-content-between align-items-start">
+    <div>
+      <span class="badge-pill">Project Analytics</span>
+      <% if (user.userData.user_type==='S' ) { %>
+        <h1>Select Your Location</h1>
+        <% } else if (user.userData.user_type==='A' ) { %>
+          <h1>
+            <%= user.userData.customer_name %>
+          </h1>
+          <% } %>
+            <p>Read operations, revenue, operator performance, device activity, payment mix, and recent activity from
+              one clean screen.</p>
+    </div>
+
+    <div class="d-flex flex-column align-items-end gap-3">
+      <div class="text-light fw-bold d-flex gap-3 align-items-center" style="font-weight: 500;">
+        <span>🗓️ <span id="currentDate"></span></span>&nbsp; | &nbsp;
+        <span>⏰ <span id="currentTime"></span></span>
+      </div>
+
+      <% if (user.userData.user_type==='S' ) { %>
+        <div class="dropdown mt-5">
+          <button class="custom-location-btn" id="dropdownBtn">🌍 Choose location...</button>
+          <div class="dropdown-menu custom-location-menu" id="dropdownMenu">
+            <div class="dropdown-item" data-value="0">📍 Choose Location</div>
+            <% if (data && data.msg && data.msg.length> 0) { %>
+              <% data.msg.forEach(dt=> { %>
+                <div class="dropdown-item" data-value="<%= dt.location_id %>">
+                  📍 <%= dt.loction %>
+                </div>
+                <% }) %>
+                  <% } else { %>
+                    <div class="dropdown-item disabled">No locations available</div>
+                    <% } %>
+          </div>
+        </div>
+        <% } %>
+    </div>
+  </div>
+
+  <div class="card shadow-none bg-transparent border-0 p-0">
+
+    <div class="d-none">
+      <span id="locationDetails" class="location-box">Details of ...</span>
+      <h3 id="greeting" class="page-title text-gradient fw-bold mb-1"></h3>
+    </div>
+
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+
+        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+        document.getElementById("currentDate").textContent = now.toLocaleDateString('en-US', dateOptions);
+
+        const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById("currentTime").textContent = now.toLocaleTimeString('en-IN', timeOptions);
+      }
+
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+    </script>
+
+
+
+
+    <!-- <script>
+const btn = document.getElementById("dropdownBtn");
+const menu = document.getElementById("dropdownMenu");
+const locationLabel = document.querySelector(".breadcrumb-item"); // breadcrumb text element
+
+btn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+});
+
+document.querySelectorAll(".dropdown-item").forEach(item => {
+  item.addEventListener("click", (e) => {
+    const selectedText = item.textContent.trim();
+    btn.textContent = selectedText;
+    menu.style.display = "none";
+
+    if (locationLabel) {
+      locationLabel.textContent = "Details of " + selectedText.replace("📍", "").trim();
+    }
+  });
+});
+
+document.addEventListener("click", (e) => {
+  if (!btn.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});
+
+</script> -->
+
+    <!-- <script>
+  const btn = document.getElementById("dropdownBtn");
+  const menu = document.getElementById("dropdownMenu");
+  const locationBox = document.getElementById("locationDetails");
+
+  btn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+});
+
+document.querySelectorAll(".dropdown-item").forEach(item => {
+  item.addEventListener("click", () => {
+    const selectedText = item.textContent.trim();
+    btn.textContent = selectedText;
+    menu.style.display = "none";
+
+    if (locationBox) {
+      locationBox.textContent = "Details of " + selectedText.replace("📍", "").trim();
+    }
+
+     // ✅ Update total customer count
+      if (customersByLocation[locationId]) {
+        totalReceiptEl.textContent = customersByLocation[locationId].length;
+      } else {
+        totalReceiptEl.textContent = 0;
+      }
+    
+  });
+});
+
+  </script> -->
+
+    <script>
+      const btn = document.getElementById("dropdownBtn");
+      const menu = document.getElementById("dropdownMenu");
+      const locationBox = document.getElementById("locationDetails");
+
+      // Elements for counts
+      const totalReceiptEl = document.getElementById("totalReceiptEl");
+      const totalOperatorEl = document.getElementById("totalOperatorEl");
+      const totalAmounttEl = document.getElementById("totalAmounttEl");
+      const totalDeviceEl = document.getElementById("totalDeviceEl");
+
+      // Toggle dropdown on button click
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation(); // prevent click from bubbling to document
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      });
+
+      // Handle selection
+      document.querySelectorAll(".dropdown-item").forEach(item => {
+        item.addEventListener("click", () => {
+          const selectedText = item.textContent.trim();
+          const locationId = item.dataset.value;
+
+          btn.textContent = selectedText;
+          menu.style.display = "none";
+          console.log(locationId, 'location');
+
+
+          if (locationBox) {
+            locationBox.textContent = "Details of " + selectedText.replace("📍", "").trim();
+          }
+
+          const today = new Date().toISOString().split("T")[0]; // e.g. "2025-09-16"
+
+          try {
+            fetch(`/superadmin/dashboard_page?location_id=${locationId}&date=${today}`)
+              .then(res => res.json())
+              .then(data => {
+                console.log("API Response:", data);
+
+                // ✅ Update dashboard cards
+                document.getElementById("totalReceiptEl").innerText = data.receipts;
+                document.getElementById("lifetimeReceiptEl").innerText = data.totalReceipts;
+                document.getElementById("totalOperatorEl").innerText = data.operators;
+                document.getElementById("totalDeviceEl").innerText = data.devices;
+                document.getElementById("lifetimeAmountEl").innerText = "₹" + data.totalAmount;
+                document.getElementById("totalAmounttEl").innerText = "₹" + data.todayAmount;
+
+                renderCharts(data);
+              })
+              .catch(err => console.error("Error fetching dashboard data:", err));
+
+          } catch (err) {
+            console.error("Error fetching dashboard data", err);
+          }
+        });
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          menu.style.display = "none";
+        }
+      });
+    </script>
+
+    <!-- Inner Stats Cards -->
+    <div class="row g-4">
+      <!-- Card 1 -->
+      <div class="col-md-4 col-lg-4 mb-4">
+        <div class="stat-card">
+          <div class="icon-circle green">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h2 id="totalOperatorEl">0</h2>
+            <p>Operators</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-md-4 col-lg-4 mb-4">
+        <div class="stat-card">
+          <div class="icon-circle teal">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <div class="stat-info">
+            <h2 id="totalDeviceEl">0</h2>
+            <p>Devices</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-md-4 col-lg-4 mb-4">
+        <div class="stat-card">
+          <div class="icon-circle purple">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="stat-info">
+            <h2 id="lifetimeReceiptEl">0</h2>
+            <p>Total Entries</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="col-md-4 col-lg-4 mb-4">
+        <div class="stat-card">
+          <div class="icon-circle purple" style="background: #ede9fe; color: #8b5cf6;">
+            <i class="fas fa-car"></i>
+          </div>
+          <div class="stat-info">
+            <h2 id="totalReceiptEl">0</h2>
+            <p>Today Entries</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="col-md-4 col-lg-4 mb-4">
+        <div class="stat-card">
+          <div class="icon-circle red">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="stat-info">
+            <h2 id="lifetimeAmountEl">0</h2>
+            <p>Total Revenue</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="col-md-4 col-lg-4 mb-4">
+        <div class="stat-card">
+          <div class="icon-circle red" style="background: #ffedd5; color: #f97316;">
+            <i class="fas fa-coins"></i>
+          </div>
+          <div class="stat-info">
+            <h2 id="totalAmounttEl">0</h2>
+            <p>Today Revenue</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card p-4 chart-card" style="background: #ffffff;">
+        <h2 class="text-dark">Receipts Collected Per Day</h2>
+        <div class="chart-scroll-wrapper" style="overflow-x: auto; overflow-y: hidden;">
+          <div class="chart-container" id="dailyChartContainer" style="position: relative; height: 350px; width: 100%;">
+            <canvas id="dailyReceiptsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-4 chart-card" style="background: #ffffff;">
+        <h2 class="text-dark">Receipts Collected Per Month</h2>
+        <div class="chart-scroll-wrapper" style="overflow-x: auto; overflow-y: hidden;">
+          <div class="chart-container" id="monthlyChartContainer" style="position: relative; height: 350px; width: 100%;">
+            <canvas id="monthlyReceiptsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card p-4 chart-card" style="background: #ffffff;">
+        <h2 class="text-dark">Entries Per Operator</h2>
+        <div class="chart-scroll-wrapper" style="overflow-x: auto; overflow-y: hidden;">
+          <div class="chart-container" id="operatorChartContainer" style="position: relative; height: 350px; width: 100%;">
+            <canvas id="operatorReceiptsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-4 chart-card" style="background: #ffffff;">
+        <h2 class="text-dark">Entries Per Device</h2>
+        <div class="chart-scroll-wrapper" style="overflow-x: auto; overflow-y: hidden;">
+          <div class="chart-container" id="deviceChartContainer" style="position: relative; height: 350px; width: 100%;">
+            <canvas id="deviceReceiptsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card p-4 chart-card" style="background: #ffffff;">
+        <h2 class="text-dark">Revenue By Payment Mode</h2>
+        <div class="chart-scroll-wrapper" style="overflow-x: auto; overflow-y: hidden;">
+          <div class="chart-container" id="payModeChartContainer" style="position: relative; height: 350px; width: 100%;">
+            <canvas id="payModeReceiptsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card p-4 chart-card" style="background: #ffffff;">
+        <h2 class="text-dark">Top Vehicles Used</h2>
+        <div class="chart-scroll-wrapper" style="overflow-x: auto; overflow-y: hidden;">
+          <div class="chart-container" id="vehicleChartContainer" style="position: relative; height: 350px; width: 100%; display: flex; justify-content: center;">
+            <canvas id="vehicleReceiptsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- =======================
+Footer
+======================= -->
+  <footer class="simple-footer mt-4">
+    <b>Santosh Parking © <span id="footerYear"></b></span>
+  </footer>
+</div>
+
+
+
+
+<!-- =======================
+Custom CSS
+======================= -->
+<style>
+  .chart-card {
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .gradient-card-blue {
+    background: linear-gradient(135deg, #d1fae5, #6ee7b7);
+  }
+
+  .gradient-card-purple {
+    background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
+  }
+
+  .chart-card h5 {
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .text-dark {
+    color: #022c22 !important;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .location-box {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #065f46, #10b981);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .location-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  .location-banner {
+    background: linear-gradient(135deg, #4cbf8a, #65a189);
+    border-radius: 8px;
+    padding: 20px;
+    color: #022c22;
+  }
+
+  .text-light {
+    color: #022c22 !important;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-btn {
+    padding: 12px 16px;
+    width: 320px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
+    color: #022c22;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    min-width: 320px;
+    background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    margin-top: 5px;
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .dropdown-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    color: #022c22;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dropdown-item:hover {
+    background: #d1fae5;
+  }
+
+  .text-gradient {
+    background: linear-gradient(90deg, #022c22, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .dashboard-card {
+    border-radius: 20px;
+    padding: 1.2rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .icon-box {
+    font-size: 2rem;
+    opacity: 0.9;
+    color: #022c22;
+  }
+
+  .gradient-blue {
+    background: linear-gradient(135deg, #36d1dc, #a0afcf);
+  }
+
+  .gradient-green {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+  }
+
+  .gradient-red {
+    background: linear-gradient(135deg, #e92653, #e49a8d);
+  }
+
+  .gradient-purple {
+    background: linear-gradient(135deg, #e46453, #e4a47a);
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+  }
+
+  #locationSelect {
+    min-width: 140px;
+    font-size: 0.9rem;
+  }
+
+  .page-wrapper {
+    background: #f9fbfd;
+    display: none;
+    box-shadow: 0 3px 9px 0 rgba(162, 176, 190, .15);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  .dashboard-footer {
+    background: linear-gradient(135deg, #a7f3d0, #6ee7b7);
+    color: #022c22;
+    padding: 14px 20px;
+    font-size: 14px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .dashboard-footer b {
+    font-weight: 600;
+  }
+
+  .dashboard-footer span {
+    letter-spacing: 0.3px;
+  }
+
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    /* color: #6b7280;   soft gray */
+    color: black;
+    padding: 12px 0;
+    margin-left: 51vw;
+  }
+</style>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+
+<script>
+  // function updateGreeting() {
+  //   const now = new Date();
+  //   const hours = now.getHours();
+  //   let greeting = "Hello";
+
+  //   if (hours >= 5 && hours < 12) {
+  //     greeting = "Good Morning";
+  //   } else if (hours >= 12 && hours < 18) {
+  //     greeting = "Good Afternoon";
+  //   } else if (hours >= 18 && hours < 22) {
+  //     greeting = "Good Evening";
+  //   } else {
+  //     greeting = "Good Night";
+  //   }
+
+  //   // Show greeting with name
+  //   document.getElementById("greeting").textContent = `${greeting}, Jason 👋`;
+
+  //   // Format date as: Aug 30, 2025
+  //   const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  //   const formattedDate = now.toLocaleDateString('en-US', options);
+
+  //   document.getElementById("currentDate").textContent = formattedDate;
+  // }
+
+  // Call once on load
+  updateGreeting();
+
+  // Update every minute (in case user stays long on dashboard)
+  setInterval(updateGreeting, 60000);
+
+  // Handle Location Change
+  document.getElementById("locationSelect").addEventListener("change", function () {
+    const selectedLocation = this.value;
+    alert("Location changed to: " + selectedLocation);
+    // You can replace this alert with actual logic (e.g., reload data for location)
+  });
+
+  feather.replace();
+</script>
+
+<script>
+  document.querySelectorAll('#dropdownMenu .dropdown-item').forEach(item => {
+    item.addEventListener('click', function () {
+      let value = this.getAttribute('data-value');
+      console.log("Selected:", value); // will log 0 if "Choose Location" clicked
+    });
+  });
+
+</script>
+
+<!-- <script>
+document.addEventListener("DOMContentLoaded", () => {
+    <% if(user.userData.user_type === 'A') { %>
+        const locationId = "<%= user.userData.customer_id %>"; // Or location_id if available
+
+        fetch(`/superadmin/dashboard_page?location_id=${locationId}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("totalReceiptEl").innerText = data.receipts;
+            document.getElementById("totalOperatorEl").innerText = data.operators;
+            document.getElementById("totalDeviceEl").innerText = data.devices;
+            document.getElementById("totalAmounttEl").innerText = data.totalAmount;
+        })
+        .catch(err => console.error("Error fetching dashboard data for admin:", err));
+    <% } %>
+});
+</script> -->
+
+<script>
+  // function renderCharts(data) {
+  //   // ===== Daily Receipts Chart =====
+  //   const dailyCtx = document.getElementById('dailyReceiptsChart').getContext('2d');
+
+  //   // Gradient for daily bars
+  //   const dailyGradient = dailyCtx.createLinearGradient(0, 0, 0, 400);
+  //   dailyGradient.addColorStop(1, 'rgba(255, 123, 0, 1)'); // Orange top
+  //   dailyGradient.addColorStop(1, 'rgba(255, 200, 0, 0.3)'); // Yellow bottom
+
+  //   new Chart(dailyCtx, {
+  //     type: 'bar',
+  //     data: {
+  //       labels: data.dailyReceipts.map(d => {
+  //         const dt = new Date(d.date);
+  //         return dt.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+  //       }),
+  //       datasets: [{
+  //         label: 'Receipts per Day',
+  //         data: data.dailyReceipts.map(d => d.count),
+  //         backgroundColor: dailyGradient,
+  //         borderRadius: 5,
+  //         maxBarThickness: 100,
+  //         hoverBackgroundColor: 'rgba(255, 123, 0, 1)',
+  //         barPercentage: 0.9
+  //       }]
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       plugins: {
+  //         legend: { display: false },
+  //         tooltip: {
+  //           backgroundColor: '#333',
+  //           titleColor: '#fff',
+  //           bodyColor: '#fff',
+  //           displayColors: true
+  //         }
+  //       },
+  //       scales: {
+  //         x: {
+  //           grid: { display: true },
+  //           ticks: { font: { size: 13, weight: 'bold' , color: '#000'} }
+  //         },
+  //         y: {
+  //           grid: { color: '#e0e0e0' },
+  //           ticks: { beginAtZero: true, font: { size: 13, weight: 'bold' }, color: '#000' }
+  //         }
+  //       }
+  //     }
+  //   });
+
+  //   // ===== Monthly Receipts Chart =====
+  //   const monthlyCtx = document.getElementById('monthlyReceiptsChart').getContext('2d');
+
+  //   const monthlyGradient = monthlyCtx.createLinearGradient(0, 0, 0, 400);
+  //   monthlyGradient.addColorStop(1, 'rgba(102, 126, 234, 1)'); // Purple-blue
+  //   monthlyGradient.addColorStop(1, 'rgba(118, 75, 162, 0.3)');
+
+  //   new Chart(monthlyCtx, {
+  //     type: 'bar',
+  //     data: {
+  //       labels: data.monthlyReceipts.map(d => {
+  //         const dt = new Date(d.month + '-01'); // "YYYY-MM"
+  //         return dt.toLocaleString('en-US', { month: 'short' }); // "Sep"
+  //       }),
+  //       datasets: [{
+  //         label: 'Receipts per Month',
+  //         data: data.monthlyReceipts.map(d => d.count),
+  //         backgroundColor: monthlyGradient,
+  //         borderRadius: 5,
+  //         maxBarThickness: 50,
+  //         hoverBackgroundColor: 'rgba(102, 126, 234, 1)',
+  //         barPercentage: 0.9
+  //       }]
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       plugins: {
+  //         legend: { display: false },
+  //         tooltip: {
+  //           backgroundColor: '#333',
+  //           titleColor: '#fff',
+  //           bodyColor: '#fff',
+  //           displayColors: true
+  //         }
+  //       },
+  //       scales: {
+  //         x: { grid: { display: true }, ticks: { font: { size: 13, weight: 'bold' }, color: '#000' } },
+  //         y: { grid: { color: '#e0e0e0' }, ticks: { beginAtZero: true, font: { size: 13, weight: 'bold' },color: '#000' } }
+  //       }
+  //     }
+  //   });
+  // }
+
+  // let dailyChartInstance = null;
+  // let monthlyChartInstance = null;
+
+  // function renderCharts(data) {
+  //   // ===== Destroy old charts if exist =====
+  //   if (dailyChartInstance) dailyChartInstance.destroy();
+  //   if (monthlyChartInstance) monthlyChartInstance.destroy();
+
+  //   // ===== Daily Receipts Chart =====
+  //   const dailyCtx = document.getElementById('dailyReceiptsChart').getContext('2d');
+  //   const dailyGradient = dailyCtx.createLinearGradient(0, 0, 0, 400);
+  //   dailyGradient.addColorStop(1, 'rgba(255, 123, 0, 1)');
+  //   dailyGradient.addColorStop(1, 'rgba(255, 123, 0, 1)');
+
+  //   dailyChartInstance = new Chart(dailyCtx, {
+  //     type: 'bar',
+  //     data: {
+  //       labels: data.dailyReceipts.map(d => {
+  //         const dt = new Date(d.date);
+  //         return dt.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+  //       }),
+  //       datasets: [{
+  //         label: 'Receipts per Day',
+  //         data: data.dailyReceipts.map(d => d.count),
+  //         backgroundColor: dailyGradient,
+  //         borderRadius: 5,
+  //         maxBarThickness: 60,
+  //         hoverBackgroundColor: 'rgba(255, 123, 0, 1)',
+  //         barPercentage: 0.8
+  //       }]
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       plugins: {
+  //         legend: { display: false },
+  //         tooltip: {
+  //           backgroundColor: '#333',
+  //           titleColor: '#fff',
+  //           bodyColor: '#fff',
+  //           displayColors: true
+  //         }
+  //       },
+  //       scales: {
+  //         x: {
+  //           grid: { display: true },
+  //           ticks: { font: { size: 13, weight: 'bold' , color: '#000'} }
+  //         },
+  //         y: {
+  //           grid: { color: '#e0e0e0' },
+  //           ticks: { beginAtZero: true, font: { size: 13, weight: 'bold' }, color: '#000' }
+  //         }
+  //       }
+  //     }
+  //   });
+
+
+  //   // ===== Monthly Receipts Chart =====
+  //   const monthlyCtx = document.getElementById('monthlyReceiptsChart').getContext('2d');
+  //   const monthlyGradient = monthlyCtx.createLinearGradient(0, 0, 0, 400);
+  //   monthlyGradient.addColorStop(1, 'rgba(102, 126, 234, 1)');
+  //   monthlyGradient.addColorStop(1, 'rgba(102, 126, 234, 1)');
+
+  //   monthlyChartInstance = new Chart(monthlyCtx, {
+  //     type: 'bar',
+  //     data: {
+  //       labels: data.monthlyReceipts.map(d => {
+  //         const dt = new Date(d.month + '-01'); // "YYYY-MM"
+  //         return dt.toLocaleString('en-US', { month: 'short' });
+  //       }),
+  //       datasets: [{
+  //         label: 'Receipts per Month',
+  //         data: data.monthlyReceipts.map(d => d.count),
+  //         backgroundColor: monthlyGradient,
+  //         borderRadius: 5,
+  //         maxBarThickness: 50,
+  //         hoverBackgroundColor: 'rgba(102, 126, 234, 1)'
+  //       }]
+  //     },
+  //    options: {
+  //       responsive: true,
+  //       plugins: {
+  //         legend: { display: false },
+  //         tooltip: {
+  //           backgroundColor: '#333',
+  //           titleColor: '#fff',
+  //           bodyColor: '#fff',
+  //           displayColors: true
+  //         }
+  //       },
+  //       scales: {
+  //         x: { grid: { display: true }, ticks: { font: { size: 13, weight: 'bold' }, color: '#000' } },
+  //         y: { grid: { color: '#e0e0e0' }, ticks: { beginAtZero: true, font: { size: 13, weight: 'bold' },color: '#000' } }
+  //       }
+  //     }
+  //   });
+
+  // }
+
+  let dailyChartInstance = null;
+  let monthlyChartInstance = null;
+  let operatorChartInstance = null;
+  let deviceChartInstance = null;
+  let payModeChartInstance = null;
+  let vehicleChartInstance = null;
+
+  // Function to initialize empty charts
+  function getEmptyConfig(titleText, chartType = "bar") {
+    return {
+      type: chartType,
+      data: {
+        labels: ["Select a location"],
+        datasets: [{
+          data: chartType === "doughnut" ? [1] : [0], // Give doughnut a slice to render the text
+          backgroundColor: "rgba(229, 231, 235, 0.5)", // Light gray placeholder
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: titleText,
+            color: "#6b7280",
+            font: { size: 16, weight: '600' },
+            padding: { top: 20, bottom: 20 }
+          },
+          legend: { display: false },
+          tooltip: { enabled: false }
+        },
+        scales: chartType === "bar" ? {
+          x: { grid: { display: false }, ticks: { color: "#9ca3af", font: { style: 'italic' } } },
+          y: { display: false }
+        } : {}
+      }
+    };
+  }
+
+  function initEmptyCharts() {
+    const dailyCtx = document.getElementById("dailyReceiptsChart").getContext("2d");
+    dailyChartInstance = new Chart(dailyCtx, getEmptyConfig("Waiting for Location Data...", "bar"));
+
+    const monthlyCtx = document.getElementById("monthlyReceiptsChart").getContext("2d");
+    monthlyChartInstance = new Chart(monthlyCtx, getEmptyConfig("Waiting for Location Data...", "bar"));
+
+    const operatorCtx = document.getElementById("operatorReceiptsChart").getContext("2d");
+    operatorChartInstance = new Chart(operatorCtx, getEmptyConfig("Waiting for Location Data...", "bar"));
+
+    const deviceCtx = document.getElementById("deviceReceiptsChart").getContext("2d");
+    deviceChartInstance = new Chart(deviceCtx, getEmptyConfig("Waiting for Location Data...", "bar"));
+
+    const payModeCtx = document.getElementById("payModeReceiptsChart").getContext("2d");
+    payModeChartInstance = new Chart(payModeCtx, getEmptyConfig("Waiting for Location Data...", "doughnut"));
+
+    const vehicleCtx = document.getElementById("vehicleReceiptsChart").getContext("2d");
+    vehicleChartInstance = new Chart(vehicleCtx, getEmptyConfig("Waiting for Location Data...", "bar"));
+  }
+
+  // Call this on page load
+  initEmptyCharts();
+
+  function renderCharts(data) {
+    const now = new Date();
+    const currentMonth = now.getMonth(); // 0–11
+    const currentYear = now.getFullYear();
+
+    // ✅ FILTER DAILY DATA FOR CURRENT MONTH
+    const filteredDailyReceipts = data.dailyReceipts.filter(d => {
+      const dt = new Date(d.date);
+      return (
+        dt.getMonth() === currentMonth &&
+        dt.getFullYear() === currentYear
+      );
+    });
+
+    if (dailyChartInstance) dailyChartInstance.destroy();
+    if (monthlyChartInstance) monthlyChartInstance.destroy();
+    if (operatorChartInstance) operatorChartInstance.destroy();
+    if (deviceChartInstance) deviceChartInstance.destroy();
+    if (payModeChartInstance) payModeChartInstance.destroy();
+    if (vehicleChartInstance) vehicleChartInstance.destroy();
+
+    // ========== Dynamic Width Calculations ==========
+    const dailyContainer = document.getElementById("dailyChartContainer");
+    const minDailyWidth = filteredDailyReceipts.length * 50; // 50px per bar
+    if (dailyContainer && dailyContainer.parentElement) {
+      dailyContainer.style.width = Math.max(minDailyWidth, dailyContainer.parentElement.clientWidth) + 'px';
+    }
+
+    const monthlyContainer = document.getElementById("monthlyChartContainer");
+    const minMonthlyWidth = data.monthlyReceipts.length * 60; // 60px per bar
+    if (monthlyContainer && monthlyContainer.parentElement) {
+      monthlyContainer.style.width = Math.max(minMonthlyWidth, monthlyContainer.parentElement.clientWidth) + 'px';
+    }
+
+    // ========== Daily Chart ==========
+    const dailyCtx = document.getElementById("dailyReceiptsChart").getContext("2d");
+
+    dailyChartInstance = new Chart(dailyCtx, {
+      type: "bar",
+      data: {
+        labels: filteredDailyReceipts.map(d => {
+          const dt = new Date(d.date);
+          return dt.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+        }),
+        datasets: [{
+          label: "Amount Collected (₹)",
+          data: filteredDailyReceipts.map(d => parseFloat(d.amount) || 0),
+          backgroundColor: "rgba(59, 130, 246, 0.85)",
+          borderRadius: 4,
+          maxBarThickness: 50
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            type: 'category',
+            ticks: {
+              autoSkip: true,
+              maxRotation: 45,
+              minRotation: 0,
+              align: 'center'
+            },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: "Amount (₹)" },
+            ticks: {
+              callback: (value) => "₹" + value.toLocaleString(),
+              padding: 10
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const idx = context.dataIndex;
+                const amount = context.dataset.data[idx];
+                const count = filteredDailyReceipts[idx].count;
+                return [
+                  `Amount: ₹${amount.toLocaleString()}`,
+                  `Receipts: ${count}`
+                ];
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // ========== Monthly Chart ==========
+    const monthlyCtx = document.getElementById("monthlyReceiptsChart").getContext("2d");
+
+    monthlyChartInstance = new Chart(monthlyCtx, {
+      type: "bar",
+      data: {
+        labels: data.monthlyReceipts.map(d => {
+          const dt = new Date(d.month + "-01");
+          return dt.toLocaleString("en-US", { month: "short", year: "numeric" });
+        }),
+        datasets: [{
+          label: "Amount Collected (₹)",
+          data: data.monthlyReceipts.map(d => parseFloat(d.amount) || 0),
+          backgroundColor: "rgba(16, 185, 129, 0.85)",
+          borderRadius: 4,
+          maxBarThickness: 50
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: {
+              autoSkip: true,
+              maxRotation: 45
+            },
+            grid: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: "Amount (₹)" },
+            ticks: {
+              callback: (value) => "₹" + value.toLocaleString(),
+              padding: 10
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const idx = context.dataIndex;
+                const amount = context.dataset.data[idx];
+                const count = data.monthlyReceipts[idx].count;
+                return [
+                  `Amount: ₹${amount.toLocaleString()}`,
+                  `Receipts: ${count}`
+                ];
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // ========== Dynamic Width Calculations for Operator and Device ==========
+    const operatorContainer = document.getElementById("operatorChartContainer");
+    const minOperatorWidth = (data.operatorEntries || []).length * 60;
+    if (operatorContainer && operatorContainer.parentElement) {
+      operatorContainer.style.width = Math.max(minOperatorWidth, operatorContainer.parentElement.clientWidth) + 'px';
+    }
+
+    const deviceContainer = document.getElementById("deviceChartContainer");
+    const minDeviceWidth = (data.deviceEntries || []).length * 60;
+    if (deviceContainer && deviceContainer.parentElement) {
+      deviceContainer.style.width = Math.max(minDeviceWidth, deviceContainer.parentElement.clientWidth) + 'px';
+    }
+
+    // ========== Operator Chart ==========
+    const operatorCtx = document.getElementById("operatorReceiptsChart").getContext("2d");
+    operatorChartInstance = new Chart(operatorCtx, {
+      type: "bar",
+      data: {
+        labels: (data.operatorEntries || []).map(d => d.operator || "Unknown"),
+        datasets: [{
+          label: "Entries Count",
+          data: (data.operatorEntries || []).map(d => d.count),
+          backgroundColor: "rgba(245, 158, 11, 0.85)",
+          borderRadius: 4,
+          maxBarThickness: 50
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { ticks: { autoSkip: true, maxRotation: 45 }, grid: { display: false } },
+          y: { beginAtZero: true, title: { display: true, text: "Entries" } }
+        }
+      }
+    });
+
+    // ========== Device Chart ==========
+    const deviceCtx = document.getElementById("deviceReceiptsChart").getContext("2d");
+    deviceChartInstance = new Chart(deviceCtx, {
+      type: "bar",
+      data: {
+        labels: (data.deviceEntries || []).map(d => d.device || "Unknown"),
+        datasets: [{
+          label: "Entries Count",
+          data: (data.deviceEntries || []).map(d => d.count),
+          backgroundColor: "rgba(236, 72, 153, 0.85)",
+          borderRadius: 4,
+          maxBarThickness: 50
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { ticks: { autoSkip: true, maxRotation: 45 }, grid: { display: false } },
+          y: { beginAtZero: true, title: { display: true, text: "Entries" } }
+        }
+      }
+    });
+
+    // ========== Payment Mode Chart ==========
+    const payModeCtx = document.getElementById("payModeReceiptsChart").getContext("2d");
+    payModeChartInstance = new Chart(payModeCtx, {
+      type: "doughnut",
+      data: {
+        labels: (data.payModeEntries || []).map(d => {
+          if (d.pay_mode === 'C' || d.pay_mode === 'Cash') return 'Cash';
+          if (d.pay_mode === 'U' || d.pay_mode === 'UPI') return 'UPI';
+          return d.pay_mode || 'Unknown';
+        }),
+        datasets: [{
+          data: (data.payModeEntries || []).map(d => parseFloat(d.total_amount) || 0),
+          backgroundColor: [
+            "rgba(16, 185, 129, 0.85)", // Emerald Green for Cash
+            "rgba(99, 102, 241, 0.85)", // Indigo for UPI
+            "rgba(245, 158, 11, 0.85)", // Amber
+            "rgba(236, 72, 153, 0.85)"  // Pink
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              color: '#000',
+              font: { size: 13, weight: 'bold' }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const amount = context.dataset.data[context.dataIndex];
+                return `Amount: ₹${amount.toLocaleString()}`;
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // ========== Vehicle Types Chart ==========
+    const vehicleCtx = document.getElementById("vehicleReceiptsChart").getContext("2d");
+    vehicleChartInstance = new Chart(vehicleCtx, {
+      type: "bar",
+      data: {
+        labels: (data.vehicleTypeEntries || []).map(d => d.vehicle || "Unknown"),
+        datasets: [{
+          label: "Vehicles Parked",
+          data: (data.vehicleTypeEntries || []).map(d => d.count),
+          backgroundColor: "rgba(99, 102, 241, 0.85)",
+          borderRadius: 4,
+          maxBarThickness: 50
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: { ticks: { autoSkip: true, maxRotation: 45 }, grid: { display: false } },
+          y: {
+            beginAtZero: true, 
+            title: { display: true, text: "Count" }
+          }
+        }
+      }
+    });
+  }
+
+  const today = new Date().toISOString().split("T")[0]; // e.g. "2025-09-16"
+
+  // Example fetch for admin or superadmin
+  const locationId = "<%= user.userData.customer_id || '' %>"; // admin location
+
+  // Auto-load only for Admin
+  fetch(`/superadmin/dashboard_page?location_id=${locationId}&date=${today}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("totalReceiptEl").innerText = data.receipts;
+      document.getElementById("lifetimeReceiptEl").innerText = data.totalReceipts;
+      document.getElementById("totalOperatorEl").innerText = data.operators;
+      document.getElementById("totalDeviceEl").innerText = data.devices;
+      document.getElementById("lifetimeAmountEl").innerText = "₹" + data.totalAmount;
+      document.getElementById("totalAmounttEl").innerText = "₹" + data.todayAmount;
+
+      // Render charts
+      renderCharts(data);
+    });
+
+</script>
+
+<script>
+
+
+  function updateGreeting() {
+    const now = new Date();
+    const hours = now.getHours();
+    let greeting = "Hello";
+
+    if (hours >= 5 && hours < 12) {
+      greeting = "Good Morning";
+    } else if (hours >= 12 && hours < 18) {
+      greeting = "Good Afternoon";
+    } else if (hours >= 18 && hours < 22) {
+      greeting = "Good Evening";
+    } else {
+      greeting = "Good Night";
+    }
+
+    // Show greeting with name
+    document.getElementById("greeting").textContent = `${greeting}, ${user.userData.customer_name || "User"} 👋`;
+
+    // Format date as: Aug 30, 2025
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const formattedDate = now.toLocaleDateString('en-US', options);
+    document.getElementById("currentDate").textContent = formattedDate;
+  }
+
+  // Call once on load
+  updateGreeting();
+
+  // Update every minute
+  setInterval(updateGreeting, 60000);
+</script>

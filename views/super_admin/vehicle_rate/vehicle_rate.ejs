@@ -1,0 +1,572 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+        <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3" style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <div class="d-flex align-items-center">
+            <div class="text-white rounded"
+              style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+              <i class="fas fa-rupee-sign fs-5"></i>
+            </div>
+            <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">Manage Vehicle Rate</h4>
+          </div>
+          
+          <button type="button" class="btn text-white px-4 py-2"
+            style="background: linear-gradient(45deg, #3a8b64, #367e61); border-radius: 6px; font-weight: 500;" id="myBtn">
+            <i class="fa fa-plus me-1"></i> Add Vehicle Rate
+          </button>
+           <button type="button" class="btn text-white px-4 py-2"
+            style="background: linear-gradient(45deg, #3a8b64, #367e61); border-radius: 6px; font-weight: 500;" id="myBtn_monthly">
+            <i class="fa fa-plus me-1"></i> Add Monthly Vehicle Rate
+          </button>
+        </div>
+
+        <form action="/superadmin/vehicle_rate" method="post" class="p-4 mb-4 mt-3 mx-3" style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-<%= user.userData.user_type==='S' ? '2' : '3' %>">
+              <label class="fw-bold text-dark mb-2" style="font-size: 14px;"><i class="fas fa-percent"></i> Rate Type</label>
+               <select name="rate_type1" class="form-control" id="rate_type1" required>
+                  <option value="">Rate Type</option>
+                  <option value="Hourly" <% if (selected.rate_type === "Hourly") { %>selected<% } %>>Hourly</option>
+                  <option value="Monthly" <% if (selected.rate_type === "Monthly") { %>selected<% } %>>Monthly</option>
+                </select>
+            </div>
+
+            <% if (user.userData.user_type==='S' ) { %>
+              <div class="col-md-3">
+                <label for="cust_name_sel" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-map-marker-alt"></i> Location Name</label>
+                <!-- Superadmin: Show dropdown -->
+                <select name="cust_name" class="form-control" id="cust_name_sel" required>
+                  <option value="">Select Location Name</option>
+                  <% customer.forEach(dt=> {
+                    var _selected = '';
+                    if (selected.cust_id == dt.customer_id) _selected = 'selected';
+                    %>
+                    <option value="<%= dt.customer_id %>" <%=_selected %>><%= dt.customer_name %>
+                    </option>
+                  <% }) %>
+                </select>
+              </div>
+            <% } else if (user.userData.user_type==='A' ) { %>
+              <!-- Admin: Show fixed location name in hidden field -->
+              <input type="hidden" name="cust_name" value="<%= user.userData.customer_id %>">
+            <% } %>
+
+            <div class="col-md-<%= user.userData.user_type==='S' ? '3' : '4' %>">
+              <label for="veh_id_sel" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-car"></i> Vehicle Name</label>
+              <select name="veh_id" class="form-control" id="veh_id_sel" required>
+                <option value="">Select Vehicle Name</option>
+              </select>
+            </div>
+
+            <div class="col-md-<%= user.userData.user_type==='S' ? '4' : '5' %> text-center">
+              <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-gradient flex-grow-1" id="submitBtn" style="height: 45px;">
+                  <i class="fa fa-search me-2"></i> Fetch Details
+                </button>
+                <a href="/superadmin/vehicle_rate" class="btn shadow-sm" style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;" title="Refresh">
+                  <i class="fas fa-sync-alt"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <% if(selected.cust_id>0){ %>
+          <div class="table-responsive mt-4">
+            <table id="dataTable" class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden border-0">
+              <thead class="text-white text-center" style="background: linear-gradient(45deg, #3a8b64, #367e61);">
+                
+                <tr>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">SL. NO.</th>
+                  <% if (selected.rate_type === "Monthly") { %>
+                    <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">Number of days</th>
+                  <% }else{ %>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">FROM HOUR</th>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">TO HOUR</th>
+                  <% } %>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">PARKING FEE</th>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">FLAG</th>
+                  <th class="text-center text-white py-3 fw-bold text-uppercase" style="font-size: 13px;">ACTION</th>
+                </tr>
+              </thead>
+              <tbody style="border-top: none;">
+                <% if(data.length> 0){
+                  var i = 1
+                  data.forEach(dt => { %>
+                  <tr style="border-bottom: 1px solid #f1f3f5;">
+                    <td class="text-center text-dark py-3">
+                      <%= i %>
+                    </td>
+                    <% if (selected.rate_type === "Monthly") { %>
+                      <td class="text-center text-dark py-3">
+                        <%= dt.no_of_days %>
+                      </td>
+                    <% } else { %>
+                      <td class="text-center text-dark py-3">
+                        <%= dt.from_hour %>
+                      </td>
+                      <td class="text-center text-dark py-3">
+                        <%= dt.to_hour %>
+                    </td>
+                    <% } %>
+                    <td class="text-center fw-bold py-3" style="color: #065f46;">
+                      ₹ <%= dt.vehicle_rate %>
+                    </td>
+                    <td class="text-center py-3">
+                      <span class="badge" style="background-color: #fef0c7; color: #dc6803; border-radius: 20px; padding: 6px 12px; font-weight: 600;">
+                        <%= dt.night_day_flag === 'O' ? 'Old Rate' : (dt.night_day_flag === 'N' ? 'New Rate' : (dt.night_day_flag === 'C' ? 'Custom' : 'Old Rate')) %>
+                      </span>
+                    </td>
+                    <td class="text-center py-3">
+                       <% if (selected.rate_type === "Monthly") { %>
+                      <a href='/superadmin/vehicle_edit_rate_monthly?customer_id=<%= selected.cust_id %>&id=<%= dt.sl_no %>'
+                        class='btn btn-sm' style='background-color: #e6f4ea; color: #065f46; border: 1px solid #065f46; border-radius: 6px;'>
+                        <i class='fa fa-edit'></i>
+                      </a>
+                      <% }else { %>
+                           <a href='/superadmin/vehicle_edit_rate?customer_id=<%= selected.cust_id %>&id=<%= dt.sl_no %>' class='btn btn-sm' style='background-color: #e6f4ea; color: #065f46; border: 1px solid #065f46; border-radius: 6px;'>
+                                          <i class='fa fa-edit'></i>
+                              </a>
+                        <% } %>
+                    </td>
+                  </tr>
+                  <% i++; }) 
+                
+                
+                
+                    } else { %>
+                    <tr>
+                      <td class="text-center text-danger py-4" colspan="6">No data found</td>
+                    </tr>
+                  <% } %>
+              </tbody>
+            </table>
+          </div>
+          <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<footer class="simple-footer mt-4">
+  <b>Santosh Parking © <span id="footerYear"></b></span>
+</footer>
+
+
+
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+    <div class="modal-content rounded-4 shadow-lg glass-bg border-0">
+      <!-- Modal Header -->
+      <div class="modal-header border-0" style="background: linear-gradient(45deg, #3a8b64, #367e61); border-radius: 15px 15px 0 0;">
+        <h3 class="modal-title fw-bold text-white">
+          <i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Vehicle
+            Rate</b>
+        </h3>
+        <!-- <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button> -->
+      </div>
+
+      <%- include('./vehicle_rate_modal', {seller, customer}) %>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="myModal_monthly">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+    <div class="modal-content rounded-4 shadow-lg glass-bg border-0">
+      <!-- Modal Header -->
+      <div class="modal-header border-0" style="background: linear-gradient(45deg, #3a8b64, #367e61); border-radius: 15px 15px 0 0;">
+        <h3 class="modal-title fw-bold text-white">
+          <i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Monthly Vehicle
+            Rate</b>
+        </h3>
+      </div>
+      <%- include('./vehicle_rate_modal_monthly', {seller, customer}) %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('#cust_name_sel').change()
+    $("#myBtn").click(function () {
+      $("#myModal").modal();
+      
+    });
+  });
+  $(document).ready(function () {
+    $('#cust_name_sel').change()
+    $("#myBtn_monthly").click(function () {
+      $("#myModal_monthly").modal();
+  
+    });
+  });
+
+  window.addEventListener('load', function () {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function () {
+      $('#cust_name_sel').select2({
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#veh_id_sel').select2({
+        placeholder: "Select Vehicle Name",
+        allowClear: true,
+        width: '100%'
+      });
+      // Initialize select2 for modal #myModal (add rate)
+      $('#myModal #cust_name').select2({
+        dropdownParent: $('#myModal'),
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#myModal #veh_id').select2({
+        dropdownParent: $('#myModal'),
+        placeholder: "Select Vehicle Name",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#myModal #night_day_flag').select2({
+        dropdownParent: $('#myModal'),
+        placeholder: "Select Flag",
+        allowClear: true,
+        width: '100%'
+      });
+      // Initialize select2 for monthly modal #myModal_monthly
+      $('#myModal_monthly #cust_name_monthly').select2({
+        dropdownParent: $('#myModal_monthly'),
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#myModal_monthly #veh_id_monthly').select2({
+        dropdownParent: $('#myModal_monthly'),
+        placeholder: "Select Vehicle Name",
+        allowClear: true,
+        width: '100%'
+      });
+    };
+    document.body.appendChild(script);
+  });
+</script>
+
+<script>
+  var cust_list = <%- JSON.stringify(customer) %>;
+  var rate_type = [{ id: 'D', name: 'Hourly' }, { id: 'F', name: 'Fixed' }]
+  $('#cust_name_sel').on('change', function () {
+    // console.log('here lalalalal');
+    var cust_id = $(this).val()
+    changeProcess(cust_id)
+  })
+
+  $(document).ready(function () {
+    // Superadmin: change event triggers on dropdown change
+    $('#cust_name_sel').on('change', function () {
+      var cust_id = $(this).val();
+      changeProcess(cust_id);
+    });
+
+    // Admin: automatically fetch vehicles based on user.userData.customer_id
+    <% if (user.userData.user_type === 'A') { %>
+      var admin_cust_id = '<%= user.userData.customer_id %>';
+      changeProcess(admin_cust_id);
+    <% } else { %>
+      // Superadmin: trigger change if already selected
+      var sel_cust_id = '<%= selected.cust_id %>';
+      if (sel_cust_id > 0) changeProcess(sel_cust_id);
+    <% } %>
+
+      // Modal button
+      $("#myBtn").click(function () {
+        $("#myModal").modal();
+      });
+  });
+
+  // $(document).ready(function () {
+  //   var sel_cust_id = '<%= selected.cust_id %>'
+  //   if (sel_cust_id > 0) {
+  //     changeProcess(sel_cust_id)
+  //   }
+  // })
+
+  function changeProcess(cust_id) {
+    var cust_dtls = cust_list.filter(dt => dt.customer_id == cust_id);
+    $('#rate_type_name').empty()
+    if (cust_dtls.length > 0) {
+      $('#rate_type_name').append($('<option>', { value: '', text: 'Select Rate Type' }))
+      $.each(rate_type, function (i, dt) {
+        var selected = false
+        if (cust_dtls[0].dev_mod == dt.id) selected = true
+        $('#rate_type_name').append($('<option>', { value: dt.id, text: dt.name, selected: selected }))
+      })
+      $('#rate_type').val(cust_dtls[0].dev_mod)
+    } else {
+      alert('Please select dev mode in customer first')
+    }
+
+    // $('#cust_name').change(function () {
+    //   var cust_id = $(this).val()
+    //   var veh_id = $(this).val()
+
+    $.ajax({
+      type: "POST",
+      url: "/superadmin/vehicle_dt",
+      data: { cust_id: cust_id },
+      success: function (response) {
+        // console.log(response.SUCCESS.branchData.msg)
+        $('#veh_id_sel').empty();
+        $('#veh_id_sel').append(`<option value="">Select Vehicle Name</option>`)
+
+        var sel_veh_id = '<%= selected.veh_id > 0 ? selected.veh_id : 0 %>'
+
+        response.SUCCESS.veh_id.msg.forEach(function (resData) {
+          var _selected = false
+          if (sel_veh_id == resData.vehicle_id) _selected = true
+          $('#veh_id_sel').append($('<option>', { value: resData.vehicle_id, text: resData.vehicle_name, selected: _selected }))
+          // $('#veh_id').append('<option value="' + resData.vehicle_id + '">' + resData.vehicle_id + '</option>');
+        });
+
+        if ($('#veh_id_sel').hasClass('select2-hidden-accessible')) {
+          $('#veh_id_sel').trigger('change.select2');
+        }
+      },
+      error: function (error) {
+        console.log(error);
+        //   tbody.empty();
+      },
+    });
+  }
+</script>
+
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    /* color: #6b7280;   soft gray */
+    color: black;
+    padding: 12px 0;
+    margin-left: 57vw;
+  }
+
+  .modal-lg-custom {
+    max-width: 60%;
+    /* Increase width as needed */
+  }
+
+  @media (max-width: 1200px) {
+    .modal-lg-custom {
+      max-width: 90%;
+      /* Responsive for smaller screens */
+    }
+  }
+
+  /* Custom Select2 Styling to match premium design */
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #065f46 transparent transparent transparent !important;
+    border-width: 6px 5px 0 5px !important;
+  }
+
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+
+  /* Dropdown Menu Styling */
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+  }
+
+  html body .select2-results__option {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: #374151 !important;
+    transition: all 0.2s ease !important;
+    text-align: center !important;
+  }
+
+  html body .select2-results__option:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+
+  html body .select2-search--dropdown .select2-search__field {
+    border-radius: 4px !important;
+    border: 1px solid #065f46 !important;
+    padding: 6px 10px !important;
+  }
+
+  html body .select2-search__field:focus {
+    outline: none !important;
+  }
+
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+
+  html body .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+
+  html body .select2-container {
+    width: 100% !important;
+  }
+
+  .card {
+    border-radius: 20px;
+    /* Make whole card rounded */
+    overflow: hidden;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+    color: #fff;
+  }
+
+  #dataTable thead th {
+    background: linear-gradient(45deg, #3a8b64, #367e61) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+
+  #dataTable tbody tr:hover {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    transition: 0.3s;
+  }
+
+  /* Pagination Color Override */
+  .page-item.active .page-link {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: white !important;
+  }
+  .page-link {
+    color: #065f46 !important;
+  }
+  .page-link:hover {
+    background-color: #e6f4ea !important;
+    color: #065f46 !important;
+  }
+
+  /* Form Controls & Toggle */
+  .form-control,
+  .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+  
+  textarea.form-control {
+    height: auto !important;
+  }
+
+  .form-control:hover,
+  .form-select:hover {
+    border-color: #059669 !important;
+    background-color: #ffffff !important;
+  }
+
+  .cust-toggle1 .toggle {
+    border-radius: 30px;
+    border: 1px solid #065f46;
+    height: 45px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  .cust-toggle1 .toggle-on {
+    border-radius: 30px 0 0 30px;
+    font-weight: bold;
+    padding-left: 20px;
+    background: linear-gradient(45deg, #3a8b64, #065f46) !important;
+    border-color: #065f46 !important;
+    color: white !important;
+    display: flex;
+    align-items: center;
+  }
+  .cust-toggle1 .toggle-off {
+    border-radius: 0 30px 30px 0;
+    font-weight: bold;
+    padding-right: 20px;
+    background-color: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .cust-toggle1 .toggle-handle {
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 1px solid #065f46;
+    margin: 2px;
+  }
+</style>

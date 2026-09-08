@@ -1,0 +1,658 @@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<style>
+  .left-sidebar {
+    background: #ffffff !important;
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .sidebar-nav #sidebarnav .sidebar-item.selected>.sidebar-link {
+    border-radius: 10px !important;
+    margin: 5px 10px !important;
+    padding: 12px 18px !important;
+    color: #ffffff !important;
+    background: #127253 !important;
+    box-shadow: 0 4px 10px rgba(18, 114, 83, 0.4);
+    opacity: 1;
+  }
+  .sidebar-nav #sidebarnav .sidebar-item.selected>.sidebar-link i,
+  .sidebar-nav #sidebarnav .sidebar-item.selected>.sidebar-link svg,
+  .sidebar-nav #sidebarnav .sidebar-item.selected>.sidebar-link .feather {
+    color: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  .scroll-sidebar {
+    height: 100%;
+    overflow-y: auto;
+    padding-top: 1rem;
+  }
+
+  .sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-item {
+    margin: 0; 
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px; /* Uniform padding */
+    margin: 5px 10px; /* Margin for the box */
+    font-size: 15px;
+    font-weight: 500;
+    color: #065f46 !important; /* Dark green text */
+    background-color: #e6f4ea; /* Light green box */
+    border-radius: 10px; /* Rounded box */
+    transition: all 0.3s ease;
+  }
+
+  /* When sidebar is collapsed, absolutely lock the margins and padding to prevent shifting on hover */
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav #sidebarnav .sidebar-item > .sidebar-link,
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .sidebar-nav #sidebarnav .sidebar-item > .sidebar-link,
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav #sidebarnav .sidebar-item > .sidebar-link:hover,
+  #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav #sidebarnav .sidebar-item > .sidebar-link,
+  #main-wrapper.mini-sidebar .left-sidebar:hover .sidebar-nav #sidebarnav .sidebar-item > .sidebar-link,
+  #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav #sidebarnav .sidebar-item > .sidebar-link:hover {
+    padding: 12px 0 !important;
+    justify-content: center !important;
+    margin: 5px 10px !important;
+    width: 45px !important; /* 65px container - 20px margin */
+    border-radius: 10px !important;
+    position: relative;
+    overflow: visible;
+    transition: none !important; /* Kill all dancing animations */
+    transform: none !important;
+  }
+
+  /* Prevent auto-expand on hover or click when mini-sidebar is active */
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar,
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover,
+  #main-wrapper.mini-sidebar .left-sidebar,
+  #main-wrapper.mini-sidebar .left-sidebar:hover {
+    width: 65px !important;
+    min-width: 65px !important;
+    max-width: 65px !important;
+  }
+
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .hide-menu,
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .hide-menu,
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .has-arrow::after,
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar:hover .nav-small-cap,
+  #main-wrapper.mini-sidebar .left-sidebar .hide-menu,
+  #main-wrapper.mini-sidebar .left-sidebar:hover .hide-menu,
+  #main-wrapper.mini-sidebar .left-sidebar:hover .has-arrow::after,
+  #main-wrapper.mini-sidebar .left-sidebar:hover .nav-small-cap {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .sidebar-link i,
+  .sidebar-link svg,
+  .sidebar-link .feather {
+    width: 20px;
+    color: #065f46 !important;
+    stroke: #065f46 !important;
+  }
+
+  .sidebar-link:hover,
+  .sidebar-item.active>.sidebar-link {
+    background: #c3ebd2; /* Slightly darker green on hover */
+    color: #065f46 !important;
+  }
+
+  .sidebar-link:hover i,
+  .sidebar-item.active>.sidebar-link i,
+  .sidebar-link:hover svg,
+  .sidebar-item.active>.sidebar-link svg,
+  .sidebar-link:hover .feather,
+  .sidebar-item.active>.sidebar-link .feather {
+    color: #065f46 !important;
+    stroke: #065f46 !important;
+  }
+
+  .logout-link {
+    background-color: #fee2e2 !important;
+    color: #991b1b !important;
+    margin-top: 15px !important;
+  }
+  .logout-link i, .logout-link svg {
+    color: #991b1b !important;
+    stroke: #991b1b !important;
+  }
+  .logout-link:hover {
+    background-color: #fca5a5 !important;
+    color: #7f1d1d !important;
+  }
+  .logout-link:hover i, .logout-link:hover svg {
+    color: #7f1d1d !important;
+    stroke: #7f1d1d !important;
+  }
+
+  .sidebar-item.has-arrow>a::after {
+    content: "›";
+    font-size: 14px;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-item.has-arrow.open>a::after {
+    transform: rotate(90deg);
+  }
+
+  .collapse {
+    display: none;
+    margin-left: 20px;
+  }
+
+  .sidebar-item.has-arrow.open>.collapse {
+    display: block;
+  }
+
+  /* Add default icon to submenu items so they aren't empty when sidebar is collapsed */
+  .sidebar-nav ul.collapse .sidebar-link::before {
+    content: '\f15c'; /* FontAwesome file-alt icon */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 16px;
+    width: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: inherit;
+    transition: all 0.3s ease;
+  }
+
+  /* When sidebar is collapsed, remove the left margin from submenus so they stay centered */
+  #main-wrapper[data-sidebartype="mini-sidebar"] .left-sidebar .sidebar-nav .collapse,
+  #main-wrapper.mini-sidebar .left-sidebar .sidebar-nav .collapse {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* Scrollbar styling */
+  .scroll-sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(6, 95, 70, 0.2);
+    border-radius: 10px;
+  }
+
+  .sidebar-nav {
+    padding-top: 0px;
+  }
+
+  /* .sidebar-item.has-arrow > a:after {
+  content: "\f107"; 
+} */
+</style>
+
+
+<aside class="left-sidebar">
+  <div class="scroll-sidebar">
+    <nav class="sidebar-nav">
+      <% if (user.userData.user_type==='S' ) { %>
+        <ul id="sidebarnav">
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/dashboard">
+              <i data-feather="home"></i>
+              <span class="hide-menu">Dashboard</span>
+            </a>
+          </li>
+
+          <li class="nav-small-cap" style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; padding: 20px 0 10px 28px;">
+            <span class="hide-menu">Reports</span>
+          </li>
+          <li class="sidebar-item">
+            <!-- <a
+            class="sidebar-link has-arrow"
+            href="javascript:void(0)"
+            aria-expanded="false"
+            ><i data-feather="file-text" class="feather-icon"></i
+            ><span class="hide-menu">New Reports</span></a
+          > -->
+            <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><i
+                data-feather="file-text" class="feather-icon"></i><span class="hide-menu">New Reports</span></a>
+            <ul aria-expanded="false" class="collapse first-level base-level-line">
+              <li class="sidebar-item">
+                <a href="/report/unbilled_report" class="sidebar-link">
+                  <span class="hide-menu">Unbilled Report</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a href="/report/details_report_new" class="sidebar-link"><span class="hide-menu">Detail
+                    Report</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a href="/report/veh_wise_repo_new" class="sidebar-link"><span class="hide-menu">Vehicle Wise</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a href="/report/dev_wise_repo_new" class="sidebar-link"><span class="hide-menu">Device Wise</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a href="/report/operator_wise_repo_new" class="sidebar-link"><span class="hide-menu">Operator
+                    Wise</span></a>
+              </li>
+              <li class="sidebar-item">
+                <a href="/report/shift_wise_repo" class="sidebar-link"><span class="hide-menu">Shiftwise</span></a>
+              </li>
+              <!-- <li class="sidebar-item">
+                <a href="/report/summary_report" class="sidebar-link"><span class="hide-menu">Summary Report</span></a>
+              </li> -->
+              <li class="sidebar-item">
+              <a href="/report/combine_repo_new" class="sidebar-link"
+                ><span class="hide-menu">Combine Report<br>(Vehicle)</span></a>
+            </li>
+            <li class="sidebar-item">
+              <a href="/report/combine_repo_dev_new" class="sidebar-link"
+                ><span class="hide-menu">Combine Report<br>(Device)</span></a>
+            </li>
+              <li class="sidebar-item">
+              <a href="/report/usr_wise_repo_new" class="sidebar-link"
+                ><span class="hide-menu">User Wise</span></a>
+            </li>
+            
+             <li class="sidebar-item">
+              <a href="/report/monthly_subscription" class="sidebar-link"
+                ><span class="hide-menu">Monthly subscription</span></a>
+            </li>
+             <li class="sidebar-item">
+              <a href="/report/upcoming_subscription_expiry" class="sidebar-link"
+                ><span class="hide-menu">Upcoming Subscription Expiry </span></a>
+            </li>
+            </ul>
+          </li>
+
+          <li class="nav-small-cap" style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; padding: 20px 0 10px 28px;">
+            <span class="hide-menu">Operations</span>
+          </li>
+          <!-- Example items -->
+
+          <!-- <li class="sidebar-item">
+          <a class="sidebar-link" href="/superadmin/location">
+            <i data-feather="map-pin"></i>
+            <span class="hide-menu">Locations</span>
+          </a>
+        </li> -->
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/customer">
+              <i class="fas fa-users"></i>
+              <span class="hide-menu">Location</span>
+            </a>
+          </li>
+
+          <!-- <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/admin">
+              <i class="fas fa-user-shield"></i>
+              <span class="hide-menu">Admin Create</span>
+            </a>
+          </li> -->
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/operator"><i data-feather="user-check"></i><span
+                class="hide-menu">Operator</span></a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/vehicle"><i class='fas fa-car'></i><span
+                class="hide-menu">Vehicle</span></a>
+          </li>
+
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/vehicle_rate"><i class="fas fa-ellipsis-h"></i><span
+                class="hide-menu">Vehicle Rate</span></a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/gst"><i data-feather="tag" class="feather-icon"></i><span
+                class="hide-menu">Manage GST</span></a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/shift"><i data-feather="corner-up-right"
+                class="feather-icon"></i><span class="hide-menu">Manage Shift</span></a>
+          </li>
+
+
+          <li class="sidebar-item">
+            <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+              <i data-feather="settings"></i>
+              <span class="hide-menu">Settings</span>
+            </a>
+            <ul aria-expanded="false" class="collapse first-level base-level-line">
+              <li class="sidebar-item">
+                <a href="/superadmin/device_setting" class="sidebar-link">
+                  <i data-feather="slack"></i>
+                  <span class="hide-menu">Device Setting</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a href="/superadmin/report_pass" class="sidebar-link">
+                  <i data-feather="key"></i>
+                  <span class="hide-menu">Report Password</span>
+                </a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/header_footer" aria-expanded="false"><i
+                    data-feather="activity" class="feather-icon"></i><span class="hide-menu">Header & Footer</span></a>
+              </li>
+              <!-- 
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/report_permission" aria-expanded="false"><i
+                    data-feather="send" class="feather-icon"></i><span class="hide-menu">Report Permission</span></a>
+              </li> 
+              -->
+
+            </ul>
+          </li>
+          <!-- <li class="sidebar-item">
+            <a
+              class="sidebar-link"
+              href="/superadmin/view_trans"
+              aria-expanded="false"
+              ><i class="fas fa-eye"></i
+              ><span class="hide-menu">View Transactions</span></a
+            >
+          </li> -->
+
+          <!-- <li class="sidebar-item">
+            <a class="sidebar-link" href="/superadmin/db_backup"><i data-feather="database"
+                class="feather-icon"></i><span class="hide-menu">DB Backup</span></a>
+          </li> -->
+
+          <li class="sidebar-item">
+            <a class="sidebar-link logout-link" href="/superadmin_logout">
+              <i data-feather="log-out"></i>
+              <span class="hide-menu">Logout</span>
+            </a>
+          </li>
+        </ul>
+        <% } %>
+
+          <% if (user.userData.user_type==='A' ) { %>
+            <ul id="sidebarnav">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/dashboard">
+                  <i data-feather="home"></i>
+                  <span class="hide-menu">Dashboard</span>
+                </a>
+              </li>
+
+              <% if ( user && user.reportPermission && ( user.reportPermission.detail_report==='Y' ||
+                user.reportPermission.veh_wise_report==='Y' || user.reportPermission.dev_wise_report==='Y' ||
+                user.reportPermission.operate_wise_report==='Y' || user.reportPermission.shift_wise_report==='Y' ||
+                user.reportPermission.summary_report==='Y' ) ) { %>
+                <li class="nav-small-cap" style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; padding: 20px 0 10px 28px;">
+                  <span class="hide-menu">Reports</span>
+                </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+                    <i data-feather="file-text" class="feather-icon"></i>
+                    <span class="hide-menu">New Reports</span>
+                  </a>
+                  <ul aria-expanded="false" class="collapse first-level base-level-line">
+
+                    <% if (user.reportPermission.detail_report==='Y' ) { %>
+                      <li class="sidebar-item">
+                        <a href="/report/details_report_new_admin" class="sidebar-link">
+                          <span class="hide-menu">Detail Report</span>
+                        </a>
+                      </li>
+                      <% } %>
+
+                        <% if (user.reportPermission.veh_wise_report==='Y' ) { %>
+                          <li class="sidebar-item">
+                            <a href="/report/veh_wise_repo_new_admin" class="sidebar-link">
+                              <span class="hide-menu">Vehicle Wise</span>
+                            </a>
+                          </li>
+                          <% } %>
+
+                            <% if (user.reportPermission.dev_wise_report==='Y' ) { %>
+                              <li class="sidebar-item">
+                                <a href="/report/dev_wise_repo_new_admin" class="sidebar-link">
+                                  <span class="hide-menu">Device Wise</span>
+                                </a>
+                              </li>
+                              <% } %>
+
+                                <% if (user.reportPermission.operate_wise_report==='Y' ) { %>
+                                  <li class="sidebar-item">
+                                    <a href="/report/operator_wise_repo_new_admin" class="sidebar-link">
+                                      <span class="hide-menu">Operator Wise</span>
+                                    </a>
+                                  </li>
+                                  <% } %>
+
+                                    <% if (user.reportPermission.shift_wise_report==='Y' ) { %>
+                                      <li class="sidebar-item">
+                                        <a href="/report/shift_wise_repo_admin" class="sidebar-link">
+                                          <span class="hide-menu">Shiftwise</span>
+                                        </a>
+                                      </li>
+                                      <% } %>
+
+                                        <% if (user.reportPermission.summary_report==='Y' ) { %>
+                                          <li class="sidebar-item">
+                                            <a href="/report/summary_report" class="sidebar-link">
+                                              <span class="hide-menu">Summary Report</span>
+                                            </a>
+                                          </li>
+                                          <% } %>
+
+                  </ul>
+                </li>
+                <% } %>
+
+              <li class="nav-small-cap" style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; padding: 20px 0 10px 28px;">
+                <span class="hide-menu">Operations</span>
+              </li>
+
+              <!-- <li class="sidebar-item">
+          <a class="sidebar-link" href="/superadmin/location">
+            <i data-feather="map-pin"></i>
+            <span class="hide-menu">Locations</span>
+          </a>
+        </li> -->
+
+              <!-- <li class="sidebar-item">
+          <a class="sidebar-link" href="/superadmin/customer">
+            <i class="fas fa-users"></i>
+            <span class="hide-menu">Location</span>
+          </a>
+        </li> -->
+
+              <!-- <li class="sidebar-item">
+          <a class="sidebar-link" href="/superadmin/admin">
+            <i class="fas fa-user-shield"></i> 
+            <span class="hide-menu">Admin</span>
+          </a>
+        </li> -->
+
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/operator"><i data-feather="user-check"></i><span
+                    class="hide-menu">Operator</span></a>
+              </li>
+
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/vehicle"><i class='fas fa-car'></i><span
+                    class="hide-menu">Vehicle</span></a>
+              </li>
+
+
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/vehicle_rate"><i class="fas fa-ellipsis-h"></i><span
+                    class="hide-menu">Vehicle Rate</span></a>
+              </li>
+
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/gst"><i data-feather="tag" class="feather-icon"></i><span
+                    class="hide-menu">Manage GST</span></a>
+              </li>
+
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/superadmin/shift"><i data-feather="corner-up-right"
+                    class="feather-icon"></i><span class="hide-menu">Manage Shift</span></a>
+              </li>
+
+                  <!-- <li class="sidebar-item">
+  <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
+    <i data-feather="settings"></i>
+    <span class="hide-menu">Settings</span>
+  </a>
+  <ul aria-expanded="false" class="collapse first-level base-level-line">
+    <li class="sidebar-item">
+      <a href="/superadmin/device_setting" class="sidebar-link">
+        <i data-feather="slack"></i>
+        <span class="hide-menu">Device Setting</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+      <a href="/superadmin/report_pass" class="sidebar-link">
+        <i data-feather="key"></i>
+        <span class="hide-menu">Report Password</span>
+      </a>
+    </li>
+    <li class="sidebar-item">
+            <a
+              class="sidebar-link"
+              href="/superadmin/header_footer"
+              aria-expanded="false"
+              ><i data-feather="activity" class="feather-icon"></i
+              ><span class="hide-menu">Header & Footer</span></a
+            >
+          </li>
+  </ul>
+</li> -->
+                  <!-- <li class="sidebar-item">
+            <a
+              class="sidebar-link"
+              href="/superadmin/view_trans"
+              aria-expanded="false"
+              ><i class="fas fa-eye"></i
+              ><span class="hide-menu">View Transactions</span></a
+            >
+          </li> -->
+
+                  <li class="sidebar-item">
+                    <a class="sidebar-link logout-link" href="/superadmin_logout">
+                      <i data-feather="log-out"></i>
+                      <span class="hide-menu">Logout</span>
+                    </a>
+                  </li>
+            </ul>
+            <% } %>
+    </nav>
+  </div>
+</aside>
+
+
+<script>
+  $(document).ready(function() {
+    // Kill any native template hover event loops that cause "dancing"
+    $(".left-sidebar, .sidebar-item").off('mouseenter mouseleave');
+    
+    // Custom floating tooltip for mini-sidebar
+    $(".sidebar-link").hover(function(e) {
+      if ($("#main-wrapper").hasClass("mini-sidebar") || $("#main-wrapper").attr("data-sidebartype") === "mini-sidebar") {
+        var text = $(this).find(".hide-menu").text().trim();
+        if (!text) return;
+        
+        if ($('#custom-sidebar-tooltip').length === 0) {
+          $('body').append('<div id="custom-sidebar-tooltip" style="position:fixed; background:#1f2937; color:#fff; padding:6px 12px; border-radius:6px; font-size:13px; font-weight:500; z-index:999999; pointer-events:none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>');
+        }
+        
+        var rect = this.getBoundingClientRect();
+        $('#custom-sidebar-tooltip').text(text).css({
+          top: rect.top + (rect.height / 2) - 15 + 'px',
+          left: rect.left + rect.width + 10 + 'px',
+          display: 'block'
+        });
+      }
+    }, function() {
+      $('#custom-sidebar-tooltip').hide();
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get current path
+    const currentPath = window.location.pathname;
+    
+    // Get all sidebar links
+    const links = document.querySelectorAll('.sidebar-link');
+    
+    links.forEach(link => {
+      const parentLi = link.closest('.sidebar-item');
+      const href = link.getAttribute('href');
+      let isActive = (href === currentPath);
+      
+      // Also keep the Location sidebar active if we are on edit_customer page
+      if (currentPath.includes('edit_customer') && href === '/superadmin/customer') {
+        isActive = true;
+      }
+      
+      // Keep Report Password active on its edit page
+      if (currentPath.includes('edit_report_pass') && href === '/superadmin/report_pass') {
+        isActive = true;
+      }
+
+      // Keep Header Footer active on its edit page
+      if (currentPath.includes('edit_header_footer') && href === '/superadmin/header_footer') {
+        isActive = true;
+      }
+
+      // Keep Device Setting active on its edit page
+      if (currentPath.includes('edit_device_setting') && href === '/superadmin/device_setting') {
+        isActive = true;
+      }
+      
+      // Match link href with current path
+      if (isActive) {
+        parentLi.classList.add('selected'); // highlight this item
+        
+        // If inside a submenu, open the parent
+        const collapse = link.closest('.collapse');
+        if (collapse) {
+          collapse.classList.add('show'); // open submenu
+          collapse.style.display = 'block'; // force display block just in case
+          const parentItem = collapse.closest('.sidebar-item');
+          if (parentItem) {
+            parentItem.classList.add('open', 'active', 'selected');
+            const parentLink = parentItem.querySelector('a.has-arrow');
+            if(parentLink) {
+                parentLink.classList.add('active');
+                parentLink.setAttribute('aria-expanded', 'true');
+            }
+          }
+        }
+        
+        // Automatically scroll the sidebar container to show the active item
+        setTimeout(() => {
+          const scrollContainer = document.querySelector('.scroll-sidebar');
+          if (scrollContainer && parentLi) {
+            scrollContainer.scrollTo({
+              top: parentLi.offsetTop - (scrollContainer.clientHeight / 2) + (parentLi.clientHeight / 2),
+              behavior: 'smooth'
+            });
+          } else if (parentLi) {
+            parentLi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 300);
+      } else {
+        parentLi.classList.remove('selected');
+      }
+    });
+  });
+</script>

@@ -1,0 +1,743 @@
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3"
+                    style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+                    <div class="d-flex align-items-center">
+                        <div class="text-white rounded"
+                            style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+                            <i class="fas fa-list-alt fs-5"></i>
+                        </div>
+                        <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">
+                            <%= title %>
+                        </h4>
+                    </div>
+                </div>
+
+                <!-- Search Form -->
+                <div class="p-4 mb-4 mt-3 mx-3"
+                    style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+                    <div class="row g-4 align-items-end mb-3">
+                        <!-- From Date -->
+                        <div class="col-md-4">
+                            <label for="frm_dt" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-calendar-alt"></i> From Date</label>
+                            <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                        </div>
+                        <!-- To Date -->
+                        <div class="col-md-4">
+                            <label for="to_dt" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-calendar-alt"></i> To Date</label>
+                            <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                        </div>
+                        <!-- Customer Select -->
+                        <div class="col-md-4">
+                            <label for="custId" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-map-marker-alt"></i> Location Name</label>
+                            <select name="custId" class="form-control" id="custId" required
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                <option value="">Select Location</option>
+                                <% if (data.msg && data.msg.length> 0) { %>
+                                    <% data.msg.forEach(customer=> { %>
+                                        <option value="<%= customer.customer_id %>">
+                                            <%= customer.customer_name %>
+                                        </option>
+                                        <% }) %>
+                                            <% } %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 align-items-end">
+                        <!-- Pay Mode -->
+                        <div class="col-md-4">
+                            <label for="pay_mode" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-wallet"></i> Pay Mode</label>
+                            <select name="pay_mode" id="pay_mode" class="form-control"
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                <option value="A" selected>All Modes</option>
+                                <option value="C">CASH</option>
+                                <option value="U">UPI</option>
+                            </select>
+                        </div>
+                        <!-- Operator -->
+                        <div class="col-md-4">
+                            <label for="operator_id" class="text-dark mb-2" style="font-size: 14px;"><i
+                                    class="fas fa-user-circle"></i> Operator</label>
+                            <select name="operator_id" id="operator_id" class="form-control"
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                <option value="">Select Operator Name</option>
+                                <option value="A" selected>All Operators</option>
+                                <% if (operators && operators.msg && operators.msg.length> 0) { %>
+                                    <% operators.msg.forEach(operator=> { %>
+                                        <option value="<%= operator.operator_id %>">
+                                            <%= operator.operator_name %>
+                                        </option>
+                                        <% }) %>
+                                            <% } %>
+                            </select>
+                        </div>
+                        <!-- Search Button -->
+                        <div class="col-md-4 text-center">
+                            <div class="d-flex justify-content-center">
+                                <button type="button" class="btn flex-grow-1 text-white" id="btnSubmit"
+                                    style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                                    <i class="fa fa-search me-2"></i> Fetch Details
+                                </button>
+                                <a href="/report/summary_report" class="btn shadow-sm"
+                                    style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;"
+                                    title="Refresh">
+                                    <i class="fas fa-sync-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle Search sub-row -->
+                <div class="p-4 mb-4 mx-3" id="vehicleSearchSection"
+                    style="display:none; background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; border-left: 4px solid #065f46;">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label for="vehicleSearch" class="text-dark mb-2" style="font-size: 14px;"><b>Search Vehicle
+                                    No.</b></label>
+                            <input type="text" id="vehicleSearch" class="form-control" placeholder="Enter Vehicle No."
+                                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn text-white w-100" id="btnVehicleSearch"
+                                style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                                <i class="fa fa-search me-2"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dateWiseDataTable mt-5" id="resultDiv" style="display: none;">
+                    <h5 class="text-center text-secondary mb-3">
+                        <span id="searchCred"></span>
+                    </h5>
+                    <div class="table-responsive shadow-sm rounded-3">
+                        <table id="summary-datatable" class="table table-bordered table-hover align-middle w-100"
+                            style="white-space: nowrap;">
+                            <thead class="table-fixed-header">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Receipt No</th>
+                                    <th scope="col">Date Time In</th>
+                                    <th scope="col">Machine In</th>
+                                    <th scope="col">Vehicle Type</th>
+                                    <th scope="col">Vehicle No</th>
+                                    <th scope="col">Date Time Out</th>
+                                    <th scope="col">Machine Out</th>
+                                    <th scope="col">Base Amount</th>
+                                    <th scope="col">Advance Amount</th>
+                                    <th scope="col">CGST</th>
+                                    <th scope="col">SGST</th>
+                                    <th scope="col">IGST</th>
+                                    <th scope="col">Paid Amount</th>
+                                    <th scope="col">Net Amount</th>
+                                    <th scope="col">Mode</th>
+                                    <th scope="col">Operator Name</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td scope="col" colspan="8" class="text-end"><b>Grand Total</b></td>
+                                    <td scope="col" id="tot_base"><b>0.00</b></td>
+                                    <td scope="col" id="tot_advance"><b>0.00</b></td>
+                                    <td scope="col" id="tot_cgst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_sgst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_igst"><b>0.00</b></td>
+                                    <td scope="col" id="tot_paid"><b>0.00</b></td>
+                                    <td scope="col" id="tot_net"><b>0.00</b></td>
+                                    <td scope="col" colspan="2"></td>
+                                </tr>
+                                <tr id="upiRow" style="display: none;">
+                                    <td scope="col" colspan="13" class="text-end">Grand Total UPI</td>
+                                    <td scope="col" class="text-left" id="tot_upi" colspan="4">0.00</td>
+                                </tr>
+                                <tr id="cashRow" style="display: none;">
+                                    <td scope="col" colspan="13" class="text-end">Grand Total Cash</td>
+                                    <td scope="col" class="text-left" id="tot_cash" colspan="4">0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="text-end mt-3">
+                            <button class="btn btn-gradient-print btn-sm px-4 shadow-sm me-2 no-print"
+                                onclick="printDiv()" style="height: 38px; border-radius: 6px;">
+                                <i class="fa fa-print me-2"></i> Print
+                            </button>
+                            <button class="btn btn-success btn-sm px-4 shadow-sm no-print" onclick="downloadExcel()"
+                                style="height: 38px; border-radius: 6px;">
+                                <i class="fa fa-file-excel me-2"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="simple-footer mt-4 text-center">
+    <b>Santosh Parking © <span id="footerYear"></span></b>
+</footer>
+
+<style>
+    .form-control:focus {
+        box-shadow: none !important;
+        border-color: #065f46 !important;
+    }
+
+    html body .select2-container.select2-container--focus .select2-selection--single,
+    html body .select2-container.select2-container--open .select2-selection--single {
+        box-shadow: none !important;
+        border-color: #065f46 !important;
+    }
+
+    html body .select2-container .select2-selection--single {
+        border: 1px solid #065f46 !important;
+        border-radius: 8px !important;
+        height: 45px !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__rendered {
+        color: #000000 !important;
+        font-weight: normal !important;
+        font-size: 16px !important;
+        width: 100%;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__arrow {
+        height: 43px !important;
+        right: 12px !important;
+    }
+
+    html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+        border-color: transparent transparent #065f46 transparent !important;
+        border-width: 0 5px 6px 5px !important;
+    }
+
+    html body .select2-dropdown {
+        border: 1px solid #065f46 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    html body .select2-results__option {
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        color: #374151 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    html body .select2-results__option:hover {
+        background-color: #ecfdf5 !important;
+        color: #065f46 !important;
+    }
+
+    html body .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+        background-color: #065f46 !important;
+        color: white !important;
+    }
+
+    html body .select2-container .select2-results__option--highlighted[data-selected] {
+        background-color: #065f46 !important;
+        color: #ffffff !important;
+    }
+
+    html body .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: #ecfdf5 !important;
+        color: #065f46 !important;
+    }
+
+    .page-item.active .page-link {
+        background-color: #065f46 !important;
+        border-color: #065f46 !important;
+        color: white !important;
+    }
+
+    .page-link {
+        color: #065f46 !important;
+    }
+
+    .page-link:hover {
+        background-color: #ecfdf5 !important;
+        color: #065f46 !important;
+    }
+
+    .table-fixed-header th {
+        background-color: #064e3b;
+        color: #ffffff;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+
+    .table tfoot tr {
+        background-color: #e2e8f0;
+        color: #1f2937;
+        font-weight: 700;
+    }
+
+    .btn-gradient-print {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        color: rgb(20, 14, 14);
+        border: none;
+        border-radius: 3px;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+
+    .btn-success {
+        background: linear-gradient(90deg, #064e3b, #022c22);
+        color: white;
+        border-radius: 3px;
+        border: none;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+    window.addEventListener('load', function () {
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+        script.onload = function () {
+            $('#custId, #pay_mode, #operator_id').select2({
+                allowClear: false,
+                width: '100%'
+            });
+        };
+        document.body.appendChild(script);
+    });
+</script>
+
+<script>
+    document.getElementById("footerYear").textContent = new Date().getFullYear();
+
+    $(document).ready(function () {
+        let table;
+
+        // Dynamically load operators when customer is selected
+        $('#custId').on('change', function () {
+            var custId = $(this).val();
+            if (custId) {
+                $.ajax({
+                    method: "POST",
+                    url: "/report/get_operators_by_location",
+                    data: JSON.stringify({ custId }),
+                    contentType: "application/json",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#operator_id").html('<option value="">Loading...</option>');
+                    },
+                    success: function (res) {
+//                       res.msg.forEach(item => {
+//     console.log(item.operator_id);
+//     console.log(item.operator_name);
+// });
+// console.log(JSON.stringify(res.msg, null, 2));
+
+//                         alert(res.msg);
+                        if (res.msg && res.suc > 0 ) {
+                            // let options = '<option value="">Select Operator Name</option>';
+                            // options += '<option value="A" selected>All Operators</option>';
+                            // res.msg.msg.forEach(op => {
+                            //     options += `<option value="${op.operator_id}">${op.operator_name}</option>`;
+                            // });
+                            // $("#operator_id").html(options).val("A").trigger('change');
+
+                        let options = '<option value="">Select Operator Name</option>';
+                                options += '<option value="A" selected>All Operators</option>';
+
+                                res.msg.forEach(op => {
+                                    options += `<option value="${op.operator_id}">${op.operator_name}</option>`;
+                                });
+
+                                $("#operator_id").html(options).val("A").trigger("change");
+                        } else {
+                            $("#operator_id").html('<option value="">No Operator Found</option>').trigger('change');
+                        }
+                    },
+                    error: function () {
+                        $("#operator_id").html('<option value="">Error loading operators</option>').trigger('change');
+                    }
+                });
+            } else {
+                $("#operator_id").html('<option value="">Select Operator Name</option>').trigger('change');
+            }
+        });
+
+        // Initialize DataTable
+        function fetchDatatable() {
+            var frm_dt = $('#frm_dt').val();
+            var to_dt = $('#to_dt').val();
+            var custId = $('#custId').val();
+            var pay_mode = $('#pay_mode').val();
+            var operator_id = $('#operator_id').val();
+            var custName = $("#custId option:selected").text();
+
+            if (frm_dt && to_dt && custId && pay_mode && operator_id) {
+                if (table) {
+                    table.destroy();
+                    $('#summary-datatable tbody').empty();
+                }
+
+                $('#resultDiv').show();
+                $('#vehicleSearchSection').show();
+                $('#searchCred').html(`<b>Summary Report of ${custName} from ${createDate(frm_dt)} to ${createDate(to_dt)}</b>`);
+
+                table = $('#summary-datatable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    searching: false,
+                    lengthChange: true,
+                    pageLength: 50,
+                    ajax: {
+                        url: "/report/get_details_report_new",
+                        type: "POST",
+                        data: function (d) {
+                            d.frm_dt = $('#frm_dt').val();
+                            d.to_dt = $('#to_dt').val();
+                            d.custId = $('#custId').val();
+                            d.pay_mode = $('#pay_mode').val();
+                            d.operator_id = $('#operator_id').val();
+                            d.vehicle_no = $('#vehicleSearch').val();
+                        },
+                        beforeSend: function () {
+                            $(".preloader").fadeIn();
+                        },
+                        complete: function () {
+                            $(".preloader").fadeOut();
+                        }
+                    },
+                    drawCallback: function (settings) {
+                        if (settings.json && settings.json.grandTotals) {
+                            let gt = settings.json.grandTotals;
+                            $('#tot_base').text(parseFloat(gt.base_amt || 0).toFixed(2));
+                            $('#tot_advance').text(parseFloat(gt.advance_amt || 0).toFixed(2));
+                            $('#tot_cgst').text(parseFloat(gt.cgst || 0).toFixed(2));
+                            $('#tot_sgst').text(parseFloat(gt.sgst || 0).toFixed(2));
+                            $('#tot_igst').text(parseFloat(gt.igst || 0).toFixed(2));
+                            $('#tot_paid').text(parseFloat(gt.paid_amt || 0).toFixed(2));
+
+                            let grand_net = parseFloat(gt.base_amt || 0) + parseFloat(gt.advance_amt || 0) + parseFloat(gt.cgst || 0) + parseFloat(gt.sgst || 0) + parseFloat(gt.igst || 0);
+                            $('#tot_net').text(grand_net.toFixed(2));
+
+                            if (pay_mode === 'A') {
+                                $('#upiRow').show();
+                                $('#cashRow').show();
+                                $('#tot_upi').text(parseFloat(gt.tot_upi || 0).toFixed(2));
+                                $('#tot_cash').text(parseFloat(gt.tot_cash || 0).toFixed(2));
+                            } else {
+                                $('#upiRow').hide();
+                                $('#cashRow').hide();
+                            }
+                        }
+                    },
+                    columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        { data: "receipt_no", render: function (data) { return data ? String(data).slice(-5) : ''; } },
+                        { data: "date_time_in" },
+                        { data: "device_id" },
+                        { data: "vehicle_name" },
+                        { data: "vehicle_no" },
+                        { data: "date_time_out" },
+                        { data: "device_id_out" },
+                        { data: "base_amt", render: function (data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "advance_amt", render: function (data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "cgst", render: function (data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "sgst", render: function (data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "igst", render: function (data) { return parseFloat(data || 0).toFixed(2); } },
+                        { data: "paid_amt", render: function (data) { return parseFloat(data || 0).toFixed(2); } },
+                        {
+                            data: null, render: function (data, type, row) {
+                                return (parseFloat(row.base_amt || 0) + parseFloat(row.advance_amt || 0) + parseFloat(row.cgst || 0) + parseFloat(row.sgst || 0) + parseFloat(row.igst || 0)).toFixed(2);
+                            }
+                        },
+                        { data: "pay_mode", render: function (data) { return data === 'U' ? 'UPI' : (data === 'C' ? 'CASH' : ''); } },
+                        { data: "operator_name" }
+                    ]
+                });
+            } else {
+                alert("Please fill all fields.");
+            }
+        }
+
+        $('#btnSubmit').on('click', fetchDatatable);
+
+        $('#btnVehicleSearch').on('click', function () {
+            if (table) {
+                table.ajax.reload();
+            }
+        });
+    });
+
+    function downloadExcel() {
+        var frm_dt = $('#frm_dt').val();
+        var to_dt = $('#to_dt').val();
+        var custId = $('#custId').val();
+        var pay_mode = $('#pay_mode').val();
+        var operator_id = $('#operator_id').val();
+        var custName = $("#custId option:selected").text();
+
+        if (!frm_dt || !to_dt || !custId || !operator_id) {
+            alert("Please select filters and search first.");
+            return;
+        }
+
+        $(".preloader").fadeIn();
+        $.ajax({
+            url: "/report/get_details_report_excel",
+            type: "POST",
+            data: { frm_dt, to_dt, custId, pay_mode, operator_id },
+            success: function (response) {
+                $(".preloader").fadeOut();
+                if (response.suc > 0 && response.data.length > 0) {
+                    var excelData = [];
+                    var tot_base = 0, tot_advance = 0, tot_cgst = 0, tot_sgst = 0, tot_igst = 0, tot_paid = 0, tot_net = 0;
+                    var tot_upi = 0, tot_cash = 0;
+
+                    for (var i = 0; i < response.data.length; i++) {
+                        var row = response.data[i];
+                        tot_base += parseFloat(row.base_amt || 0);
+                        tot_advance += parseFloat(row.advance_amt || 0);
+                        tot_cgst += parseFloat(row.cgst || 0);
+                        tot_sgst += parseFloat(row.sgst || 0);
+                        tot_igst += parseFloat(row.igst || 0);
+                        tot_paid += parseFloat(row.paid_amt || 0);
+
+                        var row_net = parseFloat(row.base_amt || 0) + parseFloat(row.advance_amt || 0) + parseFloat(row.cgst || 0) + parseFloat(row.sgst || 0) + parseFloat(row.igst || 0);
+                        tot_net += row_net;
+
+                        if (row.pay_mode === 'U') tot_upi += row_net;
+                        if (row.pay_mode === 'C') tot_cash += row_net;
+
+                        excelData.push({
+                            "Sl No": i + 1,
+                            "Receipt No": row.receipt_no ? String(row.receipt_no).slice(-5) : '',
+                            "Date Time In": row.date_time_in,
+                            "Machine In": row.device_id,
+                            "Vehicle Type": row.vehicle_name,
+                            "Vehicle No": row.vehicle_no,
+                            "Date Time Out": row.date_time_out,
+                            "Machine Out": row.device_id_out,
+                            "Base Amount": parseFloat(row.base_amt || 0).toFixed(2),
+                            "Advance Amount": parseFloat(row.advance_amt || 0).toFixed(2),
+                            "CGST": parseFloat(row.cgst || 0).toFixed(2),
+                            "SGST": parseFloat(row.sgst || 0).toFixed(2),
+                            "IGST": parseFloat(row.igst || 0).toFixed(2),
+                            "Paid Amount": parseFloat(row.paid_amt || 0).toFixed(2),
+                            "Net Amount": row_net.toFixed(2),
+                            "Mode": row.pay_mode === 'U' ? 'UPI' : (row.pay_mode === 'C' ? 'CASH' : ''),
+                            "Operator Name": row.operator_name
+                        });
+                    }
+
+                    excelData.push({
+                        "Sl No": "", "Receipt No": "Grand Total", "Date Time In": "", "Machine In": "",
+                        "Vehicle Type": "", "Vehicle No": "", "Date Time Out": "", "Machine Out": "",
+                        "Base Amount": tot_base.toFixed(2),
+                        "Advance Amount": tot_advance.toFixed(2),
+                        "CGST": tot_cgst.toFixed(2),
+                        "SGST": tot_sgst.toFixed(2),
+                        "IGST": tot_igst.toFixed(2),
+                        "Paid Amount": tot_paid.toFixed(2),
+                        "Net Amount": tot_net.toFixed(2),
+                        "Mode": "", "Operator Name": ""
+                    });
+
+                    if (pay_mode === 'A') {
+                        excelData.push({
+                            "Sl No": "", "Receipt No": "Total UPI", "Date Time In": "", "Machine In": "",
+                            "Vehicle Type": "", "Vehicle No": "", "Date Time Out": "", "Machine Out": "",
+                            "Base Amount": tot_upi.toFixed(2), "Advance Amount": "", "CGST": "", "SGST": "", "IGST": "", "Paid Amount": "", "Net Amount": "", "Mode": "", "Operator Name": ""
+                        });
+                        excelData.push({
+                            "Sl No": "", "Receipt No": "Total Cash", "Date Time In": "", "Machine In": "",
+                            "Vehicle Type": "", "Vehicle No": "", "Date Time Out": "", "Machine Out": "",
+                            "Base Amount": tot_cash.toFixed(2), "Advance Amount": "", "CGST": "", "SGST": "", "IGST": "", "Paid Amount": "", "Net Amount": "", "Mode": "", "Operator Name": ""
+                        });
+                    }
+
+                    var ws = XLSX.utils.json_to_sheet(excelData);
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Summary Report");
+                    XLSX.writeFile(wb, "Summary_Report_" + custName + ".xlsx");
+                } else {
+                    alert("No data available for Excel export.");
+                }
+            },
+            error: function () {
+                $(".preloader").fadeOut();
+                alert("Error generating Excel.");
+            }
+        });
+    }
+
+    function printDiv() {
+        var frm_dt = $('#frm_dt').val();
+        var to_dt = $('#to_dt').val();
+        var custId = $('#custId').val();
+        var pay_mode = $('#pay_mode').val();
+        var operator_id = $('#operator_id').val();
+        var custName = $("#custId option:selected").text();
+
+        if (!frm_dt || !to_dt || !custId || !operator_id) return;
+
+        $(".preloader").fadeIn();
+        $.ajax({
+            url: "/report/get_details_report_excel",
+            type: "POST",
+            data: { frm_dt, to_dt, custId, pay_mode, operator_id },
+            success: function (response) {
+                $(".preloader").fadeOut();
+                if (response.suc > 0 && response.data.length > 0) {
+
+                    var tableHtml = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h2>Summary Report</h2>
+                        <h4>Location: ${custName}</h4>
+                        <p>From: ${createDate(frm_dt)} To: ${createDate(to_dt)}</p>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12px;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Sl No</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Receipt No</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Date In</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Machine In</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Vehicle Type</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Vehicle No</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Date Out</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Machine Out</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Base Amt</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Adv Amt</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">CGST</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">SGST</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">IGST</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Paid Amt</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Net Amt</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Mode</th>
+                                <th style="border: 1px solid #000; padding: 6px; background-color: #e2e8f0;">Operator</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+
+                    var tot_base = 0, tot_advance = 0, tot_cgst = 0, tot_sgst = 0, tot_igst = 0, tot_paid = 0, tot_net = 0;
+                    var tot_upi = 0, tot_cash = 0;
+
+                    for (var i = 0; i < response.data.length; i++) {
+                        var row = response.data[i];
+                        tot_base += parseFloat(row.base_amt || 0);
+                        tot_advance += parseFloat(row.advance_amt || 0);
+                        tot_cgst += parseFloat(row.cgst || 0);
+                        tot_sgst += parseFloat(row.sgst || 0);
+                        tot_igst += parseFloat(row.igst || 0);
+                        tot_paid += parseFloat(row.paid_amt || 0);
+
+                        var row_net = parseFloat(row.base_amt || 0) + parseFloat(row.advance_amt || 0) + parseFloat(row.cgst || 0) + parseFloat(row.sgst || 0) + parseFloat(row.igst || 0);
+                        tot_net += row_net;
+
+                        if (row.pay_mode === 'U') tot_upi += row_net;
+                        if (row.pay_mode === 'C') tot_cash += row_net;
+
+                        tableHtml += `
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${i + 1}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.receipt_no ? String(row.receipt_no).slice(-5) : ''}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.date_time_in}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.device_id}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.vehicle_name}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.vehicle_no}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.date_time_out}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.device_id_out}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: right;">${parseFloat(row.base_amt || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: right;">${parseFloat(row.advance_amt || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: right;">${parseFloat(row.cgst || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: right;">${parseFloat(row.sgst || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: right;">${parseFloat(row.igst || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: right;">${parseFloat(row.paid_amt || 0).toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: right;">${row_net.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.pay_mode === 'U' ? 'UPI' : (row.pay_mode === 'C' ? 'CASH' : '')}</td>
+                            <td style="border: 1px solid #000; padding: 4px; text-align: center;">${row.operator_name}</td>
+                        </tr>
+                        `;
+                    }
+
+                    tableHtml += `
+                        <tr style="background-color: #f8f9fa; font-weight: bold;">
+                            <td colspan="8" style="border: 1px solid #000; padding: 6px; text-align: right;">Grand Total:</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_base.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_advance.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_cgst.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_sgst.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_igst.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_paid.toFixed(2)}</td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: right;">${tot_net.toFixed(2)}</td>
+                            <td colspan="2" style="border: 1px solid #000;"></td>
+                        </tr>`;
+
+                    if (pay_mode === 'A') {
+                        tableHtml += `
+                        <tr style="background-color: #f8f9fa; font-weight: bold;">
+                            <td colspan="12" style="border: 1px solid #000; padding: 6px; text-align: right;">Total UPI:</td>
+                            <td colspan="5" style="border: 1px solid #000; padding: 6px; text-align: left;">${tot_upi.toFixed(2)}</td>
+                        </tr>
+                        <tr style="background-color: #f8f9fa; font-weight: bold;">
+                            <td colspan="12" style="border: 1px solid #000; padding: 6px; text-align: right;">Total Cash:</td>
+                            <td colspan="5" style="border: 1px solid #000; padding: 6px; text-align: left;">${tot_cash.toFixed(2)}</td>
+                        </tr>
+                        `;
+                    }
+
+                    tableHtml += `</tbody></table>`;
+
+                    var WindowObject = window.open('', 'Print-Window');
+                    WindowObject.document.open();
+                    WindowObject.document.writeln('<!DOCTYPE html><html><head><title>Summary Report</title></head><body>');
+                    WindowObject.document.writeln(tableHtml);
+                    WindowObject.document.writeln('<script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }<\/script>');
+                    WindowObject.document.writeln('</body></html>');
+                    WindowObject.document.close();
+
+                } else {
+                    alert("No data available to print.");
+                }
+            },
+            error: function () {
+                $(".preloader").fadeOut();
+                alert("Error fetching data for print.");
+            }
+        });
+    }
+
+    function createDate(dateString) {
+        var date = new Date(dateString);
+        var day = ("0" + date.getDate()).slice(-2);
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+    }
+</script>

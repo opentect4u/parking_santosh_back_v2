@@ -1,0 +1,689 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Select2 CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+  rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+<style>
+  /* Custom Select2 Styling to match premium design */
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #065f46 transparent transparent transparent !important;
+    border-width: 6px 5px 0 5px !important;
+  }
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+
+  /* Dropdown Menu Styling */
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    margin-top: 4px;
+    background-color: #ffffff !important;
+  }
+
+  /* Search Box inside dropdown */
+  .select2-search--dropdown {
+    padding: 10px !important;
+  }
+  .select2-search--dropdown .select2-search__field {
+    border: 1px solid #065f46 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    font-size: 14px;
+  }
+
+  .select2-search--dropdown .select2-search__field:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.2) !important;
+  }
+
+  /* Dropdown Options */
+  html body .select2-container .select2-results__option {
+    padding: 12px 16px !important;
+    font-weight: 500;
+    color: #6b7280 !important;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+    text-align: center !important;
+  }
+
+  html body .select2-container .select2-results__option:last-child {
+    border-bottom: none;
+  }
+
+  /* Highlighted/Hover Option */
+  html body .select2-container .select2-results__option--highlighted[aria-selected],
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+
+  /* Selected Option */
+  html body .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+</style>
+
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <!-- Card -->
+      <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+        <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3" style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <div class="d-flex align-items-center">
+            <div class="text-white rounded"
+              style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+              <i class="fa fa-users fs-5"></i>
+            </div>
+            <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">Manage Operator</h4>
+          </div>
+          <button type="button" class="btn text-white px-4 py-2"
+            style="background: linear-gradient(45deg, #3a8b64, #367e61); border-radius: 6px; font-weight: 500;" id="myBtn">
+            <i class="fa fa-plus me-1"></i> Add Operator
+          </button>
+        </div>
+
+        <!-- Search Form -->
+        <% if(user.userData.user_type=="S" ){ %>
+          <form action="/superadmin/operator" method="post" class="p-4">
+            <div class="row g-3 align-items-end justify-content-center">
+              <!-- Dropdown -->
+              <div class="col-md-6">
+                <label for="cust_name" class="form-label text-dark">Location Name:</label>
+                <select name="cust_name" class="form-control custom-select shadow-sm" id="cust_name" required>
+                  <option value="">Select Location Name</option>
+                  <% customer.forEach(dt=> {
+                    var _selected = ''
+                    if(selected.cust_id == dt.customer_id) _selected = 'selected' %>
+                    <option value="<%= dt.customer_id %>" <%=_selected %>>
+                      <%= dt.customer_name %>
+                    </option>
+                    <% })%>
+                </select>
+              </div>
+              <!-- Submit -->
+              <div class="col-md-4 text-center">
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="btn btn-gradient flex-grow-1" id="submitBtn" style="height: 45px;">
+                    <i class="fa fa-search me-2"></i> Fetch Details
+                  </button>
+                  <a href="/superadmin/operator" class="btn shadow-sm" style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </form>
+          <% } %>
+
+            <!-- Table -->
+            <%# if(selected.cust_id> 0){ %>
+              <% if((user.userData.user_type=="S" && selected.cust_id> 0) || user.userData.user_type == "A"){ %>
+                <div class="p-3">
+                  <div class="table-responsive">
+                    <table id="dataTable" class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+                      <thead class="text-white">
+                        <tr>
+                          <th class="text-center text-white">Sl No.</th>
+                          <th class="text-center text-white">Operator Name</th>
+                          <th class="text-center text-white">User ID</th>
+                          <th class="text-center text-white">Device ID</th>
+                          <th class="text-center text-white">Status</th>
+                          <th class="text-center text-white">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(data.length> 0){
+                          var i = 1
+                          data.forEach(dt => { %>
+                          <tr>
+                            <td class="text-center text-dark">
+                              <%= i %>
+                            </td>
+                            <td class="text-center text-dark">
+                              <%= dt.operator_name %>
+                            </td>
+                            <td class="text-center text-dark">
+                              <%= dt.user_id %>
+                            </td>
+                            <td class="text-center text-dark">
+                              <%= dt.device_id %>
+                            </td>
+                            <td class="text-center text-dark">
+                              <span
+                                class="badge <%= dt.allow_flag === 'Y' ? 'bg-success' : 'bg-danger' %> rounded-pill px-3 py-2"
+                                style="font-weight: 500;">
+                                <%= dt.allow_flag==='Y' ? 'Active' : 'Deactive' %>
+                              </span>
+                            </td>
+                            <td class="text-center text-dark">
+                              <a href='/superadmin/edit_operator?customer_id=<%= (user.userData.user_type == "A" ? user.userData.customer_id : selected.cust_id) %>&id=<%= dt.operator_id %>'
+                                class='btn btn-sm'
+                                style='background-color: #e6f4ea; color: #065f46; border: 1px solid #065f46; border-radius: 6px;'>
+                                <i class='fa fa-edit'></i>
+                              </a>
+                            </td>
+                          </tr>
+                          <% i++; }) }else{ %>
+                            <tr>
+                              <td class="text-center text-danger" colspan="5">No data found</td>
+                            </tr>
+                            <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="simple-footer mt-4">
+  <b>Santosh Parking © <span id="footerYear"></b></span>
+</footer>
+
+
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+    <div class="modal-content rounded-4 shadow-lg glass-bg border-0">
+      <!-- Modal Header -->
+      <div class="modal-header border-0" style="background: #065f46; border-radius: 15px 15px 0 0;">
+        <h3 class="modal-title fw-bold text-white">
+          <i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Operator</b>
+        </h3>
+        <!-- <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button> -->
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form action="/superadmin/operator_save" method="post" id="myForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cust_name" class="text-dark">Location Name</label>
+                <% if (user.userData.user_type==='S' ) { %>
+                  <!-- Show dropdown if user_type is S -->
+                  <select name="cust_name" class="form-control" id="cust_name_modal">
+                    <option value="">Select Location Name</option>
+                    <% customer.forEach(dt=> { %>
+                      <option value="<%= dt.customer_id %>">
+                        <%= dt.customer_name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                  <% } else { %>
+                    <!-- Auto-select & show location name for others (e.g. A) -->
+                    <% let selectedCust=customer.find(c=> c.customer_id == user.userData.customer_id);
+                      %>
+                      <input type="hidden" name="cust_name" value="<%= user.userData.customer_id %>">
+                      <input type="text" class="form-control"
+                        value="<%= selectedCust ? selectedCust.customer_name : '' %>" disabled>
+                      <% } %>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="op_name" class="text-dark"><b>Operator Name</b></label>
+                <input type="text" class="form-control" id="op_name" name="op_name"
+                  placeholder="Enter Operator Name.....">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="mobile" class="text-dark"><b>Mobile No</b></label>
+                <input type="text" class="form-control" id="mobile" name="mobile" maxlength="10"
+                  placeholder="Enter Mobile No....." oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                <small id="mobileError" class="text-danger fw-bold"></small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="dev_id" class="text-dark"><b>Device ID</b></label>
+                <input type="text" class="form-control" id="dev_id" name="dev_id" placeholder="Enter Device ID.....">
+              </div>
+            </div>
+            <div class="form-group col-6">
+              <label for="pwd" class="text-dark"><b>Password:</b></label>
+              <div class="input-group">
+                <input type="password" class="form-control" name="pwd" id="pwd" value="" placeholder="Enter Password" style="border-right: none !important; border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important;">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" id="togglePassword" style="border-radius: 0 8px 8px 0 !important; border: 1px solid #065f46; border-left: none; background-color: #ffffff; color: #065f46; height: 45px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);">
+                    <i class="fa fa-eye-slash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <% if (user.userData.user_type==='S' ) { %>
+              <div class="form-group col-6 cust-toggle1">
+                <label for="allow_flag" class="text-dark d-block mb-2"><b>Status:</b></label>
+                <input type="checkbox" value="Y" id="allow_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="allow_flag" checked disabled>
+              </div>
+              <% } %>
+          </div>
+          <div class="row mt-4">
+            <input type="hidden" name="id" value="0">
+            <div class="col-12 text-center">
+              <input type="submit" value="SUBMIT" class="btn btn-gradient px-4 py-2" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+
+<script>
+  $(document).ready(function () {
+    $("#myBtn").click(function () {
+      $("#myModal").modal();
+    });
+
+    // Initialize Select2 on dropdowns
+    $('#cust_name').select2({
+      placeholder: "Select Location Name",
+      allowClear: true,
+      width: '100%'
+    });
+
+    $('#cust_name_modal').select2({
+      placeholder: "Select Location Name",
+      allowClear: true,
+      width: '100%',
+      dropdownParent: $('#myModal') // Required for Select2 inside Bootstrap modal
+    });
+  });
+</script>
+
+<script>
+  document.getElementById("togglePassword").addEventListener("click", function () {
+    const pwdField = document.getElementById("pwd");
+    if (pwdField.type === "password") {
+      pwdField.type = "text";
+    } else {
+      pwdField.type = "password";
+    }
+  });
+</script>
+
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    /* color: #6b7280;   soft gray */
+    color: black;
+    padding: 12px 0;
+    margin-left: 51vw;
+  }
+
+  /* Gradient Button */
+  .btn-gradient {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+    color: #fff;
+  }
+
+  .cust-toggle1 .toggle {
+    border-radius: 30px;
+    border: 1px solid #065f46;
+    height: 45px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  .cust-toggle1 .toggle-on {
+    border-radius: 30px 0 0 30px;
+    font-weight: bold;
+    padding-left: 20px;
+    background: linear-gradient(45deg, #3a8b64, #065f46) !important;
+    border-color: #065f46 !important;
+    color: white !important;
+    display: flex;
+    align-items: center;
+  }
+  .cust-toggle1 .toggle-off {
+    border-radius: 0 30px 30px 0;
+    font-weight: bold;
+    padding-right: 20px;
+    background-color: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .cust-toggle1 .toggle-handle {
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 1px solid #065f46;
+    margin: 2px;
+  }
+
+  /* Gradient Text */
+  .text-gradient {
+    color: #065f46 !important;
+    background: none;
+    -webkit-text-fill-color: initial;
+  }
+
+  /* Custom Table */
+  #dataTable thead th,
+  #dataTable thead th * {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+
+  #dataTable tbody tr:hover {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    transition: 0.3s;
+  }
+
+  /* Glassmorphism Modal */
+  .glass-bg {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Select2 Custom Theme */
+  .select2-container--default .select2-selection--single {
+    border: 1px solid #065f46;
+    border-radius: 6px;
+    height: 42px;
+    padding: 6px 12px;
+    background-color: #fff;
+    transition: all 0.3s ease;
+  }
+
+  .select2-container--default .select2-selection--single:focus,
+  .select2-container--default.select2-container--open .select2-selection--single {
+    border-color: #065f46;
+    box-shadow: none;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 40px;
+    right: 10px;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 28px;
+    color: #333;
+    font-size: 14px;
+  }
+
+  .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+  }
+
+  html body .select2-results__option {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: #374151 !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    text-align: center !important;
+  }
+
+  html body .select2-results__option:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+
+  .select2-search__field {
+    border-radius: 4px !important;
+    border: 1px solid #065f46 !important;
+    padding: 6px 10px !important;
+  }
+
+  .select2-search__field:focus {
+    outline: none !important;
+  }
+
+  html body .select2-results__option--highlighted[aria-selected] {
+    background-color: #065f46 !important;
+    color: white !important;
+  }
+
+  .select2-container {
+    width: 100% !important;
+  }
+
+  /* Pagination Styling */
+  .page-item.active .page-link {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: white !important;
+  }
+
+  .page-link {
+    color: #065f46 !important;
+  }
+
+  .page-link:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+
+  .modal-lg-custom {
+    max-width: 50%;
+  }
+
+  .custom-card {
+    border-radius: 20px;
+    /* Rounded corners for whole card */
+    overflow: hidden;
+    /* Ensure inner elements respect the border-radius */
+  }
+
+  .card.p-0 {
+    padding: 0 !important;
+  }
+
+  #cust_name,
+  #cust_name_modal {
+    color: #000 !important;
+    /* Dark text */
+  }
+
+  /* Optional: keep placeholder lighter */
+  #cust_name option:first-child,
+  #cust_name_modal option:first-child {
+    color: #6c757d;
+    /* light gray for placeholder */
+  }
+
+  .form-control,
+  .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+  
+  textarea.form-control {
+    height: auto !important;
+  }
+
+  .form-control:hover,
+  .form-select:hover {
+    border-color: #059669 !important;
+    background-color: #ffffff !important;
+  }
+</style>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<!-- <script>
+  $(document).ready(function () {
+    $('#mobile').on('change', function () {
+      let mobile = $(this).val().trim();
+      console.log("Input changed:", mobile);
+
+      if (mobile.length === 10) {
+        $.ajax({
+          url: '/superadmin/check-mobile',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ mobile }),
+          success: function (data) {
+            console.log("API response:", data);
+            let errorField = $('#mobileError');
+
+            if (data.exists) {
+              // ❌ Duplicate → show error + clear field
+              errorField.text("* Phone number already exists");
+              $('#mobile').val('').focus();
+            } else {
+              // ✅ Not duplicate → clear error, keep value
+              errorField.text("");
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("Error checking mobile:", error);
+            $('#mobileError').text("* Server error while checking number");
+          }
+        });
+      } else {
+        $('#mobileError').text("* Enter a valid 10 digit number");
+      }
+    });
+  });
+</script> -->
+
+<script>
+  window.addEventListener('load', function () {
+    // Dynamically load Select2 AFTER the main layout jQuery has fully loaded and overwritten window.$
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function() {
+      $('#cust_name').select2({
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+      
+      $('#cust_name_modal').select2({
+        dropdownParent: $('#myModal'),
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+    };
+    document.body.appendChild(script);
+
+    $('#mobile').on('change', function () {
+      let mobile = $(this).val().trim();
+      // let customer_id = $('#cust_name_modal').val() || $('#cust_name').val(); // 👈 check modal OR form dropdown
+      let customer_id = "";
+
+     <% if (user.userData.user_type === 'S') { %>
+        // For SuperAdmin → from dropdown
+        customer_id = $('#cust_name_modal').val();
+      <% } else { %>
+        // For Admin → from hidden input
+        customer_id = "<%= user.userData.customer_id %>";
+      <% } %>
+    // console.log("Input changed:", mobile, "Customer ID:", customer_id);
+
+    // Check only if mobile is 10 digits & customer is selected
+    if (mobile.length === 10 && customer_id) {
+        $.ajax({
+          url: '/superadmin/check-mobile',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ mobile, customer_id }), // send both
+          success: function (data) {
+            console.log("API response:", data);
+            let errorField = $('#mobileError');
+
+            if (data.exists) {
+              // ❌ Duplicate → show error + clear field
+              errorField.text("* Phone number already exists for this location");
+              $('#mobile').val('').focus();
+            } else {
+              // ✅ Not duplicate → clear error, keep value
+              errorField.text("");
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("Error checking mobile:", error);
+            $('#mobileError').text("* Server error while checking number");
+          }
+        });
+      } else if (!customer_id) {
+        $('#mobileError').text("* Please select a location first");
+        $('#mobile').val('').focus();
+      } else {
+        $('#mobileError').text("* Enter a valid 10 digit number");
+      }
+    });
+  });
+</script>

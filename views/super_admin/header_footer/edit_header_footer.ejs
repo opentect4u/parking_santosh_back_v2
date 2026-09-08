@@ -1,0 +1,559 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+  rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+<div class="container-fluid py-4" style="background: #f5f7fa;">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <!-- Card -->
+      <div class="card rounded-4 border-0 full-rounded-card">
+
+        <!-- Card Header -->
+        <div class="card-header bg-white py-3 d-flex align-items-center">
+          <div id="back" class="back-btn-custom me-4" title="Go Back" style="margin-right: 24px !important;">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          <h5 class="mb-0 fw-bold d-flex align-items-center" style="color: #1f2937;">
+            <i class="fa fa-edit me-3" style="color: #127253;"></i>&nbsp; Edit Header & Footer
+          </h5>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body p-4">
+          <form action="/superadmin/save_header_footer" id="myForm" method="post">
+            <div class="row mt-4">
+              <div class="form-group col-9">
+                <label for="cust_id" class="text-dark"><b>Location Name:</b></label>
+                <% let selectedCust=customer.find(c=> c.customer_id == data[0].customer_id); %>
+                  <input type="text" class="form-control" id="cust_name"
+                    value="<%= selectedCust ? selectedCust.customer_name : '' %>" readonly>
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_1" class="text-dark"><b>Header 1</b>&nbsp;&nbsp;<span id="charCount1"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_1" name="header_1" rows="2" placeholder="Enter Header1...."
+                    maxlength="25" oninput="updateCharCount('header_1','charCount1')"><%= data[0].header1 %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_1_flag" class="text-dark"><b>Header 1 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_1_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_1_flag"
+                  <%=(data[0].header1_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_2" class="text-dark"><b>Header 2</b>&nbsp;&nbsp;<span id="charCount2"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_2" name="header_2" rows="2" placeholder="Enter Header2...."
+                    maxlength="25" oninput="updateCharCount('header_2','charCount2')"><%= data[0].header2 %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_2_flag" class="text-dark"><b>Header 2 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_2_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_2_flag"
+                  <%=(data[0].header2_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_3" class="text-dark"><b>Header 3</b>&nbsp;&nbsp;<span id="charCount3"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_3" name="header_3" rows="2" placeholder="Enter Header3...."
+                    maxlength="25" oninput="updateCharCount('header_3','charCount3')"><%= data[0].header3 %></textarea>
+                </div>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_3_flag" class="text-dark"><b>Header 3 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_3_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_3_flag"
+                  <%=(data[0].header3_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_4" class="text-dark"><b>Header 4</b>&nbsp;&nbsp;<span id="charCount4"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_4" name="header_4" rows="2" placeholder="Enter Header4...."
+                    maxlength="25" oninput="updateCharCount('header_4','charCount4')"><%= data[0].header4 %></textarea>
+                </div>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_4_flag" class="text-dark"><b>Header 4 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_4_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_4_flag"
+                  <%=(data[0].header4_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_5" class="text-dark"><b>Header 5</b>&nbsp;&nbsp;<span id="charCount9"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_5" name="header_5" rows="2" placeholder="Enter Header5...."
+                    maxlength="25" oninput="updateCharCount('header_5','charCount9')"><%= data[0].header5 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_5_flag" class="text-dark"><b>Header 5 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_5_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_5_flag"
+                  <%=(data[0].header5_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_6" class="text-dark"><b>Header 6</b>&nbsp;&nbsp;<span id="charCount10"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_6" name="header_6" rows="2" placeholder="Enter Header6...."
+                    maxlength="25" oninput="updateCharCount('header_6','charCount10')"><%= data[0].header6 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_6_flag" class="text-dark"><b>Header 6 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_6_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_6_flag"
+                  <%=(data[0].header6_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_7" class="text-dark"><b>Header 7</b>&nbsp;&nbsp;<span id="charCount11"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_7" name="header_7" rows="2" placeholder="Enter Header7...."
+                    maxlength="25" oninput="updateCharCount('header_7','charCount11')"><%= data[0].header7 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_7_flag" class="text-dark"><b>Header 7 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_7_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_7_flag"
+                  <%=(data[0].header7_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="header_8" class="text-dark"><b>Header 8</b>&nbsp;&nbsp;<span id="charCount12"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="header_8" name="header_8" rows="2" placeholder="Enter Header8...."
+                    maxlength="25" oninput="updateCharCount('header_8','charCount12')"><%= data[0].header8 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="header_8_flag" class="text-dark"><b>Header 8 Flag</b></label><br>
+                <input type="checkbox" value=1 id="header_8_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="header_8_flag"
+                  <%=(data[0].header8_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_1" class="text-dark"><b>Footer 1</b>&nbsp;&nbsp;<span id="charCount5"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_1" name="footer_1" rows="2" placeholder="Enter Footer1...."
+                    maxlength="25" oninput="updateCharCount('footer_1','charCount5')"><%= data[0].footer1 %></textarea>
+                </div>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_1_flag" class="text-dark"><b>Footer 1 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_1_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_1_flag"
+                  <%=(data[0].footer1_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_2" class="text-dark"><b>Footer 2</b>&nbsp;&nbsp;<span id="charCount6"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_2" name="footer_2" rows="2" placeholder="Enter Footer2...."
+                    maxlength="25" oninput="updateCharCount('footer_2','charCount6')"><%= data[0].footer2 %></textarea>
+                </div>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_2_flag" class="text-dark"><b>Footer 2 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_2_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_2_flag"
+                  <%=(data[0].footer2_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_3" class="text-dark"><b>Footer 3</b>&nbsp;&nbsp;<span id="charCount7"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_3" name="footer_3" rows="2" placeholder="Enter Footer3...."
+                    maxlength="25" oninput="updateCharCount('footer_3','charCount7')"><%= data[0].footer3 %></textarea>
+                </div>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_3_flag" class="text-dark"><b>Footer 3 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_3_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_3_flag"
+                  <%=(data[0].footer3_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_4" class="text-dark"><b>Footer 4</b>&nbsp;&nbsp;<span id="charCount8"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_4" name="footer_4" rows="2" placeholder="Enter Footer4...."
+                    maxlength="25" oninput="updateCharCount('footer_4','charCount8')"><%= data[0].footer4 %></textarea>
+                </div>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_4_flag" class="text-dark"><b>Footer 4 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_4_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_4_flag"
+                  <%=(data[0].footer4_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_5" class="text-dark"><b>Footer 5</b>&nbsp;&nbsp;<span id="charCount13"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_5" name="footer_5" rows="2" placeholder="Enter Footer5...."
+                    maxlength="25" oninput="updateCharCount('footer_5','charCount13')"><%= data[0].footer5 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_5_flag" class="text-dark"><b>Footer 5 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_5_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_5_flag"
+                  <%=(data[0].footer5_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_6" class="text-dark"><b>Footer 6</b>&nbsp;&nbsp;<span id="charCount14"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_6" name="footer_6" rows="2" placeholder="Enter Footer6...."
+                    maxlength="25" oninput="updateCharCount('footer_6','charCount14')"><%= data[0].footer6 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_6_flag" class="text-dark"><b>Footer 6 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_6_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_6_flag"
+                  <%=(data[0].footer6_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_7" class="text-dark"><b>Footer 7</b>&nbsp;&nbsp;<span id="charCount15"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_7" name="footer_7" rows="2" placeholder="Enter Footer7...."
+                    maxlength="25" oninput="updateCharCount('footer_7','charCount15')"><%= data[0].footer7 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_7_flag" class="text-dark"><b>Footer 7 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_7_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_7_flag"
+                  <%=(data[0].footer7_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="footer_8" class="text-dark"><b>Footer 8</b>&nbsp;&nbsp;<span id="charCount16"
+                      class="char-count"><b>(0/25)</b></span></label>
+                  <textarea class="form-control" id="footer_8" name="footer_8" rows="2" placeholder="Enter Footer8...."
+                    maxlength="25" oninput="updateCharCount('footer_8','charCount16')"><%= data[0].footer8 || '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-3 cust-toggle1">
+                <label for="footer_8_flag" class="text-dark"><b>Footer 8 Flag</b></label><br>
+                <input type="checkbox" value=1 id="footer_8_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="footer_8_flag"
+                  <%=(data[0].footer8_flag=='1' )?'checked':''%>
+                >
+              </div>
+
+              <div class="col-md-3 cust-toggle1" style="margin-left: 15vw;">
+                <label for="in_on_off_flag" class="text-dark"><b>IN Receipt</b></label><br>
+                <input type="checkbox" value="Y" id="in_on_off_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="in_on_off_flag"
+                  <%=(data[0].IN_on_off=='Y' )?'checked':''%>>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="out_on_off_flag" class="text-dark"><b>OUT Receipt</b></label><br>
+                <input type="checkbox" value="Y" id="out_on_off_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="out_on_off_flag"
+                  <%=(data[0].OUT_on_off=='Y' )?'checked':''%>>
+              </div>
+
+              <div class="col-md-3 cust-toggle1">
+                <label for="report_flag" class="text-dark"><b>Report</b></label><br>
+                <input type="checkbox" value="Y" id="report_flag" data-toggle="toggle" data-onstyle="success"
+                  data-offstyle="danger" data-on="Active" data-off="Deactive" name="report_flag"
+                  <%=(data[0].report_flag=='Y' )?'checked':''%>>
+              </div>
+            </div>
+            <div class="row mt-5 justify-content-center">
+              <input type="hidden" name="id" value="<%= id %>">
+              <input type="hidden" name="cust_id" value="<%= customer_id %>">
+              <div class="form-group col-md-4 text-center">
+                <input type="submit" id="updateBtn" value="UPDATE SETTINGS"
+                  class="btn btn-solid px-5 py-2 fw-bold text-uppercase" disabled />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <footer class="simple-footer mt-4">
+        <b>Santosh Parking © <span id="footerYear"></b></span>
+      </footer>
+    </div>
+  </div>
+
+  <style>
+    .simple-footer {
+      text-align: center;
+      font-size: 14px;
+      color: black;
+      padding: 12px 0;
+      margin-left: 45vw;
+    }
+
+    .cust-toggle1 .toggle {
+      border-radius: 30px;
+      border: 1px solid #065f46;
+      height: 45px !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .cust-toggle1 .toggle-on {
+      border-radius: 30px 0 0 30px;
+      font-weight: bold;
+      padding-left: 20px;
+      background: linear-gradient(45deg, #3a8b64, #065f46) !important;
+      border-color: #065f46 !important;
+      color: white !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .cust-toggle1 .toggle-off {
+      border-radius: 0 30px 30px 0;
+      font-weight: bold;
+      padding-right: 20px;
+      background-color: #dc3545 !important;
+      color: white !important;
+      border-color: #dc3545 !important;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .cust-toggle1 .toggle-handle {
+      border-radius: 50%;
+      background-color: #ffffff;
+      border: 1px solid #065f46;
+      margin: 2px;
+    }
+
+    .full-rounded-card {
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      border-left: 6px solid #127253 !important;
+    }
+
+    .full-rounded-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header.bg-white {
+      border-radius: 0;
+      padding: 1.25rem 1.5rem !important;
+      background: #ffffff !important;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .back-btn-custom {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: #f3f4f6;
+      border-radius: 50%;
+      color: #4b5563;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn-custom:hover {
+      background: #e5e7eb;
+      color: #1f2937;
+      transform: translateX(-2px);
+    }
+
+    .btn-solid {
+      background: #127253;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(18, 114, 83, 0.2);
+    }
+
+    .btn-solid:hover {
+      background: #0d5a42;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(18, 114, 83, 0.3);
+    }
+
+    .btn-solid:disabled {
+      background: #9ca3af;
+      box-shadow: none;
+      cursor: not-allowed;
+      color: #fff;
+    }
+
+    /* Solid styling for all form controls */
+    .form-control,
+    textarea.form-control {
+      background-color: #ffffff;
+      border: 1px solid #065f46;
+      border-radius: 8px !important;
+      padding: 10px 14px;
+      color: #000000;
+      font-weight: 500;
+      font-size: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: 0.3s ease;
+    }
+
+    .form-control:focus,
+    textarea.form-control:focus {
+      border-color: #044734;
+      box-shadow: 0 0 6px rgba(6, 95, 70, 0.3);
+      outline: none;
+    }
+
+    .char-count {
+      font-size: 13px;
+      color: #555;
+    }
+  </style>
+
+
+
+  <script>
+    document.getElementById("footerYear").textContent = new Date().getFullYear();
+  </script>
+
+
+  <script>
+    $(document).ready(function () {
+      // initialize all bootstrap toggles on page load
+      $('[data-toggle="toggle"]').bootstrapToggle();
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      $("#back").click(function () {
+        window.location.href = "/superadmin/header_footer";
+      });
+    });
+  </script>
+
+  <script>
+    updateCharCount('header_1', 'charCount1');
+    updateCharCount('header_2', 'charCount2');
+    updateCharCount('header_3', 'charCount3');
+    updateCharCount('header_4', 'charCount4');
+    updateCharCount('header_5', 'charCount9');
+    updateCharCount('header_6', 'charCount10');
+    updateCharCount('header_7', 'charCount11');
+    updateCharCount('header_8', 'charCount12');
+    updateCharCount('footer_1', 'charCount5');
+    updateCharCount('footer_2', 'charCount6');
+    updateCharCount('footer_3', 'charCount7');
+    updateCharCount('footer_4', 'charCount8');
+    updateCharCount('footer_5', 'charCount13');
+    updateCharCount('footer_6', 'charCount14');
+    updateCharCount('footer_7', 'charCount15');
+    updateCharCount('footer_8', 'charCount16');
+    function updateCharCount(textareaId, countId) {
+      var textarea = document.getElementById(textareaId);
+      var charCount = document.getElementById(countId);
+
+      if (textarea && charCount) {
+        var count = textarea.value.length;
+        charCount.innerHTML = '<span style="font-weight: bold;">(' + count + '/25)</span>';
+      }
+    }
+
+    $(document).ready(function () {
+      // Store initial state
+      setTimeout(function () {
+        $('#myForm').find('input, textarea').each(function () {
+          if ($(this).is(':checkbox')) {
+            $(this).data('initial', $(this).prop('checked'));
+          } else {
+            $(this).data('initial', $(this).val());
+          }
+        });
+      }, 200); // 200ms gives toggle plugin time to initialize fully
+
+      function checkFormState() {
+        setTimeout(function () {
+          let isChanged = false;
+          $('#myForm').find('input, textarea').each(function () {
+            if ($(this).is(':checkbox')) {
+              if ($(this).prop('checked') !== $(this).data('initial')) {
+                isChanged = true;
+              }
+            } else {
+              // Ignore hidden inputs like id/cust_id if their initial is undefined
+              if (typeof $(this).data('initial') !== 'undefined' && $(this).val() !== $(this).data('initial')) {
+                isChanged = true;
+              }
+            }
+          });
+
+          $('#updateBtn').prop('disabled', !isChanged);
+        }, 50); // slight delay to allow UI to update
+      }
+
+      // Bind events to textareas and text inputs
+      $('#myForm').on('input change keyup', 'input[type="text"], textarea', checkFormState);
+
+      // Bind click events on the toggle wrapper directly
+      $('body').on('click', '.toggle', function () {
+        checkFormState();
+      });
+
+      // Fallback for native checkbox change
+      $('input[type="checkbox"]').on('change', checkFormState);
+    });
+  </script>

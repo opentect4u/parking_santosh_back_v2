@@ -1,0 +1,365 @@
+const Joi = require("joi");
+const dateFormat = require("dateformat");
+const { getAllCustomerList } = require("./customer.controller");
+const { db_Select, db_Insert } = require("../../model/Master.model");
+const logger = require('../../model/LoggerModel');
+
+const getAllheaderfooterList = (id = 0,cust_id) => {
+    return new Promise(async (resolve, reject) => {
+      var header_footer_list = await db_Select("*","md_receipt_setting",
+        id > 0 ? `customer_id = ${cust_id} AND receipt_setting_id = ${id}` : null,
+        null
+      );
+      // console.log(vehicle_rate,'22');
+      resolve(header_footer_list);
+    });
+  };
+
+const header_footer = async (req, res) => {
+    try {
+        var cust = await getAllCustomerList()
+        var head_foot = await show_header_footer_dtls()
+      const page_data = {
+        title: "Header Footer details",
+        page_path: "super_admin/header_footer/header_footer",
+        data: head_foot,
+        customer: cust.suc > 0 ? cust.msg : null,
+      };
+      // console.log(page_data, "999");
+      res.render("common/layouts/main", page_data);
+    } catch (error) {
+      // console.log(error);
+      logger.error(err); // Log the error
+      res.redirect("/superadmin_login");
+    }
+  };
+
+  const show_header_footer_dtls = () => {
+    return new Promise(async (resolve, reject) => {
+      let select = "a.*, b.customer_name",
+        table_name = "md_receipt_setting a, md_customer b",
+        whr = `a.customer_id = b.customer_id`;
+      const head_foot_dt = await db_Select(select, table_name, whr, null);
+      resolve(head_foot_dt);
+    });
+  };
+
+  const header_footer_edit = async(req,res) =>{
+    try {
+      var data = req.query
+        var header_footer_dt = await getAllheaderfooterList(data.id,data.customer_id)
+        var cust = await getAllCustomerList()
+        const page_data = {
+          id: data.id,
+          customer_id: data.customer_id,
+          title: "Header Footer Edit details",
+          page_path: "/super_admin/header_footer/edit_header_footer",
+          data: header_footer_dt.suc > 0 ? header_footer_dt.msg : null,
+          customer: cust.suc > 0 ? cust.msg : null,
+        };
+        // console.log(page_data,'ll');
+        res.render("common/layouts/main",page_data);
+      } catch (error) {
+        // console.log(error);
+        logger.error(err); // Log the error
+        res.redirect("/superadmin_login");
+      }
+  };
+
+  const header_footer_save = async (req, res) => {
+    try {
+      const schema = Joi.object({
+        id: Joi.optional(),
+        cust_id: Joi.optional(),
+        header_1: Joi.required(),
+        header_1_flag: Joi.string(),
+        header_2: Joi.required(),
+        header_2_flag: Joi.string(),
+        header_3: Joi.required(),
+        header_3_flag: Joi.string(),
+        header_4: Joi.required(),
+        header_4_flag: Joi.string(),
+        header_5: Joi.optional().allow(''),
+        header_5_flag: Joi.string(),
+        header_6: Joi.optional().allow(''),
+        header_6_flag: Joi.string(),
+        header_7: Joi.optional().allow(''),
+        header_7_flag: Joi.string(),
+        header_8: Joi.optional().allow(''),
+        header_8_flag: Joi.string(),
+        footer_1: Joi.required(),
+        footer_1_flag: Joi.string(),
+        footer_2: Joi.required(),
+        footer_2_flag: Joi.string(),
+        footer_3: Joi.required(),
+        footer_3_flag: Joi.string(),
+        footer_4: Joi.required(),
+        footer_4_flag: Joi.string(),
+        footer_5: Joi.optional().allow(''),
+        footer_5_flag: Joi.string(),
+        footer_6: Joi.optional().allow(''),
+        footer_6_flag: Joi.string(),
+        footer_7: Joi.optional().allow(''),
+        footer_7_flag: Joi.string(),
+        footer_8: Joi.optional().allow(''),
+        footer_8_flag: Joi.string(),
+        in_on_off_flag: Joi.string(),
+        out_on_off_flag: Joi.string(),
+        report_flag: Joi.string(),
+      });
+      const { error, value } = schema.validate(req.body, { abortEarly: false });
+      // console.log(value);
+      if (error) {
+        const errors = {};
+        error.details.forEach((detail) => {
+          errors[detail.context.key] = detail.message;
+        });
+        return res.json({ error: errors });
+      }
+      var user_name = req.session.user.userData.user_name;
+      const datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
+
+      // ===== old data (for logging if update) =====
+        let oldData = null;
+        if (value.id > 0) {
+          const existing = await db_Select(
+            "*",
+            "md_receipt_setting",
+            `customer_id='${value.cust_id}' AND receipt_setting_id='${value.id}'`
+          );
+          oldData = existing.msg[0] || null;
+        }
+  
+      let fields = value.id > 0 ? `header1='${value.header_1}',header1_flag='${
+        value.header_1_flag == 1 ? 1 : 0
+      }',header2='${value.header_2}',header2_flag='${
+        value.header_2_flag == 1 ? 1 : 0
+      }',header3='${value.header_3}',header3_flag='${
+        value.header_3_flag == 1 ? 1 : 0
+      }',header4='${value.header_4}',header4_flag='${
+        value.header_4_flag == 1 ? 1 : 0
+      }',header5='${value.header_5}',header5_flag='${
+        value.header_5_flag == 1 ? 1 : 0
+      }',header6='${value.header_6}',header6_flag='${
+        value.header_6_flag == 1 ? 1 : 0
+      }',header7='${value.header_7}',header7_flag='${
+        value.header_7_flag == 1 ? 1 : 0
+      }',header8='${value.header_8}',header8_flag='${
+        value.header_8_flag == 1 ? 1 : 0
+      }',footer1='${value.footer_1}',footer1_flag='${
+        value.footer_1_flag == 1 ? 1 : 0
+      }',footer2='${value.footer_2}',footer2_flag='${
+        value.footer_2_flag == 1 ? 1 : 0
+      }',footer3='${value.footer_3}',footer3_flag='${
+        value.footer_3_flag == 1 ? 1 : 0
+      }',footer4='${value.footer_4}',footer4_flag='${
+        value.footer_4_flag == 1 ? 1 : 0
+      }',footer5='${value.footer_5}',footer5_flag='${
+        value.footer_5_flag == 1 ? 1 : 0
+      }',footer6='${value.footer_6}',footer6_flag='${
+        value.footer_6_flag == 1 ? 1 : 0
+      }',footer7='${value.footer_7}',footer7_flag='${
+        value.footer_7_flag == 1 ? 1 : 0
+      }',footer8='${value.footer_8}',footer8_flag='${
+        value.footer_8_flag == 1 ? 1 : 0
+      }',IN_on_off='${
+        value.in_on_off_flag == 'Y' ? 'Y' : 'N'
+      }',OUT_on_off='${
+        value.out_on_off_flag == 'Y' ? 'Y' : 'N'
+      }',report_flag='${
+        value.report_flag == 'Y' ? 'Y' : 'N'
+      }',updated_by='${user_name}',updated_at='${datetime}'` : "(customer_id,header1,header2,header3,header4,header5,header6,header7,header8,footer1,footer2,footer3,footer4,footer5,footer6,footer7,footer8,IN_on_off,OUT_on_off,report_flag,header1_flag,header2_flag,header3_flag,header4_flag,header5_flag,header6_flag,header7_flag,header8_flag,footer1_flag,footer2_flag,footer3_flag,footer4_flag,footer5_flag,footer6_flag,footer7_flag,footer8_flag,created_by,created_at)",
+        values = `('${value.cust_id}','${value.header_1}','${value.header_2}','${value.header_3}','${value.header_4}','${value.header_5}','${value.header_6}','${value.header_7}','${value.header_8}','${value.footer_1}','${value.footer_2}','${value.footer_3}','${value.footer_4}','${value.footer_5}','${value.footer_6}','${value.footer_7}','${value.footer_8}','${
+          value.in_on_off_flag == 'Y' ? 'Y' : 'N'
+        }','${
+          value.out_on_off_flag == 'Y' ? 'Y' : 'N'
+        }','${
+          value.report_flag == 'Y' ? 'Y' : 'N'
+        }','${
+          value.header_1_flag == 1 ? 1 : 0
+        }','${value.header_2_flag == 1 ? 1 : 0}','${value.header_3_flag == 1 ? 1 : 0}','${
+          value.header_4_flag == 1 ? 1 : 0
+        }','${value.header_5_flag == 1 ? 1 : 0}','${value.header_6_flag == 1 ? 1 : 0}','${
+          value.header_7_flag == 1 ? 1 : 0
+        }','${
+          value.header_8_flag == 1 ? 1 : 0
+        }','${value.footer_1_flag == 1 ? 1 : 0}','${value.footer_2_flag == 1 ? 1 : 0}','${
+          value.footer_3_flag == 1 ? 1 : 0
+        }','${
+          value.footer_4_flag == 1 ? 1 : 0
+        }','${value.footer_5_flag == 1 ? 1 : 0}','${value.footer_6_flag == 1 ? 1 : 0}','${
+          value.footer_7_flag == 1 ? 1 : 0
+        }','${
+          value.footer_8_flag == 1 ? 1 : 0
+        }','${user_name}','${datetime}')`;
+      let res_dt = await db_Insert("md_receipt_setting", fields, values, value.id > 0 ? `customer_id='${value.cust_id}' AND receipt_setting_id='${value.id}'` : null, value.id > 0 ? 1 : 0);
+      // console.log("========location==========", res_dt);
+      // req.flash("success", value.id > 0 ? "Updated successfully" : "Saved successfully");
+
+      if (oldData) {
+      const changes = [];
+      if (oldData.header1 !== value.header_1)
+        changes.push(`header1: '${oldData.header1}' → '${value.header_1}'`);
+
+      if (oldData.header2 !== value.header_2)
+        changes.push(`header2: '${oldData.header2}' → '${value.header_2}'`);
+
+      if (oldData.header3 !== value.header_3)
+        changes.push(`header3: '${oldData.header3}' → '${value.header_3}'`);
+
+      if (oldData.header4 !== value.header_4)
+        changes.push(`header4: '${oldData.header4}' → '${value.header_4}'`);
+
+      if (oldData.header5 !== value.header_5)
+        changes.push(`header5: '${oldData.header5}' → '${value.header_5}'`);
+
+      if (oldData.header6 !== value.header_6)
+        changes.push(`header6: '${oldData.header6}' → '${value.header_6}'`);
+
+      if (oldData.header7 !== value.header_7)
+        changes.push(`header7: '${oldData.header7}' → '${value.header_7}'`);
+
+      if (oldData.header8 !== value.header_8)
+        changes.push(`header8: '${oldData.header8}' → '${value.header_8}'`);
+
+      if (oldData.footer1 !== value.footer_1)
+        changes.push(`footer1: '${oldData.footer1}' → '${value.footer_1}'`);
+
+      if (oldData.footer2 !== value.footer_2)
+        changes.push(`footer2: '${oldData.footer2}' → '${value.footer_2}'`);
+
+      if (oldData.footer3 !== value.footer_3)
+        changes.push(`footer3: '${oldData.footer3}' → '${value.footer_3}'`);
+
+      if (oldData.footer4 !== value.footer_4)
+        changes.push(`footer4: '${oldData.footer4}' → '${value.footer_4}'`);
+
+      if (oldData.footer5 !== value.footer_5)
+        changes.push(`footer5: '${oldData.footer5}' → '${value.footer_5}'`);
+
+      if (oldData.footer6 !== value.footer_6)
+        changes.push(`footer6: '${oldData.footer6}' → '${value.footer_6}'`);
+
+      if (oldData.footer7 !== value.footer_7)
+        changes.push(`footer7: '${oldData.footer7}' → '${value.footer_7}'`);
+
+      if (oldData.footer8 !== value.footer_8)
+        changes.push(`footer8: '${oldData.footer8}' → '${value.footer_8}'`);
+
+      if (oldData.IN_on_off !== (value.in_on_off_flag == "Y" ? "Y" : "N"))
+        changes.push(`IN_on_off: '${oldData.IN_on_off}' → '${value.in_on_off_flag == "Y" ? "Y" : "N"}'`);
+
+      if (oldData.OUT_on_off !== (value.out_on_off_flag == "Y" ? "Y" : "N"))
+        changes.push(`OUT_on_off: '${oldData.OUT_on_off}' → '${value.out_on_off_flag == "Y" ? "Y" : "N"}'`);
+
+      if (oldData.report_flag !== (value.report_flag == "Y" ? "Y" : "N"))
+        changes.push(`report_flag: '${oldData.report_flag}' → '${value.report_flag == "Y" ? "Y" : "N"}'`);
+
+      if (oldData.header1_flag !== (value.header_1_flag == 1 ? 1 : 0))
+        changes.push(`header1_flag: '${oldData.header1_flag}' → '${value.header_1_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.header2_flag !== (value.header_2_flag == 1 ? 1 : 0))
+        changes.push(`header2_flag: '${oldData.header2_flag}' → '${value.header_2_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.header3_flag !== (value.header_3_flag == 1 ? 1 : 0))
+        changes.push(`header3_flag: '${oldData.header3_flag}' → '${value.header_3_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.header4_flag !== (value.header_4_flag == 1 ? 1 : 0))
+        changes.push(`header4_flag: '${oldData.header4_flag}' → '${value.header_4_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.header5_flag !== (value.header_5_flag == 1 ? 1 : 0))
+        changes.push(`header5_flag: '${oldData.header5_flag}' → '${value.header_5_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.header6_flag !== (value.header_6_flag == 1 ? 1 : 0))
+        changes.push(`header6_flag: '${oldData.header6_flag}' → '${value.header_6_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.header7_flag !== (value.header_7_flag == 1 ? 1 : 0))
+        changes.push(`header7_flag: '${oldData.header7_flag}' → '${value.header_7_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.header8_flag !== (value.header_8_flag == 1 ? 1 : 0))
+        changes.push(`header8_flag: '${oldData.header8_flag}' → '${value.header_8_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer1_flag !== (value.footer_1_flag == 1 ? 1 : 0))
+        changes.push(`footer1_flag: '${oldData.footer1_flag}' → '${value.footer_1_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer2_flag !== (value.footer_2_flag == 1 ? 1 : 0))
+        changes.push(`footer2_flag: '${oldData.footer2_flag}' → '${value.footer_2_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer3_flag !== (value.footer_3_flag == 1 ? 1 : 0))
+        changes.push(`footer3_flag: '${oldData.footer3_flag}' → '${value.footer_3_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer4_flag !== (value.footer_4_flag == 1 ? 1 : 0))
+        changes.push(`footer4_flag: '${oldData.footer4_flag}' → '${value.footer_4_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer5_flag !== (value.footer_5_flag == 1 ? 1 : 0))
+        changes.push(`footer5_flag: '${oldData.footer5_flag}' → '${value.footer_5_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer6_flag !== (value.footer_6_flag == 1 ? 1 : 0))
+        changes.push(`footer6_flag: '${oldData.footer6_flag}' → '${value.footer_6_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer7_flag !== (value.footer_7_flag == 1 ? 1 : 0))
+        changes.push(`footer7_flag: '${oldData.footer7_flag}' → '${value.footer_7_flag == 1 ? 1 : 0}'`);
+
+      if (oldData.footer8_flag !== (value.footer_8_flag == 1 ? 1 : 0))
+        changes.push(`footer8_flag: '${oldData.footer8_flag}' → '${value.footer_8_flag == 1 ? 1 : 0}'`);
+
+      logger.info(
+        `${user_name} Updated Operator [CustID: ${value.cust_id}, ID: ${value.id}] Fields changed: ${changes.join(", ")}`
+      );
+      req.flash("success", "Updated successfully");
+        } else {
+      const createdFields = [
+        `customer_id: '${value.cust_id}'`,
+        `header1: '${value.header_1}'`,
+        `header2: '${value.header_2}'`,
+        `header3: '${value.header_3}'`,
+        `header4: '${value.header_4}'`,
+        `header5: '${value.header_5}'`,
+        `header6: '${value.header_6}'`,
+        `header7: '${value.header_7}'`,
+        `header8: '${value.header_8}'`,
+        `footer1: '${value.footer_1}'`,
+        `footer2: '${value.footer_2}'`,
+        `footer3: '${value.footer_3}'`,
+        `footer4: '${value.footer_4}'`,
+        `footer5: '${value.footer_5}'`,
+        `footer6: '${value.footer_6}'`,
+        `footer7: '${value.footer_7}'`,
+        `footer8: '${value.footer_8}'`,
+        `in_on_off: '${value.in_on_off_flag == "Y" ? "Y" : "N"}'`,
+        `out_on_off: '${value.out_on_off_flag == "Y" ? "Y" : "N"}'`,
+        `report_flag: '${value.report_flag == "Y" ? "Y" : "N"}'`,
+        `header1_flag: '${value.header_1_flag == 1 ? 1 : 0}'`,
+        `header2_flag: '${value.header_2_flag == 1 ? 1 : 0}'`,
+        `header3_flag: '${value.header_3_flag == 1 ? 1 : 0}'`,
+        `header4_flag: '${value.header_4_flag == 1 ? 1 : 0}'`,
+        `header5_flag: '${value.header_5_flag == 1 ? 1 : 0}'`,
+        `header6_flag: '${value.header_6_flag == 1 ? 1 : 0}'`,
+        `header7_flag: '${value.header_7_flag == 1 ? 1 : 0}'`,
+        `header8_flag: '${value.header_8_flag == 1 ? 1 : 0}'`,
+        `footer1_flag: '${value.footer_1_flag == 1 ? 1 : 0}'`,
+        `footer2_flag: '${value.footer_2_flag == 1 ? 1 : 0}'`,
+        `footer3_flag: '${value.footer_3_flag == 1 ? 1 : 0}'`,
+        `footer4_flag: '${value.footer_4_flag == 1 ? 1 : 0}'`,
+        `footer5_flag: '${value.footer_5_flag == 1 ? 1 : 0}'`,
+        `footer6_flag: '${value.footer_6_flag == 1 ? 1 : 0}'`,
+        `footer7_flag: '${value.footer_7_flag == 1 ? 1 : 0}'`,
+        `footer8_flag: '${value.footer_8_flag == 1 ? 1 : 0}'`,
+      ];
+      logger.info(
+        `${user_name} Created Operator [CustID: ${value.cust_id}] Fields: ${createdFields.join(", ")}`
+      );
+      req.flash("success", "Saved successfully");
+    }
+      res.redirect("/superadmin/header_footer");
+    //   res.send(res_dt)
+    } catch (error) {
+      // console.log(error);
+      logger.error(error); // Log the error
+      const isUpdate = req.body && req.body.id > 0;
+      req.flash("error", isUpdate ? "Data not updated Successfully" : "Data not saved Successfully");
+      res.redirect("/superadmin/header_footer");
+    }
+  };
+
+  module.exports = {header_footer,show_header_footer_dtls,header_footer_edit,header_footer_save}

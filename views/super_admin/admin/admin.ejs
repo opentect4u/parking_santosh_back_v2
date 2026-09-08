@@ -1,0 +1,301 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="card shadow-lg border-0 custom-card" 
+           style="border-radius: 20px; background: linear-gradient(145deg, #ffffff, #f0f2f7);">
+          <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+            <h4 class="mb-0 text-gradient fw-bold">
+              <i data-feather="corner-up-right" class="feather-icon text-dark"></i>&nbsp;<b>Manage Admin</b>
+            </h4>
+              <button type="button" class="btn btn-gradient px-4 rounded-pill" id="myBtn">
+            <i class="fa fa-plus"></i> Add
+          </button>
+          </div>
+
+          
+          <form action="/superadmin/admin" method="post" class="p-4">
+            <div class="row g-3 align-items-end justify-content-center">
+
+              <div class="col-md-6">
+                <label for="cust_name"><b style="color: black;">Location Name:</b></label>
+                <select name="cust_name" class="form-control" id="cust_name" required>
+                  <option value="">Select Location Name</option>
+                  <% customer.forEach(dt => {
+                    var _selected = ''
+                    if(selected.cust_id == dt.customer_id) _selected = 'selected' %>
+                      <option value="<%= dt.customer_id %>" <%= _selected %>><%= dt.customer_name %></option>
+                    <% })%>
+                </select>
+              </div>
+
+              <div class="col-md-3  text-center">
+                <button type="submit" class="btn btn-gradient w-100 rounded-pill" id="submitBtn">
+                  <i class="fa fa-search"></i>Submit</button>
+              </div>
+            </div>
+          </form>
+
+          <% if(selected.cust_id > 0){ %>
+            <div class="p-3">
+              <!-- <div class="col-md-12"> -->
+                <div class="table-responsive">
+                  <table id="dataTable" class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+                      <thead>
+                          <tr>
+                              <th class="text-center text-dark">Sl No.</th>
+                              <th class="text-center text-dark">User ID</th>
+                              <th class="text-center text-dark">User Name</th>
+                              <!-- <th class="text-center text-dark">Device ID</th> -->
+                              <th class="text-center text-dark">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                        <% if(data.length > 0){
+                            var i = 1
+                            data.forEach(dt => { %>
+                              <tr>
+                                <td class="text-center text-dark"><%= i %></td>
+                                <td class="text-center text-dark"><%= dt.user_id %></td>
+                                <td class="text-center text-dark"><%= dt.user_name %></td>
+                                <!-- <td class="text-center text-dark"><%= dt.device_id %></td> -->
+                                <td class="text-center text-dark"><a href='/superadmin/edit_admin?customer_id=<%= selected.cust_id %>&id=<%= dt.sl_no %>' class='btn btn-info' style='border-radius:5px'><i class='fa fa-edit'></i></a></td>
+                              </tr>
+                          <% i++; })
+                          }else{ %>
+                            <tr>
+                              <td class="text-center text-danger" colspan="4">No data found</td>
+                            </tr>
+                          <% } %>
+                      </tbody>
+                      <tfoot></tfoot>
+                  </table>
+                </div>
+              <!-- </div> -->
+            </div>
+            <% } %>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   <footer class="simple-footer mt-4">
+            <b>Hertz Communications © <span id="footerYear"></b></span>
+            </footer>
+
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+      <div class="modal-content rounded-4 shadow-lg border-0 glass-bgt">
+        <!-- Modal Header -->
+        <div class="modal-header border-0">
+          <h3 class="modal-title fw-bold text-dark">
+            <i data-feather="plus-circle" class="feather-icon"></i>&nbsp;<b>Add Admin</b>
+          </h3>
+          <!-- <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button> -->
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form action="/superadmin/save_admin" method="post" id="myForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label for="cust_id" class="text-dark"><b>Location Name</b></label>
+                    <select name="cust_id" class="form-control" id="cust_id">
+                        <option value="">Select Location Name</option>
+                        <% customer.forEach(dt => { %>
+                          <option value="<%= dt.customer_id %>"><%= dt.customer_name %></option>
+                          <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                  <label for="user_id" class="text-dark"><b>User Login ID</b></label>
+                  <input type="text" class="form-control" id="user_id" maxlength="10" name="user_id" placeholder="Enter User Login ID...."
+                    value="">
+                </div>
+              </div>
+             <div class="col-md-6">
+            <div class="form-group position-relative">
+              <label for="pass" class="text-dark"><b>Password</b></label>
+              <input type="password" name="pass" id="pass" class="form-control" placeholder="Enter Password....">
+            
+              <!-- Eye icon -->
+              <i class="fa fa-eye toggle-password" id="togglePass"
+                 style="position:absolute; top:44px; right:15px; cursor:pointer;"></i>
+              </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="user_name" class="text-dark"><b>User Name</b></label>
+                  <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Enter User Name...." value="">
+                </div>
+              </div>   
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="user_mobile_no" class="text-dark"><b>User Mobile No</b></label>
+                  <input type="text" name="user_mobile_no" maxlength="10" id="user_mobile_no" class="form-control" placeholder="Enter User Mobile No...." value="">
+                </div>
+              </div>   
+              <!-- <div class="col-md-6">
+                <div class="form-group">
+                  <label for="device_id" class="text-dark"><b>Device ID</b></label>
+                  <input type="text" name="device_id" id="device_id" class="form-control" placeholder="Enter Device ID" value="">
+                </div>
+              </div>            -->
+            </div>
+            <div class="row">
+                <input type="hidden" name="id" value="0">
+                <div class="form-group col-md-5"></div>
+                <div class="form-group col-md-0">
+                        <input type="submit" value="SUBMIT" class="btn btn-primary"
+                          style="border-radius: 6px;" />
+                      </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+  <script>
+  $(document).ready(function () {
+    $("#togglePass").click(function () {
+      const input = $("#pass");
+      const type = input.attr("type") === "password" ? "text" : "password";
+      input.attr("type", type);
+
+      // toggle icon
+      $(this).toggleClass("fa-eye fa-eye-slash");
+    });
+  });
+</script>
+
+
+  <script>
+    $(document).ready(function () {
+      $("#myBtn").click(function () {
+        $("#myModal").modal();
+      });
+    });
+  </script>
+
+  <style>
+    .modal-lg-custom {
+  max-width: 700px; /* default modal-lg is ~900px */
+}
+
+/* Gradient Button */
+.btn-gradient {
+  background: linear-gradient(45deg, #dbbcda, #6d83e2);
+  color: rgb(7, 5, 5);
+  font-weight: 600;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+.btn-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+  color: #fff;
+}
+
+/* Gradient Text */
+.text-gradient {
+  background: linear-gradient(to right, #b983b8, #4355a7);;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Table */
+#dataTable thead th {
+  background: linear-gradient(45deg, #dbbcda, #6d83e2);
+  color: #fff;
+  font-weight: 600;
+}
+#dataTable tbody tr:hover {
+  background-color: rgba(106, 17, 203, 0.08) !important;
+  transition: 0.3s;
+}
+
+/* Glassmorphism Modal */
+.glass-bg {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+/* Form Controls */
+.form-control {
+  border-radius: 12px;
+  /* padding: 12px; */
+}
+.custom-select option {
+  background: linear-gradient(45deg, #dbbcda, #6d83e2);
+  color: #0e0a0a;
+}
+.modal-lg-custom {
+  max-width: 50%;
+}
+.gradient-select {
+  background: linear-gradient(90deg, #8e2de2, #4a00e0); /* Purple gradient */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  appearance: none; /* removes default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.gradient-select option {
+  background: #fff; /* Dropdown list background */
+  color: #333;      /* Dropdown list text */
+}
+
+.gradient-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(142, 45, 226, 0.5);
+}
+.custom-card {
+  border-radius: 20px; /* Rounded corners for whole card */
+  overflow: hidden; /* Ensure inner elements respect the border-radius */
+}
+.card.p-0 {
+  padding: 0 !important;
+}
+#cust_name,
+#cust_name_modal {
+  color: #000 !important; /* Dark text */
+}
+
+/* Optional: keep placeholder lighter */
+#cust_name option:first-child,
+#cust_name_modal option:first-child {
+  color: #6c757d; /* light gray for placeholder */
+}
+
+.simple-footer {
+  text-align: center;
+  font-size: 14px;
+  /* color: #6b7280;   soft gray */
+  color: black;
+  padding: 12px 0;
+  margin-left: 75vw;
+}
+</style>

@@ -1,0 +1,331 @@
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+  rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+<div class="container-fluid py-4" style="background: #f5f7fa;">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <!-- Card -->
+      <div class="card rounded-4 border-0 full-rounded-card">
+
+        <!-- Card Header -->
+        <div class="card-header bg-white py-3 d-flex align-items-center">
+          <div id="back" class="back-btn-custom me-4" title="Go Back" style="margin-right: 24px !important;">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          <h5 class="mb-0 fw-bold d-flex align-items-center" style="color: #1f2937;">
+            <i class="fas fa-user-edit me-3" style="color: #127253;"></i>&nbsp; Edit Operator Details
+          </h5>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body p-3">
+          <form action="/superadmin/operator_save" id="myForm" method="post">
+
+            <div class="row g-2">
+              <!-- Customer Name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="cust_name" class="form-label"><b>Location Name</b></label>
+                  <% let selectedCust = customer.find(c => c.customer_id == data[0].customer_id); %>
+                  <input type="text" class="form-control shadow-sm rounded-3 py-2 px-3" id="cust_name" value="<%= selectedCust ? selectedCust.customer_name : '' %>" readonly>
+                </div>
+              </div>
+
+              <!-- Operator Name -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="op_name" class="form-label"><b>Operator Name</b></label>
+                  <input type="text" class="form-control shadow-sm rounded-3 py-2 px-3" id="op_name" name="op_name"
+                    value="<%= data[0].operator_name %>" readonly>
+                </div>
+              </div>
+
+              <!-- Mobile No -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="mobile" class="form-label"><b>Mobile No</b></label>
+                  <input type="text" class="form-control shadow-sm rounded-3 py-2 px-3" id="mobile" name="mobile"
+                    value="<%= data[0].user_id %>" readonly>
+                </div>
+              </div>
+
+              <!-- Device ID -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="dev_id" class="form-label"><b>Device ID</b></label>
+                  <input type="text" class="form-control shadow-sm rounded-3 py-2 px-3" id="dev_id" name="dev_id"
+                    value="<%= data[0].device_id %>" readonly>
+                </div>
+              </div>
+
+              <!-- Password -->
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="pwd" class="form-label"><b>Password</b></label>
+                  <div class="input-group">
+                    <input type="password" class="form-control shadow-sm rounded-3 py-2 px-3" name="pwd" id="pwd"
+                      placeholder="Enter Password" style="border-right: none !important; border-top-right-radius: 0 !important; border-bottom-right-radius: 0 !important;">
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword"
+                      style="border-radius: 0 8px 8px 0 !important; border: 1px solid #065f46; border-left: none; background-color: #ffffff; color: #065f46; height: 45px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);">
+                      <i class="fa fa-eye-slash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <% if (user.userData.user_type==='S' ) { %>
+                <div class="col-md-4 cust-toggle1">
+                  <div class="form-group">
+                    <!-- Label on top -->
+                    <label for="allow_flag" class="form-label d-block mb-2"><b>Operator Status (ON/OFF)</b></label>
+                    <!-- Toggle under the label -->
+                    <input type="checkbox" id="allow_flag" data-toggle="toggle" data-onstyle="success"
+                      data-offstyle="danger" data-on="ACTIVE" data-off="DEACTIVE" <%=data[0].allow_flag=='Y' ? 'checked'
+                      : '' %>>
+                    <input type="hidden" id="allow_flag_hidden" name="allow_flag"
+                      value="<%= data[0].allow_flag == 'Y' ? 'Y' : 'N' %>">
+                  </div>
+                </div>
+                <% } %>
+            </div>
+
+            <!-- Submit -->
+            <div class="row mt-4 justify-content-center">
+              <input type="hidden" name="id" value="<%= id %>">
+              <input type="hidden" name="cust_id" value="<%= customer_id %>">
+              <div class="form-group col-md-4 text-center">
+                <input type="submit" value="UPDATE OPERATOR DETAILS" id="submitBtn"
+                  class="btn btn-solid px-5 py-2 fw-bold text-uppercase" disabled />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <footer class="simple-footer mt-4">
+        <b>Santosh Parking © <span id="footerYear"></b></span>
+      </footer>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Styles -->
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    /* color: #6b7280;   soft gray */
+    color: black;
+    padding: 12px 0;
+    margin-left: 45vw;
+  }
+
+  .cust-toggle1 .toggle {
+    border-radius: 30px;
+    border: 1px solid #065f46;
+    height: 45px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  .cust-toggle1 .toggle-on {
+    border-radius: 30px 0 0 30px;
+    font-weight: bold;
+    padding-left: 20px;
+    background: linear-gradient(45deg, #3a8b64, #065f46) !important;
+    border-color: #065f46 !important;
+    color: white !important;
+    display: flex;
+    align-items: center;
+  }
+  .cust-toggle1 .toggle-off {
+    border-radius: 0 30px 30px 0;
+    font-weight: bold;
+    padding-right: 20px;
+    background-color: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .cust-toggle1 .toggle-handle {
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 1px solid #065f46;
+    margin: 2px;
+  }
+
+  .full-rounded-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-left: 6px solid #127253 !important;
+  }
+
+  .full-rounded-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header.bg-white {
+    border-radius: 0;
+    padding: 1.25rem 1.5rem !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .back-btn-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .back-btn-custom:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+    transform: translateX(-2px);
+  }
+
+  .btn-solid {
+    background: #127253;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 15px rgba(18, 114, 83, 0.2);
+    border-radius: 10px;
+  }
+
+  .btn-solid:hover:not(:disabled) {
+    background: #0d5940;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(18, 114, 83, 0.3);
+    color: #fff;
+  }
+
+  .btn-solid:disabled {
+    background: #9ca3af;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #127253;
+    box-shadow: 0 0 0 0.15rem rgba(18, 114, 83, 0.25);
+    background: #ffffff;
+  }
+
+  .form-label {
+    font-size: 1.05rem !important;
+    color: #111827 !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control,
+  .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+  
+  textarea.form-control {
+    height: auto !important;
+  }
+
+  .form-control:hover,
+  .form-select:hover {
+    border-color: #059669 !important;
+    background-color: #ffffff !important;
+  }
+
+  .input-group .form-control:focus+.btn-outline-secondary {
+    border-color: #127253;
+    background: #ffffff;
+  }
+</style>
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<script>
+  $("#myForm").submit(function () {
+    if ($("#allow_flag").prop("checked")) {
+      $("#allow_flag_hidden").val("Y");
+    } else {
+      $("#allow_flag_hidden").val("N");
+    }
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    $("#back").click(function () {
+      window.location.href = "/superadmin/operator";
+    });
+
+    // Password toggle
+    $("#togglePassword").click(function () {
+      const input = $("#pwd");
+      const icon = $(this).find("i");
+      if (input.attr("type") === "password") {
+        input.attr("type", "text");
+        icon.removeClass("fa-eye-slash").addClass("fa-eye");
+      } else {
+        input.attr("type", "password");
+        icon.removeClass("fa-eye").addClass("fa-eye-slash");
+      }
+    });
+
+    // Dirty check logic to enable/disable submit button
+    let initialPassword = "";
+    let initialAllowFlag = false;
+
+    // Use a slight delay to capture initial values in case the browser auto-fills the password
+    setTimeout(function () {
+      initialPassword = $("#pwd").val() || "";
+      initialAllowFlag = $("#allow_flag").prop("checked");
+    }, 300);
+
+    function checkFormChanges() {
+      const currentPassword = $("#pwd").val() || "";
+      const currentAllowFlag = $("#allow_flag").prop("checked");
+
+      if (currentPassword !== initialPassword || currentAllowFlag !== initialAllowFlag) {
+        $("#submitBtn").removeAttr("disabled");
+      } else {
+        $("#submitBtn").attr("disabled", "disabled");
+      }
+    }
+
+    // Bind events for dirty checking
+    $("#pwd").on("input keyup change paste", checkFormChanges);
+    $("#allow_flag").on("change", checkFormChanges);
+    
+    // Backup for bootstrap-toggle if it doesn't trigger 'change' reliably
+    $(".toggle").on("click", function () {
+      setTimeout(checkFormChanges, 100);
+    });
+
+    // Keep the Operator sidebar item activated
+    const operatorSidebarLink = $('ul#sidebarnav a[href="/superadmin/operator"]');
+    if (operatorSidebarLink.length) {
+      operatorSidebarLink.addClass("active");
+      operatorSidebarLink.closest(".sidebar-item").addClass("selected");
+    }
+  });
+</script>

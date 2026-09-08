@@ -1,0 +1,660 @@
+<!-- DataTables CSS & JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+  /* Custom Select2 Styling to match premium design */
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #065f46 transparent transparent transparent !important;
+    border-width: 6px 5px 0 5px !important;
+  }
+
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+
+  /* Dropdown Menu Styling */
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+  }
+
+  html body .select2-results__option {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: #374151 !important;
+    transition: all 0.2s ease !important;
+    text-align: center !important;
+  }
+
+  html body .select2-results__option:hover {
+    background-color: #ecfdf5 !important;
+    color: #065f46 !important;
+  }
+
+  html body .select2-search--dropdown .select2-search__field {
+    border-radius: 4px !important;
+    border: 1px solid #065f46 !important;
+    padding: 6px 10px !important;
+  }
+
+  html body .select2-search__field:focus {
+    outline: none !important;
+  }
+
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+
+  html body .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+
+  html body .select2-container {
+    width: 100% !important;
+  }
+
+  .radio-option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .radio-option-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 22px;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    min-width: 160px;
+  }
+
+  .radio-option-card:hover {
+    border-color: #065f46;
+    background: #f4f9f4;
+  }
+
+  .radio-option-card input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #065f46;
+    border-radius: 50%;
+    position: relative;
+    background: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .radio-option-card input[type="radio"]::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    transition: background-color 0.2s ease;
+  }
+
+  .radio-option-card input[type="radio"]:checked {
+    background: rgba(6, 95, 70, 0.12);
+    box-shadow: 0 0 0 0.14rem rgba(6, 95, 70, 0.18);
+  }
+
+  .radio-option-card input[type="radio"]:checked::after {
+    background: #065f46;
+  }
+
+  .radio-option-card span {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+</style>
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+        <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3"
+          style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <div class="d-flex align-items-center">
+            <div class="text-white rounded"
+              style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+              <i class="fas fa-file-invoice-dollar fs-5"></i>
+            </div>
+            <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">
+              <%= title %>
+            </h4>
+          </div>
+        </div>
+
+        <!-- Search Form -->
+        <div class="p-4 mb-4 mt-3 mx-3"
+          style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+
+          <div class="row g-3 align-items-end">
+            <div class="col-12">
+              <div class="radio-option-group">
+                <label class="radio-option-card" for="regular">
+                  <input class="form-check-input" type="radio" name="intype" id="regular" value="R" checked>
+                  <span>Regular</span>
+                </label>
+
+                <label class="radio-option-card" for="monthly">
+                  <input class="form-check-input" type="radio" name="intype" id="monthly" value="M">
+                  <span>Monthly</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 align-items-end">
+            <!-- From Date -->
+            <div class="col-md-3">
+              <label for="frm_dt" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-calendar-alt"></i>
+                From Date</label>
+              <input type="datetime-local" id="frm_dt" name="frm_dt" class="form-control" required
+                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            </div>
+
+            <!-- To Date -->
+            <div class="col-md-3">
+              <label for="to_dt" class="text-dark mb-2" style="font-size: 14px;"><i class="fas fa-calendar-alt"></i> To
+                Date</label>
+              <input type="datetime-local" id="to_dt" name="to_dt" class="form-control" required
+                style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            </div>
+
+            <!-- Customer Select -->
+            <% if (user.userData.user_type==='S' ) { %>
+              <div class="col-md-3">
+                <label for="custId" class="text-dark mb-2" style="font-size: 14px;"><i
+                    class="fas fa-map-marker-alt"></i> Location Name</label>
+                <select name="custId" class="form-control" id="custId" required
+                  style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+                  <option value="">Select Location Name</option>
+                  <% if (data.msg && data.msg.length> 0) { %>
+                    <% data.msg.forEach(customer=> { %>
+                      <option value="<%= customer.customer_id %>">
+                        <%= customer.customer_name %>
+                      </option>
+                      <% }) %>
+                        <% } %>
+                </select>
+              </div>
+              <% } else if (user.userData.user_type==='A' ) { %>
+                <input type="hidden" id="custId" name="custId" value="<%= user.userData.customer_id %>">
+                <% } %>
+
+                  <!-- Search Button -->
+                  <div class="col-md-<%= user.userData.user_type==='S' ? '3' : '6' %> text-center">
+                    <div class="d-flex justify-content-center">
+                      <button type="button" class="btn flex-grow-1 text-white" id="btnSubmit"
+                        style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                        <i class="fa fa-search me-2"></i> Fetch Details
+                      </button>
+                      <a href="/report/unbilled_report" class="btn shadow-sm"
+                        style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;"
+                        title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                      </a>
+                    </div>
+                  </div>
+          </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="dateWiseDataTable mt-4" id="resultDiv" style="display: none;">
+          <h5 class="text-center text-secondary mb-3"><span id="searchCred"></span></h5>
+          <div class="shadow-sm rounded-3">
+            <table class="table table-bordered table-hover align-middle" id="unbilled-datatable">
+              <thead class="table-fixed-header">
+                <tr>
+                  <th>#</th>
+                  <th>Receipt No.</th>
+                  <th>Date Time In</th>
+                  <th>Machine Sl. No. In</th>
+                  <th>Vehicle Type</th>
+                  <th>Vehicle No.</th>
+                  <th>Advance Amount</th>
+                  <th>Operator Name</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6" class="fw-bold text-end">Total</td>
+                  <td id="tot_amt" class="fw-bold">0</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <!-- Gorgeous Print Button -->
+            <!-- <div class="text-end mt-3">
+      <button class="btn btn-gradient-print btn-sm px-5 shadow-sm" onclick="printDiv()">
+        <i class="fa fa-print me-2"></i> Print
+      </button>
+    </div> -->
+
+            <div class="text-end mt-3" id="printExcelBtnContainer">
+              <button class="btn btn-gradient-print btn-sm px-4 shadow-sm me-2 no-print" onclick="printDiv()" id="btnPrint" style="height: 38px; border-radius: 6px;">
+                <i class="fa fa-print me-2"></i> Print
+              </button>
+              <button class="btn btn-success btn-sm px-4 shadow-sm no-print" onclick="downloadExcel()" id="btnExcel" style="height: 38px; border-radius: 6px;">
+                <i class="fa fa-file-excel me-2"></i> Excel
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="simple-footer mt-4 text-center">
+    <b>Santosh Parking © <span id="footerYear"></span></b>
+</footer>
+
+<style>
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+
+  .table-fixed-header th {
+    background-color: #064e3b;
+    /* Premium green color */
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  /* Optional: keep footer visible too */
+  .table tfoot tr {
+    background-color: #c0b9b9;
+    font-weight: 700;
+  }
+
+  .btn-gradient-print {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    /* Yellow/Orange gradient */
+    color: rgb(20, 14, 14);
+    border: none;
+    border-radius: 3px;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .btn-success {
+    background: linear-gradient(90deg, #27893e, #176629);
+    color: white;
+    border-radius: 3px;
+    border: none;
+  }
+
+  /* .btn-gradient-print:hover {
+  background: linear-gradient(90deg, #feb47b, #ff7e5f);
+  transform: scale(1.05); 
+  box-shadow: 0 4px 15px rgba(255, 126, 95, 0.4);
+}  */
+  .input-custom,
+  .select-custom {
+    transition: all 0.3s;
+    border: 1px solid #ced4da;
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  .input-custom:focus,
+  .select-custom:focus {
+    box-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
+    border-color: #0d6efd;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    /* transition: all 0.3s; */
+  }
+
+  /* .btn-gradient:hover {
+  background: linear-gradient(90deg, #2575fc, #6a11cb);
+  transform: scale(1.05);
+} */
+  .table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+
+  /* Pagination Color Override */
+  .page-item.active .page-link {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: white !important;
+  }
+
+  .page-link {
+    color: #065f46 !important;
+  }
+
+  .page-link:hover {
+    background-color: #e6f4ea !important;
+    color: #065f46 !important;
+  }
+
+  .btn-success {
+    background: linear-gradient(90deg, #28a745, #218838);
+    color: white;
+    border-radius: 50px;
+    border: none;
+  }
+
+  /* Floating Arrows */
+  .floating-arrows {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    /* Hidden by default */
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+  }
+
+  .floating-arrows button {
+    background-color: #065f46;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .floating-arrows button:hover {
+    background-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+</style>
+
+<script>
+  window.addEventListener('load', function () {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function () {
+      $('#custId').select2({
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+    };
+    document.body.appendChild(script);
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    let table;
+
+    // Clear the table when location changes
+    $('#custId').on('change', function () {
+      if (table) {
+        table.clear().draw();
+      }
+      $('#resultDiv').hide();
+      $('#tot_amt').text('0.00');
+    });
+
+    $('#btnSubmit').on('click', function () {
+      var frm_dt = $('#frm_dt').val();
+      var to_dt = $('#to_dt').val();
+      var custId = $('#custId').val();
+      var intype = $("input[name='intype']:checked").val();
+      var custName = $("#custId option:selected").text(); // Get selected location name
+
+      if (frm_dt !== '' && to_dt !== '' && custId !== '') {
+        if (table) {
+          table.destroy();
+          $('#unbilled-datatable tbody').empty();
+        }
+
+        $('#resultDiv').show();
+        $('#searchCred').html(`<b>Unbilled Report of ${custName} from ${createDate(frm_dt)} to ${createDate(to_dt)}</b>`);
+
+        table = $('#unbilled-datatable').DataTable({
+          processing: true,
+          serverSide: true,
+          searching: true, // Allows global search input (searches vehicle_no in backend)
+          lengthChange: true,
+          pageLength: 50,
+          ajax: {
+            url: "/report/get_unbilled_report",
+            type: "POST",
+            data: function (d) {
+              d.frm_dt = $('#frm_dt').val();
+              d.to_dt = $('#to_dt').val();
+              d.custId = $('#custId').val();
+              d.intype = $("input[name='intype']:checked").val();
+            },
+            beforeSend: function () {
+              $(".preloader").fadeIn();
+            },
+            complete: function () {
+              $(".preloader").fadeOut();
+            }
+          },
+          drawCallback: function (settings) {
+            if (settings.json && settings.json.grandTotals) {
+              let totalAdvance = settings.json.grandTotals.advance_amt ? parseFloat(settings.json.grandTotals.advance_amt) : 0;
+              $('#tot_amt').text('₹ ' + totalAdvance.toFixed(2));
+            } else {
+              $('#tot_amt').text('₹ 0.00');
+            }
+          },
+          columns: [
+            {
+              data: null,
+              render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+              }
+            },
+            { data: "receipt_no" },
+            {
+              data: "date_time_in",
+              render: function (data) {
+                return createDateTime(data);
+              }
+            },
+            { data: "device_id" },
+            { data: "vehicle_name" },
+            { data: "vehicle_no" },
+            {
+              data: "advance_amt",
+              render: function (data) {
+                let advAmt = data ? parseFloat(data) : 0;
+                return `<span class="text-dark fw-bold">₹ ${advAmt.toFixed(2)}</span>`;
+              }
+            },
+            { data: "operator_name" }
+          ]
+        });
+      }
+    });
+  });
+</script>
+
+<script>
+  function downloadExcel() {
+    // Get the table element
+    var table = document.querySelector("#resultDiv table");
+
+    if (!table) {
+      alert("No data available to export!");
+      return;
+    }
+
+    // Convert table to worksheet with raw set to true to prevent scientific notation formatting
+    var workbook = XLSX.utils.book_new();
+    var worksheet = XLSX.utils.table_to_sheet(table, { raw: true });
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Unbilled Report");
+
+    // Download Excel file
+    XLSX.writeFile(workbook, "Unbilled_Report.xlsx");
+  }
+</script>
+
+<script>
+  function printDiv() {
+    var divToPrint = document.getElementById('resultDiv').cloneNode(true);
+    // Remove any non-printable elements from the clone before printing
+    var noPrintElements = divToPrint.querySelectorAll('.no-print');
+    noPrintElements.forEach(function (el) {
+      el.parentNode.removeChild(el);
+    });
+
+    var WindowObject = window.open('', 'Print-Window');
+    WindowObject.document.open();
+    WindowObject.document.writeln('<!DOCTYPE html>');
+    WindowObject.document.writeln('<html><head><title>Unbilled Report</title><style type="text/css">');
+
+    WindowObject.document.writeln('@media print { ' +
+      ' body { font-family: "Segoe UI", Arial, sans-serif; color: #000; } ' +
+      ' h5 { text-align: center; font-size: 18px; margin-bottom: 20px; } ' +
+      ' table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 0 auto; } ' +
+      ' th, td { border: 1px solid #000; padding: 8px; text-align: center; } ' +
+      ' th { background-color: #e9ecef !important; -webkit-print-color-adjust: exact; font-weight: bold; } ' +
+      ' tfoot td { font-weight: bold; background-color: #f8f9fa !important; -webkit-print-color-adjust: exact; } ' +
+      ' .no-print { display: none !important; } ' +
+      ' .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate, .dt-buttons { display: none !important; } ' +
+      ' } ' +
+      ' /* Screen preview styles */ ' +
+      ' body { font-family: "Segoe UI", Arial, sans-serif; padding: 20px; color: #000; } ' +
+      ' h5 { text-align: center; font-size: 20px; margin-bottom: 20px; } ' +
+      ' table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 0 auto; } ' +
+      ' th, td { border: 1px solid #000; padding: 10px; text-align: center; } ' +
+      ' th { background-color: #e9ecef; font-weight: bold; } ' +
+      ' tfoot td { font-weight: bold; background-color: #f8f9fa; } ' +
+      ' .no-print { display: none !important; } ' +
+      ' .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate, .dt-buttons { display: none !important; } ' +
+      '</style>');
+
+    WindowObject.document.writeln('</head><body>');
+    WindowObject.document.writeln(divToPrint.innerHTML);
+    WindowObject.document.writeln('<script>window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }<\/script>');
+    WindowObject.document.writeln('</body></html>');
+    WindowObject.document.close();
+  }
+</script>
+
+<!-- Floating Scroll Arrows -->
+<div class="floating-arrows no-print" id="floatingArrowsContainer">
+  <button id="btn-scroll-up" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Go to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <button id="btn-scroll-down" onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})"
+    title="Go to bottom">
+    <i class="fas fa-arrow-down"></i>
+  </button>
+</div>
+
+<script>
+  window.addEventListener('scroll', function () {
+    var upBtn = document.getElementById('btn-scroll-up');
+    var downBtn = document.getElementById('btn-scroll-down');
+    var arrowContainer = document.getElementById('floatingArrowsContainer');
+    var resultDiv = document.getElementById('resultDiv');
+
+    // Only show arrows if the data table is visible and page is scrollable
+    if (resultDiv && resultDiv.style.display !== 'none' && document.documentElement.scrollHeight > window.innerHeight + 100) {
+      arrowContainer.style.display = 'flex';
+
+      var scrollPosition = window.scrollY || document.documentElement.scrollTop;
+      var bottomPosition = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+      if (scrollPosition <= 50) {
+        // At top
+        upBtn.style.display = 'none';
+        downBtn.style.display = 'flex';
+      } else if (scrollPosition >= bottomPosition - 50) {
+        // At bottom
+        upBtn.style.display = 'flex';
+        downBtn.style.display = 'none';
+      } else {
+        // In middle
+        upBtn.style.display = 'flex';
+        downBtn.style.display = 'flex';
+      }
+    } else {
+      arrowContainer.style.display = 'none';
+    }
+  });
+
+  // Trigger once on load to set initial state
+  window.dispatchEvent(new Event('scroll'));
+
+  // Set footer year
+  if(document.getElementById("footerYear")) {
+      document.getElementById("footerYear").textContent = new Date().getFullYear();
+  }
+</script>

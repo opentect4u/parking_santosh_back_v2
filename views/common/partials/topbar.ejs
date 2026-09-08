@@ -1,0 +1,280 @@
+<style>
+.topbar {
+  background: #ffffff;
+  padding: 0.6rem 1.5rem;
+  border-radius: 0; /* remove bottom radius */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  z-index: 1050;
+}
+
+.navbar {
+  padding: 0;
+}
+
+.logo-img {
+  height: 25px;
+  transition: transform 0.3s ease;
+  margin-left: 6px;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+.profile-pic {
+  width: 42px;
+  height: 42px;
+  border: 2px solid #fff;
+  transition: all 0.3s ease;
+}
+
+.profile-pic:hover {
+  transform: rotate(5deg) scale(1.1);
+}
+
+.nav-link {
+  color: #065f46 !important;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #10b981 !important;
+}
+
+.notify-badge {
+  background: #ff4b5c;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  right: 10px;
+}
+
+.dropdown-menu.user-menu {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6rem 0;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  animation: fadeInUp 0.3s ease;
+  /* Light Green theme */
+  background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
+  backdrop-filter: blur(10px);
+  min-width: 220px; /* makes the dropdown bigger */
+}
+
+/* Dropdown Items - Default */
+.user-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  color: #022c22 !important; 
+  white-space: nowrap;
+  transition: background 0.25s ease, transform 0.2s ease, color 0.25s ease;
+}
+
+/* Hover effect (applies to ALL items including logout) */
+.user-menu .dropdown-item:hover {
+  background: #d1fae5;
+  color: #022c22 !important;
+}
+
+/* Feather icon inside items */
+.user-menu .dropdown-item i {
+  color: #022c22 !important; /* makes icon follow text color */
+}
+
+
+/* Animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* .user-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-menu .dropdown-item i {
+  width: 18px;
+} */
+
+.header-title-text {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: #065f46;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal {
+  z-index: 1050 !important;
+}
+.modal-backdrop {
+  z-index: 1040 !important;
+}
+
+</style>
+
+<header class="topbar">
+  <nav class="navbar navbar-expand-md">
+    <div class="navbar-header d-flex align-items-center">
+      <!-- Mobile toggle -->
+      <a class="nav-toggler d-block d-md-none" href="javascript:void(0)" style="color: #065f46;">
+        <i class="ti-menu"></i>
+      </a>
+
+      <!-- Desktop Sidebar Toggle -->
+      <a class="sidebartoggler d-none d-md-block" href="javascript:void(0)" data-sidebartype="mini-sidebar" style="color: #065f46; margin-right: 15px; font-size: 1.2rem;">
+        <i class="fa fa-bars"></i>
+      </a>
+
+    <!-- <div class="sidebar-header"> -->
+ <h4 class="header-title-text">
+    <i class="bi bi-car-front-fill" style="color: #10b981; filter: drop-shadow(0 2px 4px rgba(16,185,129,0.3)); font-size: 1.4rem;"></i>
+    Welcome to Santosh <span style="color: #10b981;">Park</span>
+ </h4>
+    <!-- </div> -->
+    </div>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto d-flex align-items-center">
+        <!-- Notifications -->
+        <!-- <li class="nav-item dropdown mr-3">
+          <a class="nav-link" href="javascript:void(0)" data-toggle="dropdown">
+            <i data-feather="bell"></i>
+            <span class="notify-badge">5</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right animated fadeIn p-2">
+            <p class="dropdown-header mb-2">Notifications</p>
+            <a href="#" class="dropdown-item">⚡ New update available</a>
+            <a href="#" class="dropdown-item">📩 You have 3 new messages</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item text-center">View All</a>
+          </div>
+        </li> -->
+
+        <!-- User -->
+        <li class="nav-item dropdown">
+          <a class="nav-link d-flex align-items-center dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="/template/assets/images/users/profile-pic.png" class="rounded-circle profile-pic" alt="user"/>
+            <% if (user.userData.user_type == 'S') { %>
+          <span class="ml-2 d-none d-lg-inline-block">Discover, <%= user.userData.user_name %></span>
+          <% } else { %>
+           <span id="greeting" class="ml-2 d-none d-lg-inline-block"></span>
+          <% } %>
+
+         </a>
+       <div class="dropdown-menu dropdown-menu-right animated fadeIn user-menu" aria-labelledby="userDropdown">
+    <a class="dropdown-item" data-toggle="modal" data-target="#myAccount"><i data-feather="user"></i> My Profile</a>
+    <a class="dropdown-item" data-toggle="modal" data-target="#changepwd"><i class="fas fa-key" style="margin-right: 8px;"></i> Change Password</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="/superadmin_logout"><i data-feather="power"></i> Logout</a>
+    <!-- <a class="dropdown-item" href="#" onclick="logoutUser(event)">
+    <i data-feather="power"></i> Logout
+    </a> -->
+    <!-- <a class="dropdown-item" href="javascript:void(0)" onclick="logoutUser(event)">
+  <i data-feather="power"></i> Logout
+</a> -->
+    </div>
+
+          <!-- <a class="nav-link d-flex align-items-center" href="javascript:void(0)" data-toggle="dropdown">
+            <img src="/template/assets/images/users/profile-pic.png" class="rounded-circle profile-pic" alt="user"/>
+            <span class="ml-2 d-none d-lg-inline-block">
+              Hello, 
+              <strong>
+                <%= user.user_data ? (user.user_data.user_type=='C' ? user.user_data.customer_name : user.user_data.user_name) : user.userData.user_name %>
+              </strong>
+              <i data-feather="chevron-down"></i>
+            </span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right animated fadeIn user-menu">
+            <% if(user.user_data && user.user_data.user_type=='C'){ %>
+              <a class="dropdown-item" data-toggle="modal" data-target="#myAccount"><i data-feather="user"></i> My Profile</a>
+              <a class="dropdown-item" data-toggle="modal" data-target="#changepwd"><i data-feather="lock"></i> Change Password</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/logout"><i data-feather="power"></i> Logout</a>
+            <% } else { %>
+              <a class="dropdown-item" data-toggle="modal" data-target="#changepwd"><i data-feather="lock"></i> Change Password</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/superadmin_logout"><i data-feather="power"></i> Logout</a>
+            <% } %>
+          </div> -->
+        </li>
+      </ul>
+</header>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $(".sidebartoggler").on("click", function(e) {
+      e.preventDefault();
+      var wrapper = $("#main-wrapper");
+      wrapper.toggleClass("mini-sidebar");
+      if (wrapper.hasClass("mini-sidebar")) {
+        wrapper.attr("data-sidebartype", "mini-sidebar");
+      } else {
+        wrapper.attr("data-sidebartype", "full");
+      }
+    });
+  });
+</script>
+
+<!-- <script>
+function logoutUser() {
+  fetch("/superadmin_logout", { method: "POST" })
+    .then(res => window.location.href = "/superadmin_login")
+    .catch(err => console.error("Logout failed", err));
+}
+</script> -->
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  function logoutUser(event) {
+    event.preventDefault();
+
+    axios.post('/superadmin_logout')
+      .then(() => {
+        // Redirect after successful logout
+        window.location.href = '/superadmin_login';
+      })
+      .catch(err => {
+        console.error("Logout failed:", err);
+        alert("Logout failed. Please try again.");
+      });
+  }
+</script> -->
+
+<script>
+  const hours = new Date().getHours();
+  let greeting;
+
+  if (hours < 12) {
+    greeting = "Good Morning";
+  } else if (hours < 17) {
+    greeting = "Good Afternoon";
+  } else if (hours < 20) {
+    greeting = "Good Evening";
+  } else {
+    greeting = "Good Night";
+  }
+
+  // insert greeting + username into the span
+  document.getElementById("greeting").innerText = `${greeting}, <%= user.userData.user_name %>`;
+</script>
+

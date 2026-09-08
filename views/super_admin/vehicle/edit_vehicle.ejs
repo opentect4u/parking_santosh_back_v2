@@ -1,0 +1,263 @@
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+  rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+<div class="container-fluid py-4" style="background: #f5f7fa;">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <!-- Card -->
+      <div class="card rounded-4 border-0 full-rounded-card">
+
+        <!-- Card Header -->
+        <div class="card-header bg-white py-3 d-flex align-items-center">
+          <div id="back" class="back-btn-custom me-4" title="Go Back" style="margin-right: 24px !important;">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          <h5 class="mb-0 fw-bold d-flex align-items-center" style="color: #1f2937;">
+            <i class="fas fa-car me-3" style="color: #127253;"></i>&nbsp; Edit Vehicle Details
+          </h5>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body p-3">
+          <form action="/superadmin/vehicle_save" id="myForm" method="post">
+            <div class="row g-2">
+              <!-- Location Name -->
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="cust_name" class="form-label"><b>Location Name</b></label>
+                  <% let selectedCust = customer.find(c => c.customer_id == data[0].customer_id); %>
+                  <input type="text" class="form-control shadow-sm rounded-3 py-2 px-3" id="cust_name" value="<%= selectedCust ? selectedCust.customer_name : '' %>" readonly>
+                </div>
+              </div>
+
+              <!-- Vehicle Name -->
+              <div class="col-4">
+                <div class="form-group">
+                  <label for="veh_name" class="form-label"><b>Vehicle Name</b></label>
+                  <input type="text" class="form-control shadow-sm rounded-3 py-2 px-3" id="veh_name" name="veh_name"
+                    value="<%= data[0].vehicle_name %>" placeholder="Enter vehicle name">
+                </div>
+              </div>
+
+              <div class="col-4 cust-toggle1">
+                <div class="form-group">
+                  <!-- Label on top -->
+                  <label for="toggleActive" class="form-label d-block mb-2"><b>Status</b></label>
+                  <!-- Toggle under the label -->
+                  <input type="checkbox" id="toggleActive" data-toggle="toggle" data-onstyle="success"
+                    data-offstyle="danger" data-on="Active" data-off="Deactive" name="toggleActive" <%=(data[0].vehicle_on_off=='Y' )?'checked':''%>>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="row mt-4 justify-content-center">
+              <input type="hidden" name="id" value="<%= id %>">
+              <input type="hidden" name="cust_id" value="<%= customer_id %>">
+              <div class="form-group col-4 text-center">
+                <input type="submit" value="UPDATE VEHICLE DETAILS" id="submitBtn"
+                  class="btn btn-solid px-5 py-2 fw-bold text-uppercase" disabled />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <footer class="simple-footer mt-4">
+        <b>Santosh Parking © <span id="footerYear"></b></span>
+      </footer>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Styles -->
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    /* color: #6b7280;   soft gray */
+    color: black;
+    padding: 12px 0;
+    margin-left: 45vw;
+  }
+
+
+
+  .full-rounded-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-left: 6px solid #127253 !important;
+  }
+
+  .full-rounded-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header.bg-white {
+    border-radius: 0;
+    padding: 1.25rem 1.5rem !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .back-btn-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .back-btn-custom:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+    transform: translateX(-2px);
+  }
+
+  .btn-solid {
+    background: #127253;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 15px rgba(18, 114, 83, 0.2);
+    border-radius: 10px;
+  }
+
+  .btn-solid:hover:not(:disabled) {
+    background: #0d5940;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(18, 114, 83, 0.3);
+    color: #fff;
+  }
+
+  .btn-solid:disabled {
+    background: #9ca3af;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #127253;
+    box-shadow: 0 0 0 0.15rem rgba(18, 114, 83, 0.25);
+    background: #ffffff;
+  }
+
+  .form-label {
+    font-size: 1.05rem !important;
+    color: #111827 !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control,
+  .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+  
+  textarea.form-control {
+    height: auto !important;
+  }
+
+  .form-control:hover,
+  .form-select:hover {
+    border-color: #059669 !important;
+    background-color: #ffffff !important;
+  }
+
+  .cust-toggle1 .toggle {
+    border-radius: 30px;
+    border: 1px solid #065f46;
+    height: 45px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  .cust-toggle1 .toggle-on {
+    border-radius: 30px 0 0 30px;
+    font-weight: bold;
+    padding-left: 20px;
+    background: linear-gradient(45deg, #3a8b64, #065f46) !important;
+    border-color: #065f46 !important;
+    color: white !important;
+    display: flex;
+    align-items: center;
+  }
+  .cust-toggle1 .toggle-off {
+    border-radius: 0 30px 30px 0;
+    font-weight: bold;
+    padding-right: 20px;
+    background-color: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .cust-toggle1 .toggle-handle {
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 1px solid #065f46;
+    margin: 2px;
+  }
+</style>
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<script>
+  $(document).ready(function () {
+    $("#back").click(function () {
+      window.location.href = "/superadmin/vehicle";
+    });
+
+    // Keep the Vehicle sidebar item activated
+    const vehicleSidebarLink = $('ul#sidebarnav a[href="/superadmin/vehicle"]');
+    if (vehicleSidebarLink.length) {
+      vehicleSidebarLink.addClass("active");
+      vehicleSidebarLink.closest(".sidebar-item").addClass("selected");
+    }
+
+    // Dirty check logic to enable/disable submit button
+    let initialVehName = "";
+    let initialAllowFlag = false;
+
+    setTimeout(function () {
+      initialVehName = $("#veh_name").val() || "";
+      initialAllowFlag = $("#toggleActive").prop("checked");
+    }, 300);
+
+    function checkFormChanges() {
+      const currentVehName = $("#veh_name").val() || "";
+      const currentAllowFlag = $("#toggleActive").prop("checked");
+
+      if (currentVehName !== initialVehName || currentAllowFlag !== initialAllowFlag) {
+        $("#submitBtn").removeAttr("disabled");
+      } else {
+        $("#submitBtn").attr("disabled", "disabled");
+      }
+    }
+
+    $("#veh_name").on("input keyup change paste", checkFormChanges);
+    $("#toggleActive").on("change", checkFormChanges);
+
+    $(".toggle").on("click", function () {
+      setTimeout(checkFormChanges, 100);
+    });
+  });
+</script>

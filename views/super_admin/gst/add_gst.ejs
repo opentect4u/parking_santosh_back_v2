@@ -1,0 +1,551 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Select2 CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-lg rounded-4 border-0">
+        <div class="card-body">
+          <!-- <div class="titleSec">
+          <button type="button" class="btn btn-primary" id="myBtn"
+            style="float: inline-end;border-radius: 6px;width: 6vw;cursor: pointer;">Add</button>
+        </div> -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="card-title mb-0 text-gradient fw-bold">
+              <i data-feather="tag" class="feather-icon text-dark"></i>&nbsp;<b>Manage GST</b>
+            </h3>
+            <button type="button" class="btn btn-gradient" id="myBtn">
+              <i class="fa fa-plus"></i> Add GST
+            </button>
+          </div>
+
+          <!-- <div class="row"> -->
+          <!-- <div class="col-md-12"> -->
+
+          <div class="table-responsive mt-3">
+            <table id="dataTable" class="table table-bordered align-middle table-striped shadow-sm">
+              <thead class="text-center custom-header">
+                <tr>
+                  <th class="text-center text-white">Sl No.</th>
+                  <th class="text-center text-white">Location Name</th>
+                  <th class="text-center text-white">GST No.</th>
+                  <th class="text-center text-white">GST Flag</th>
+                  <th class="text-center text-white">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(data.msg && data.msg.length> 0) { %>
+                  <% data.msg.forEach(function(item,index) { %>
+                    <% if (user.userData.user_type==='S' || (user.userData.user_type==='A' &&
+                      item.customer_id==user.userData.customer_id)) { %>
+                      <tr>
+                        <td class="text-center text-dark">
+                          <%=(index+1)%>
+                        </td>
+                        <td class="text-center text-dark">
+                          <%=item.customer_name %>
+                        </td>
+                        <td class="text-center text-dark">
+                          <%=item.gst_number %>
+                        </td>
+                        <td class="text-center text-dark">
+                          <span class="<%=(item.gst_flag=='Y')?'badge badge-success':'badge badge-danger'%>"
+                            style="font-size: 16px;">
+                            <%=(item.gst_flag=='Y')?"Active":"Deactive"%>
+                          </span>
+                        </td>
+                        <td class="text-center text-dark">
+                          <a href='edit_gst?id=<%= item.gst_id %>&customer_id=<%= (user.userData.user_type == "A" ? user.userData.customer_id : item.customer_id) %>'
+                            class="btn btn-sm"
+                            style="background-color: #e6f4ea; color: #065f46; border: 1px solid #065f46; border-radius: 6px;"><i
+                              class="fa fa-edit"></i></a>
+                        </td>
+                      </tr>
+                      <% } %>
+                        <% }); %>
+                          <% } else { %>
+                            <tr>
+                              <td colspan="6" class="text-danger text-center">No data available</td>
+                            </tr>
+                            <% } %>
+
+              </tbody>
+              <tfoot></tfoot>
+            </table>
+          </div>
+          <!-- </div> -->
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="simple-footer mt-4">
+  <b>Santosh Parking © <span id="footerYear"></b></span>
+</footer>
+</div>
+
+
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+  rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg-custom">
+    <div class="modal-content rounded-4 shadow-lg border-0 glass-bgt">
+      <!-- Modal Header -->
+      <div class="modal-header border-0">
+        <h3 class="modal-title fw-bold text-dark">
+          <i data-feather="user-plus" class="feather-icon"></i>&nbsp;&nbsp;<b>Add
+            GST</b>
+        </h3>
+        <!-- <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button> -->
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form action="/superadmin/gst_save" method="post" id="myForm">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="cust_name" class="form-label text-dark">Location Name</label>
+                <% if (user.userData.user_type==='S' ) { %>
+                  <select name="cust_name" class="form-control" id="cust_name">
+                    <option value="">Select Location Name</option>
+                    <% customer.forEach(dt=> { %>
+                      <option value="<%= dt.customer_id %>">
+                        <%= dt.customer_name %>
+                      </option>
+                      <% }) %>
+                  </select>
+                  <% } else { %>
+                    <!-- Auto-select & show location name for others (e.g. A) -->
+                    <% let selectedCust=customer.find(c=> c.customer_id == user.userData.customer_id);
+                      %>
+                      <input type="hidden" name="cust_name" value="<%= user.userData.customer_id %>">
+                      <input type="text" class="form-control"
+                        value="<%= selectedCust ? selectedCust.customer_name : '' %>" disabled>
+                      <% } %>
+              </div>
+            </div>
+            <!-- </div> -->
+            <!-- <div class="row"> -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="gst_num" class="form-label text-dark">GST Number</label>
+                <input type="text" class="form-control" name="gst_num" id="gst_num" value=""
+                  placeholder="Enter GST Number">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="gst_category" class="form-label text-dark">GST Category</label>
+                <select name="gst_category" class="form-control" id="gst_category" required>
+                  <option value="">Select GST Category</option>
+                  <option value="CS">CGST/SGST</option>
+                  <option value="I">IGST</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="total_gst" class="form-label text-dark">Total GST</label>
+                <select name="total_gst" class="form-control" id="total_gst">
+                  <option value="">Select Total GST</option>
+                  <option value="0">0%</option>
+                  <option value="5">5%</option>
+                  <option value="12">12%</option>
+                  <option value="18">18%</option>
+                  <option value="28">28%</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6" id="cgst_div">
+              <div class="form-group">
+                <label for="cgst" class="form-label text-dark">CGST</label>
+                <input type="text" class="form-control" id="cgst_display" value="" placeholder="Enter CGST" readonly>
+                <input type="hidden" name="cgst" id="cgst">
+              </div>
+            </div>
+
+            <div class="col-md-6" id="sgst_div">
+              <div class="form-group">
+                <label for="sgst" class="form-label text-dark">SGST</label>
+                <input type="text" class="form-control" id="sgst_display" value="" placeholder="Enter SGST" readonly>
+                <input type="hidden" name="sgst" id="sgst">
+              </div>
+            </div>
+
+            <div class="col-md-6" id="igst_div" style="display: none;">
+              <div class="form-group">
+                <label for="igst" class="form-label text-dark">IGST</label>
+                <input type="text" class="form-control" id="igst_display" value="" placeholder="Enter IGST" readonly>
+                <input type="hidden" name="igst" id="igst">
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="row mt-3">
+            <div class="form-group col-md-5"></div>
+            <div class="form-group col-md-0">
+              <input type="submit" value="SUBMIT" id="submitBtn"
+                class="btn btn-gradient px-4 py-2 fw-bold text-uppercase" style="border-radius: 6px;" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<script>
+  $(document).ready(function () {
+    $("#myBtn").click(function () {
+      $("#myModal").modal();
+    });
+  });
+
+  window.addEventListener('load', function () {
+    // Dynamically load Select2 AFTER the main layout jQuery has fully loaded
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function () {
+      $('#cust_name').select2({
+        dropdownParent: $('#myModal'),
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#total_gst').select2({
+        dropdownParent: $('#myModal'),
+        placeholder: "Select Total GST",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#gst_category').select2({
+        dropdownParent: $('#myModal'),
+        placeholder: "Select GST Category",
+        minimumResultsForSearch: Infinity,
+        width: '100%'
+      });
+    };
+    document.body.appendChild(script);
+  });
+</script>
+
+<!-- <script>
+  $(document).ready(function () {
+    $('#total_gst').change(function () {
+      const gstValue = $(this).val();
+
+      if (gstValue) {
+        const gst = gstValue / 2;
+        $('#cgst').val(gst + '%');
+        $('#sgst').val(gst + '%');
+      } else {
+        $('#cgst').val('');
+        $('#sgst').val('');
+      }
+    });
+  });
+</script> -->
+
+<script>
+  $(document).ready(function () {
+    function calculateGST() {
+      const category = $('#gst_category').val();
+      const gstValue = $('#total_gst').val();
+
+      if (category === 'I') {
+        $('#cgst_div, #sgst_div').hide();
+        $('#igst_div').show();
+        if (gstValue !== "") {
+          $('#igst_display').val(gstValue + '%');
+          $('#igst').val(gstValue);
+        } else {
+          $('#igst_display, #igst').val('');
+        }
+        $('#cgst_display, #sgst_display').val('');
+        $('#cgst, #sgst').val('0');
+      } else if (category === 'CS') {
+        $('#cgst_div, #sgst_div').show();
+        $('#igst_div').hide();
+        if (gstValue !== "") {
+          const gst = gstValue / 2;
+          $('#cgst_display').val(gst + '%');
+          $('#sgst_display').val(gst + '%');
+          $('#cgst').val(gst);
+          $('#sgst').val(gst);
+        } else {
+          $('#cgst_display, #sgst_display, #cgst, #sgst').val('');
+        }
+        $('#igst_display').val('');
+        $('#igst').val('0');
+      } else {
+        // No category selected
+        $('#cgst_div, #sgst_div, #igst_div').hide();
+        $('#cgst_display, #sgst_display, #igst_display, #cgst, #sgst, #igst').val('');
+      }
+    }
+
+    $('#gst_category, #total_gst').on('change', calculateGST);
+
+    // Initial calculation on load to set up display correctly
+    calculateGST();
+  });
+</script>
+
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    padding: 12px 0;
+    margin-left: 57vw;
+  }
+
+  /* Form Controls */
+  .form-control,
+  .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+
+  textarea.form-control {
+    height: auto !important;
+  }
+
+  .form-control:hover,
+  .form-select:hover {
+    border-color: #059669 !important;
+    background-color: #ffffff !important;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #065f46 !important;
+    box-shadow: 0 0 6px rgba(6, 95, 70, 0.3) !important;
+    outline: none !important;
+  }
+
+  /* Custom Select2 Styling to match premium design */
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #065f46 transparent transparent transparent !important;
+    border-width: 6px 5px 0 5px !important;
+  }
+
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+
+  /* Dropdown Menu Styling */
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    margin-top: 4px;
+    background-color: #ffffff !important;
+  }
+
+  /* Search Box inside dropdown */
+  .select2-search--dropdown {
+    padding: 10px !important;
+  }
+
+  .select2-search--dropdown .select2-search__field {
+    border: 1px solid #065f46 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    font-size: 14px;
+  }
+
+  .select2-search--dropdown .select2-search__field:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.2) !important;
+  }
+
+  /* Dropdown Options */
+  html body .select2-container .select2-results__option {
+    padding: 12px 16px !important;
+    font-weight: 500;
+    color: #6b7280 !important;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+    text-align: center !important;
+  }
+
+  html body .select2-container .select2-results__option:last-child {
+    border-bottom: none;
+  }
+
+  /* Highlighted/Hover Option */
+  html body .select2-container .select2-results__option--highlighted[aria-selected],
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+
+  /* Selected Option */
+  html body .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+
+  #cust_name,
+  #total_gst,
+  #gst_category {
+    color: #000 !important;
+  }
+
+  #cust_name option:first-child,
+  #total_gst option:first-child,
+  #gst_category option:first-child {
+    color: #6c757d;
+  }
+
+  .modal-lg-custom {
+    max-width: 50%;
+  }
+
+  .modal-lg-custom .modal-content {
+    border-radius: 20px;
+  }
+
+  #dataTable {
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  #dataTable th,
+  #dataTable td {
+    border: 1px solid #dee2e6;
+  }
+
+  #dataTable thead th {
+    background: linear-gradient(45deg, #3a8b64, #367e61) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+
+  #dataTable tbody tr:hover {
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    transition: 0.3s;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  }
+
+  .text-gradient {
+    color: #065f46 !important;
+  }
+
+  .custom-header {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .table thead th {
+    border: none;
+  }
+
+  .glass-bg {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+  }
+
+  /* Pagination Styling */
+  .page-item.active .page-link {
+    background-color: #065f46 !important;
+    border-color: #065f46 !important;
+    color: white !important;
+  }
+
+  .page-link {
+    color: #065f46 !important;
+  }
+
+  .page-link:hover {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+</style>

@@ -1,0 +1,24 @@
+2026-07-09 14:11:21 error: ReferenceError: sendErrorResponce is not defined
+    at super_admin_login_post (C:\inetpub\wwwroot\santosh_parking\santosh_parking\controller\customer\CAuth.controller.js:205:24)
+    at Layer.handle [as handle_request] (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\route.js:149:13)
+    at LoginSuperCheckedMW (C:\inetpub\wwwroot\santosh_parking\santosh_parking\middleware\AuthChecked.middleware.js:46:13)
+    at Layer.handle [as handle_request] (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\layer.js:95:5)
+    at C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\index.js:346:12) 
+----------------------------------------------
+2026-07-12 03:26:14 error: ReferenceError: sendErrorResponce is not defined
+    at super_admin_login_post (C:\inetpub\wwwroot\santosh_parking\santosh_parking\controller\customer\CAuth.controller.js:205:24)
+    at Layer.handle [as handle_request] (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\route.js:149:13)
+    at LoginSuperCheckedMW (C:\inetpub\wwwroot\santosh_parking\santosh_parking\middleware\AuthChecked.middleware.js:46:13)
+    at Layer.handle [as handle_request] (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\layer.js:95:5)
+    at C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\inetpub\wwwroot\santosh_parking\santosh_parking\node_modules\express\lib\router\index.js:346:12) 
+----------------------------------------------

@@ -1,0 +1,446 @@
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-lg rounded-4 border-0 p-3" style="border-radius: 20px;">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3"
+          style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+          <div class="d-flex align-items-center">
+            <div id="back" class="back-btn-custom me-4" title="Go Back" style="margin-right: 24px !important;">
+              <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="text-white rounded"
+              style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+              <i class="fa fa-edit fs-5"></i>
+            </div>
+            <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">Edit GST Details</h4>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form action="/superadmin/gst_save" id="myForm" method="post" class="p-4 mb-4 mt-3 mx-3"
+          style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px;">
+          <div class="row g-3 align-items-end">
+            <!-- Row 1 -->
+            <div class="col-md-4">
+              <label for="cust_id" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-map-marker-alt"></i> Location Name</label>
+              <% let selectedCust=customer.find(c=> c.customer_id == data[0].customer_id); %>
+                <input type="text" class="form-control text-center"
+                  value="<%= selectedCust ? selectedCust.customer_name : '' %>" readonly
+                  style="background-color: #e9ecef; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+            </div>
+
+            <div class="col-md-4">
+              <label for="gst_num" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-file-invoice"></i> GST Number</label>
+              <input type="text" class="form-control text-center" name="gst_num" id="gst_num"
+                value="<%= data[0].gst_number %>" placeholder="Enter GST Number"
+                style="border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+            </div>
+
+            <div class="col-md-4">
+              <label for="gst_category" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-tags"></i> GST Category</label>
+              <select name="gst_category" class="form-control" id="gst_category" required>
+                <option value="">Select GST Category</option>
+                <option value="C" <%=(data[0].gst_mode=='C' || data[0].gst_mode=='CS' ) ? 'selected' : '' %>>CGST/SGST
+                </option>
+                <option value="I" <%=data[0].gst_mode=='I' ? 'selected' : '' %>>IGST</option>
+              </select>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="col-md-4 mt-4">
+              <label for="total_gst" class="fw-bold text-dark mb-2" style="font-size: 14px;"><i
+                  class="fas fa-percent"></i> Total GST</label>
+              <select name="total_gst" class="form-control" id="total_gst">
+                <option value="" <%=data[0].total_gst=='' ? 'selected' : '' %>>Select Total GST</option>
+                <option value="0" <%=data[0].total_gst==0 ? 'selected' : '' %>>0%</option>
+                <option value="5" <%=data[0].total_gst==5 ? 'selected' : '' %>>5%</option>
+                <option value="12" <%=data[0].total_gst==12 ? 'selected' : '' %>>12%</option>
+                <option value="18" <%=data[0].total_gst==18 ? 'selected' : '' %>>18%</option>
+                <option value="28" <%=data[0].total_gst==28 ? 'selected' : '' %>>28%</option>
+              </select>
+            </div>
+
+            <div class="col-md-4 mt-4" id="cgst_div">
+              <label for="cgst" class="fw-bold text-dark mb-2" style="font-size: 14px;">CGST</label>
+              <input type="text" class="form-control readonly-field text-center" id="cgst_display"
+                value="<%=data[0].cgst ? data[0].cgst + '%' : ''%>" placeholder="Enter CGST" readonly
+                style="background-color: #e9ecef; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+              <input type="hidden" name="cgst" id="cgst" value="<%=data[0].cgst%>">
+            </div>
+
+            <div class="col-md-4 mt-4" id="sgst_div">
+              <label for="sgst" class="fw-bold text-dark mb-2" style="font-size: 14px;">SGST</label>
+              <input type="text" class="form-control readonly-field text-center" id="sgst_display"
+                value="<%=data[0].sgst ? data[0].sgst + '%' : ''%>" placeholder="Enter SGST" readonly
+                style="background-color: #e9ecef; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+              <input type="hidden" name="sgst" id="sgst" value="<%=data[0].sgst%>">
+            </div>
+
+            <!-- Row 3 -->
+            <div class="col-md-4 mt-4" id="igst_div" style="display: none;">
+              <label for="igst" class="fw-bold text-dark mb-2" style="font-size: 14px;">IGST</label>
+              <input type="text" class="form-control readonly-field text-center" id="igst_display"
+                value="<%=data[0].igst ? data[0].igst + '%' : ''%>" placeholder="Enter IGST" readonly
+                style="background-color: #e9ecef; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px;">
+              <input type="hidden" name="igst" id="igst" value="<%=data[0].igst%>">
+            </div>
+          </div>
+
+          <!-- Hidden Fields -->
+          <input type="hidden" name="id" value="<%= id %>">
+          <input type="hidden" name="cust_id" value="<%= customer_id %>">
+          <input type="hidden" name="cust_name" value="<%= customer_id %>">
+
+          <div class="row mt-5 justify-content-center">
+            <div class="col-md-4 text-center">
+              <button type="submit" id="submitBtn" class="btn btn-gradient w-100"
+                style="height: 45px; border-radius: 6px;" disabled>
+                <i class="fa fa-save me-2"></i> Update GST Details
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <footer class="simple-footer mt-4">
+    <b>Santosh Parking © <span id="footerYear"></b></span>
+  </footer>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $("#back").click(function () {
+      window.location.href = "/superadmin/gst";
+    });
+
+    // Keep the GST sidebar item activated
+    const gstSidebarLink = $('ul#sidebarnav a[href="/superadmin/gst"]');
+    if (gstSidebarLink.length) {
+      gstSidebarLink.addClass("active");
+      gstSidebarLink.closest(".sidebar-item").addClass("selected");
+    }
+
+    function calculateGST() {
+      const category = $('#gst_category').val();
+      const gstValue = $('#total_gst').val();
+
+      if (category === 'I') {
+        $('#cgst_div, #sgst_div').hide();
+        $('#igst_div').show();
+        if (gstValue !== "") {
+          $('#igst_display').val(gstValue + '%');
+          $('#igst').val(gstValue);
+        } else {
+          $('#igst_display, #igst').val('');
+        }
+        $('#cgst_display, #sgst_display').val('');
+        $('#cgst, #sgst').val('0');
+      } else if (category === 'C') {
+        $('#cgst_div, #sgst_div').show();
+        $('#igst_div').hide();
+        if (gstValue !== "") {
+          const gst = gstValue / 2;
+          $('#cgst_display').val(gst + '%');
+          $('#sgst_display').val(gst + '%');
+          $('#cgst').val(gst);
+          $('#sgst').val(gst);
+        } else {
+          $('#cgst_display, #sgst_display, #cgst, #sgst').val('');
+        }
+        $('#igst_display').val('');
+        $('#igst').val('0');
+      } else {
+        // No category selected
+        $('#cgst_div, #sgst_div, #igst_div').hide();
+        $('#cgst_display, #sgst_display, #igst_display, #cgst, #sgst, #igst').val('');
+      }
+    }
+
+    $('#gst_category, #total_gst').on('change', calculateGST);
+
+    // Initial setup based on current DB values
+    function toggleVisibility() {
+      const category = $('#gst_category').val();
+      if (category === 'I') {
+        $('#cgst_div, #sgst_div').hide();
+        $('#igst_div').show();
+      } else if (category === 'C') {
+        $('#cgst_div, #sgst_div').show();
+        $('#igst_div').hide();
+      } else {
+        $('#cgst_div, #sgst_div, #igst_div').hide();
+      }
+    }
+
+    toggleVisibility();
+
+    // Dirty checking for Update button
+    const initialGstNum = $('#gst_num').val();
+    const initialGstCategory = $('#gst_category').val();
+    const initialTotalGst = $('#total_gst').val();
+
+    function checkChanges() {
+      const currentGstNum = $('#gst_num').val();
+      const currentGstCategory = $('#gst_category').val();
+      const currentTotalGst = $('#total_gst').val();
+
+      if (currentGstNum !== initialGstNum || 
+          currentGstCategory !== initialGstCategory || 
+          currentTotalGst !== initialTotalGst) {
+        $('#submitBtn').prop('disabled', false);
+      } else {
+        $('#submitBtn').prop('disabled', true);
+      }
+    }
+
+    $('#gst_num').on('input', checkChanges);
+    $('#gst_category, #total_gst').on('change', checkChanges);
+  });
+</script>
+
+<script>
+  window.addEventListener('load', function () {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js';
+    script.onload = function () {
+      // Initialize Select2 after script is loaded
+      $('#cust_id').select2({
+        placeholder: "Select Location Name",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#total_gst').select2({
+        placeholder: "Select Total GST",
+        allowClear: true,
+        width: '100%'
+      });
+      $('#gst_category').select2({
+        placeholder: "Select GST Category",
+        minimumResultsForSearch: Infinity,
+        width: '100%'
+      });
+    };
+    document.head.appendChild(script);
+  });
+</script>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+
+<style>
+  .simple-footer {
+    text-align: center;
+    font-size: 14px;
+    color: black;
+    padding: 12px 0;
+    margin-left: 0;
+  }
+
+  /* Back Button styling from edit_vehicle_rate.ejs */
+  .back-btn-custom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .back-btn-custom:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+    transform: translateX(-2px);
+  }
+
+  /* Form Controls */
+  .form-control,
+  .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px;
+    color: #000000 !important;
+    font-size: 16px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.3s ease;
+  }
+
+  textarea.form-control {
+    height: auto !important;
+  }
+
+  .form-control:hover,
+  .form-select:hover {
+    border-color: #059669 !important;
+    background-color: #ffffff !important;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #065f46 !important;
+    box-shadow: 0 0 6px rgba(6, 95, 70, 0.3) !important;
+    outline: none !important;
+  }
+
+  /* Custom Select2 Styling */
+  html body .select2-container {
+    width: 100% !important;
+  }
+
+  html body .select2-container .select2-selection--single {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    height: 45px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__rendered {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+    line-height: normal !important;
+    padding-left: 0 !important;
+    text-align: center !important;
+    width: 100%;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__placeholder {
+    color: #000000 !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 43px !important;
+    right: 12px !important;
+  }
+
+  html body .select2-container .select2-selection--single .select2-selection__arrow b {
+    border-color: #065f46 transparent transparent transparent !important;
+    border-width: 6px 5px 0 5px !important;
+  }
+
+  html body .select2-container.select2-container--open .select2-selection--single .select2-selection__arrow b {
+    border-color: transparent transparent #065f46 transparent !important;
+    border-width: 0 5px 6px 5px !important;
+  }
+
+  /* Dropdown Menu Styling */
+  html body .select2-dropdown {
+    border: 1px solid #065f46 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden;
+    margin-top: 4px;
+    background-color: #ffffff !important;
+  }
+
+  .select2-search--dropdown {
+    padding: 10px !important;
+  }
+
+  .select2-search--dropdown .select2-search__field {
+    border: 1px solid #065f46 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    font-size: 14px;
+  }
+
+  .select2-search--dropdown .select2-search__field:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.2) !important;
+  }
+
+  html body .select2-container .select2-results__option {
+    padding: 12px 16px !important;
+    font-weight: 500;
+    color: #6b7280 !important;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+    text-align: center !important;
+  }
+
+  html body .select2-container .select2-results__option:last-child {
+    border-bottom: none;
+  }
+
+  html body .select2-container .select2-results__option--highlighted[aria-selected],
+  html body .select2-container .select2-results__option--highlighted[data-selected] {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+  }
+
+  html body .select2-container .select2-results__option[aria-selected="true"] {
+    background-color: rgba(6, 95, 70, 0.1) !important;
+    color: #065f46 !important;
+  }
+
+  #cust_id,
+  #total_gst,
+  #gst_category {
+    color: #000 !important;
+  }
+
+  #cust_id option:first-child,
+  #total_gst option:first-child,
+  #gst_category option:first-child {
+    color: #6c757d;
+  }
+
+  /* Card and Button Styles */
+  .form-card {
+    border-radius: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .form-card:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+  }
+
+  .glass-bg {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(45deg, #3a8b64, #367e61);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  }
+
+  .text-gradient {
+    color: #065f46 !important;
+  }
+
+  .readonly-field {
+    background-color: #e9ecef !important;
+    cursor: not-allowed;
+  }
+</style>
