@@ -1,0 +1,5 @@
+(node:9544) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:9544) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+Application has thrown an uncaught exception and is terminated:
+Error: EPERM: operation not permitted, open 'C:\mobileapp_parking\parking_santosh_v2\log\activity-Sep26.log'

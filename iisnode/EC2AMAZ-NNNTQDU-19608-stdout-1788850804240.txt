@@ -1,0 +1,17 @@
+<ref *1> FirebaseNamespace {
+  __esModule: true,
+  credential: {
+    cert: [Function: cert],
+    refreshToken: [Function: refreshToken],
+    applicationDefault: [Function: applicationDefault]
+  },
+  SDK_VERSION: '11.11.1',
+  Promise: [Function: Promise],
+  INTERNAL: FirebaseNamespaceInternals { appStore: AppStore { appStore: [Map] } },
+  default: [Circular *1]
+} admin
+┌─────────┬───────────┬─────────────────────────────────────────────────────┐
+│ (index) │ Server    │ Port                                                │
+├─────────┼───────────┼─────────────────────────────────────────────────────┤
+│ 0       │ 'Running' │ '\\\\.\\pipe\\2715677a-f49c-41fc-8c09-44f64ad6f01c' │
+└─────────┴───────────┴─────────────────────────────────────────────────────┘

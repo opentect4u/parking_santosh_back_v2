@@ -1,0 +1,28 @@
+(node:10352) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:10352) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(node:10352) [DEP0044] DeprecationWarning: The `util.isArray` API is deprecated. Please use `Array.isArray()` instead.
+Error sending FCM: FirebaseMessagingError: The registration token is not a valid FCM registration token
+    at FirebaseMessagingError.fromServerError (C:\mobileapp_parking\parking_santosh_v2\node_modules\firebase-admin\lib\utils\error.js:254:16)
+    at createFirebaseError (C:\mobileapp_parking\parking_santosh_v2\node_modules\firebase-admin\lib\messaging\messaging-errors-internal.js:35:47)
+    at C:\mobileapp_parking\parking_santosh_v2\node_modules\firebase-admin\lib\messaging\messaging-api-request-internal.js:79:75
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async login (C:\mobileapp_parking\parking_santosh_v2\controller\api\V9\Auth.controller.js:476:25) {
+  errorInfo: {
+    code: 'messaging/invalid-argument',
+    message: 'The registration token is not a valid FCM registration token'
+  },
+  codePrefix: 'messaging'
+}
+Error sending FCM: FirebaseMessagingError: NotRegistered
+    at FirebaseMessagingError.fromServerError (C:\mobileapp_parking\parking_santosh_v2\node_modules\firebase-admin\lib\utils\error.js:254:16)
+    at createFirebaseError (C:\mobileapp_parking\parking_santosh_v2\node_modules\firebase-admin\lib\messaging\messaging-errors-internal.js:35:47)
+    at C:\mobileapp_parking\parking_santosh_v2\node_modules\firebase-admin\lib\messaging\messaging-api-request-internal.js:79:75
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async login (C:\mobileapp_parking\parking_santosh_v2\controller\api\V9\Auth.controller.js:476:25) {
+  errorInfo: {
+    code: 'messaging/registration-token-not-registered',
+    message: 'NotRegistered'
+  },
+  codePrefix: 'messaging'
+}
