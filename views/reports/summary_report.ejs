@@ -8,8 +8,7 @@
                 <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom mb-3"
                     style="border-top: 4px solid #065f46; border-top-left-radius: 20px; border-top-right-radius: 20px;">
                     <div class="d-flex align-items-center">
-                        <div class="text-white rounded"
-                            style="background-color: #065f46; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; margin-right: 18px;">
+                        <div class="text-white rounded title_icon">
                             <i class="fas fa-list-alt fs-5"></i>
                         </div>
                         <h4 class="mb-0 fw-bold text-dark" style="letter-spacing: 0.5px;">
@@ -84,7 +83,7 @@
                             </select>
                         </div>
                         <!-- Search Button -->
-                        <div class="col-md-4 text-center">
+                        <div class="col-md-4 text-center mt-3">
                             <div class="d-flex justify-content-center">
                                 <button type="button" class="btn flex-grow-1 text-white" id="btnSubmit"
                                     style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
@@ -306,6 +305,190 @@
         color: white;
         border-radius: 3px;
         border: none;
+    }
+
+    /* Compact report layout */
+    html {
+        overflow-x: hidden;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    .container-fluid {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .card {
+        overflow: hidden;
+    }
+
+    .form-control,
+    html body .select2-container .select2-selection--single {
+        min-height: 38px !important;
+        height: 38px !important;
+        font-size: 13px !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__rendered {
+        font-size: 13px !important;
+    }
+
+    html body .select2-container .select2-selection--single .select2-selection__arrow {
+        height: 36px !important;
+    }
+
+    #btnSubmit,
+    #btnVehicleSearch,
+    .btn-gradient-print,
+    .btn-success {
+        min-height: 38px;
+        height: 38px !important;
+        padding: 6px 16px !important;
+        font-size: 12px !important;
+    }
+
+    #summary-datatable {
+        min-width: 1180px;
+        font-size: 11px;
+    }
+
+    #summary-datatable th,
+    #summary-datatable td {
+        padding: 5px 7px !important;
+        white-space: nowrap;
+    }
+
+    #resultDiv .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .simple-footer {
+        width: 100%;
+        font-size: 11px;
+        padding: 8px 0;
+    }
+
+    .title_icon{background-color: #065f46;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 39px;
+        height: 33px;
+        margin-right: 18px;}
+
+    @media (max-width: 767.98px) {
+        .container-fluid {
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+        }
+
+        .card {
+            padding: 8px !important;
+            border-radius: 12px !important;
+        }
+
+        .card > .d-flex {
+            align-items: flex-start !important;
+            padding: 8px 4px !important;
+            margin-bottom: 8px !important;
+        }
+
+        .card > .d-flex h4 {
+            font-size: 16px !important;
+            line-height: 1.2;
+        }
+
+        .card > .d-flex > div:first-child {
+        /* width: 34px !important;
+        height: 34px !important;
+        margin-right: 9px !important;
+        flex: 0 0 34px; */
+        width: 100% !important;
+        height: 34px !important;
+        margin-right: 9px !important;
+      }
+
+.title_icon{background-color: #065f46;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 39px;
+        height: 33px;
+        margin-right: 18px;}
+
+        .card > .p-4,
+        #vehicleSearchSection {
+            padding: 12px !important;
+            margin: 8px 0 !important;
+            border-radius: 8px !important;
+        }
+
+        .row.g-4 {
+            --bs-gutter-y: 0.6rem;
+        }
+
+        .row.g-4.mb-3 {
+            margin-bottom: 0.6rem !important;
+        }
+
+        #btnSubmit {
+            width: 100%;
+        }
+
+        #btnSubmit + a {
+            margin-left: 8px !important;
+        }
+
+        #btnVehicleSearch {
+            margin-top: 0.25rem;
+        }
+
+        #searchCred {
+            font-size: 12px;
+        }
+
+        #resultDiv {
+            margin-top: 1.25rem !important;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_info {
+            font-size: 11px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 3px;
+        }
+
+        .text-end.mt-3 {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .text-end.mt-3 .btn {
+            margin: 0 !important;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .card > .d-flex h4 {
+            font-size: 14px !important;
+        }
+
+        .text-end.mt-3 .btn {
+            flex: 1;
+        }
     }
 </style>
 
