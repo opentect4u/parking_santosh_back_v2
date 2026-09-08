@@ -731,6 +731,193 @@ tfoot td {
     html body .select2-container {
         width: 100% !important;
     }
+
+    /* Keep the report compact and usable on tablets and phones. */
+    @media (max-width: 991.98px) {
+        .container-fluid.py-4 {
+            padding: 1rem 0.75rem !important;
+        }
+
+        .container-fluid.py-4 > .row > .col-12 > .card {
+            padding: 0.75rem !important;
+            border-radius: 12px !important;
+        }
+
+        .container-fluid.py-4 .card > .d-flex {
+            padding: 0.75rem 0.5rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+
+        .container-fluid.py-4 .card > .d-flex > div > div {
+            width: 36px !important;
+            height: 36px !important;
+            margin-right: 10px !important;
+        }
+
+        .container-fluid.py-4 .card > .d-flex h4 {
+            font-size: 1.1rem !important;
+        }
+
+        .container-fluid.py-4 .card > .p-4 {
+            padding: 0.75rem !important;
+            margin: 0.75rem 0 1rem !important;
+        }
+
+        .container-fluid.py-4 .card > .p-3 {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .container-fluid.py-4 .card .row.g-3 {
+            --bs-gutter-y: 0.65rem;
+        }
+
+        .container-fluid.py-4 label {
+            font-size: 12px !important;
+            margin-bottom: 0.25rem !important;
+        }
+
+        .container-fluid.py-4 input.form-control,
+        .container-fluid.py-4 select.form-control,
+        .container-fluid.py-4 .select2-container .select2-selection--single {
+            height: 38px !important;
+            min-height: 38px !important;
+            font-size: 13px !important;
+        }
+
+        .container-fluid.py-4 .select2-container .select2-selection__arrow {
+            height: 36px !important;
+            right: 8px !important;
+        }
+
+        .container-fluid.py-4 .select2-container .select2-selection__placeholder,
+        .container-fluid.py-4 .select2-container .select2-selection__rendered {
+            font-size: 13px !important;
+        }
+
+        #btnSubmit,
+        #btnVehicleSearch {
+            height: 38px !important;
+            font-size: 13px !important;
+        }
+
+        #btnSubmit {
+            padding-left: 1.25rem !important;
+            padding-right: 1.25rem !important;
+        }
+
+        #btnVehicleSearch {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+
+        #btnSubmit + a,
+        #btnVehicleReset {
+            width: 38px !important;
+            height: 38px !important;
+            margin-left: 8px !important;
+        }
+
+        .dateWiseDataTable {
+            margin-top: 1.25rem !important;
+        }
+
+        #searchCred {
+            font-size: 13px;
+        }
+
+        #printExcelBtnContainer .btn,
+        .dateWiseDataTable .text-end .btn {
+            font-size: 12px;
+            padding: 0.35rem 0.6rem !important;
+        }
+
+        #cust-datatable {
+            font-size: 11px;
+        }
+
+        #cust-datatable th,
+        #cust-datatable td {
+            padding: 0.35rem !important;
+        }
+
+        .simple-footer {
+            margin-left: 0;
+            font-size: 12px;
+        }
+
+        #goTopBtn,
+        #goDownBtn {
+            right: 12px;
+            padding: 7px 11px;
+            font-size: 13px;
+        }
+
+        #goTopBtn {
+            bottom: 70px;
+        }
+
+        #goDownBtn {
+            bottom: 20px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .container-fluid.py-4 {
+            padding: 0.5rem 0.35rem !important;
+        }
+
+        .container-fluid.py-4 .card > .d-flex {
+            align-items: flex-start !important;
+        }
+
+        .container-fluid.py-4 .card > .d-flex h4 {
+            font-size: 0.95rem !important;
+            line-height: 1.25;
+        }
+
+        .container-fluid.py-4 .card > .p-4 {
+            padding: 0.6rem !important;
+        }
+
+        #vehicleSearchSection .d-flex,
+        #printExcelBtnContainer,
+        .dateWiseDataTable .text-end {
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        #vehicleSearchSection .col-md-8,
+        #vehicleSearchSection .col-md-4 {
+            width: 100%;
+        }
+
+        #vehicleSearchSection .d-flex {
+            justify-content: flex-start !important;
+        }
+
+        #btnVehicleReset {
+            margin-left: 0 !important;
+        }
+
+        #printExcelBtnContainer {
+            justify-content: flex-start !important;
+        }
+
+        .dateWiseDataTable .text-end {
+            justify-content: flex-start !important;
+            text-align: left !important;
+        }
+
+        #cust-datatable {
+            font-size: 10px;
+        }
+
+        #cust-datatable th,
+        #cust-datatable td {
+            padding: 0.25rem !important;
+        }
+    }
 </style>
 
 
