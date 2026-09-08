@@ -129,6 +129,7 @@
     background: #ffffff;
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    margin: 0 !important;
   }
 
   .radio-option-card input[type="radio"]::after {
@@ -234,14 +235,14 @@
                 <% } %>
 
                   <!-- Search Button -->
-                  <div class="col-md-<%= user.userData.user_type==='S' ? '3' : '6' %> text-center mt-3">
-                    <div class="d-flex justify-content-center">
+                  <div class="col-md-<%= user.userData.user_type==='S' ? '3' : '6' %> d-flex flex-column">
+                    <div class="d-flex justify-content-center mt-auto">
                       <button type="button" class="btn flex-grow-1 text-white" id="btnSubmit"
-                        style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                        style="height: 38px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
                         <i class="fa fa-search me-2"></i> Fetch Details
                       </button>
                       <a href="/report/unbilled_report" class="btn shadow-sm"
-                        style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;"
+                        style="height: 38px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;"
                         title="Refresh">
                         <i class="fas fa-sync-alt"></i>
                       </a>
@@ -699,13 +700,18 @@
               $(".preloader").fadeOut();
             }
           },
-          drawCallback: function (settings) {
-            if (settings.json && settings.json.grandTotals) {
-              let totalAdvance = settings.json.grandTotals.advance_amt ? parseFloat(settings.json.grandTotals.advance_amt) : 0;
-              $('#tot_amt').text('₹ ' + totalAdvance.toFixed(2));
-            } else {
-              $('#tot_amt').text('₹ 0.00');
-            }
+          footerCallback: function (row, data, start, end, display) {
+            let api = this.api();
+            let pageTotal = api.column(6, { page: 'current' }).data().reduce(function (a, b) {
+              let amt = b ? parseFloat(b) : 0;
+              return a + amt;
+            }, 0);
+            
+            let json = api.ajax.json();
+            let grandTotal = (json && json.grandTotals && json.grandTotals.advance_amt) ? parseFloat(json.grandTotals.advance_amt) : 0;
+            
+            let finalTotal = grandTotal > 0 ? grandTotal : pageTotal;
+            $(api.column(6).footer()).html('₹ ' + finalTotal.toFixed(2));
           },
           columns: [
             {

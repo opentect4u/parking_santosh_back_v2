@@ -109,12 +109,7 @@
         overflow: hidden;
     }
 
-    .form-control,
-    .select2-container .select2-selection--single {
-        min-height: 38px !important;
-        height: 38px !important;
-        font-size: 13px !important;
-    }
+
 
     html body .select2-container .select2-selection--single .select2-selection__arrow {
         height: 36px !important;
@@ -397,6 +392,7 @@
     background: #ffffff;
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    margin: 0 !important;
   }
 
   .radio-option-card input[type="radio"]::after {
@@ -561,7 +557,7 @@
                             <div class="col-md-3">
                                 <label for="custId" class="text-dark mb-2" style="font-size: 14px;"><i
                                         class="fas fa-map-marker-alt"></i> Location Name</label>
-                                <select name="custId" class="form-control" id="custId" required
+                                <select name="custId" class="form-select" id="custId" required
                                     style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
                                     <option value="">Select Location Name</option>
                                     <% if (data.msg && data.msg.length> 0) { %>
@@ -581,7 +577,7 @@
                                     <div class="col-md-3">
                                         <label for="pay_mode" class="text-dark mb-2" style="font-size: 14px;"><i
                                                 class="fas fa-money-bill-wave"></i> Pay Mode</label>
-                                        <select name="pay_mode" class="form-control" id="pay_mode" required
+                                        <select name="pay_mode" class="form-select" id="pay_mode" required
                                             style="background-color: #ffffff; border: 1px solid #065f46; border-radius: 8px; height: 45px; color: #000000; font-size: 16px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
                                             <option value="">Select Pay Mode</option>
                                             <option value="C">CASH</option>
@@ -1703,8 +1699,10 @@ function updateTotals(base, advance, cgst, sgst, other, total_amt, tot_upi, tot_
 
     $('#btnVehicleReset').on('click', function () {
         $('#vehicleSearch').val('');
-        // $('#resultDiv table tbody tr').show();
-        table.ajax.reload();
+        // table.ajax.reload();
+        if (typeof table !== 'undefined') {
+            table.column(6).search('').draw();
+        }
     });
 
     // 1️⃣ Clear vehicle search and totals when location changes
@@ -1740,7 +1738,8 @@ function updateTotals(base, advance, cgst, sgst, other, total_amt, tot_upi, tot_
             table = $('#cust-datatable').DataTable({
                 processing: true,
                 serverSide: false,
-                searching: false,
+                searching: true,
+                dom: 'lrtip',
                 lengthChange: true,
                 pageLength: 50,
 
@@ -1830,35 +1829,54 @@ function updateTotals(base, advance, cgst, sgst, other, total_amt, tot_upi, tot_
                     { data: "operator_name" }
                 ],
                 footerCallback: function (row, data, start, end, display) {
-                    var api = this.api();
+                    let api = this.api();
+                    
+                    let intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,₹]/g, '') * 1 :
+                            typeof i === 'number' ? i : 0;
+                    };
 
-                    var json = api.ajax.json();
+                    let totalBase = api.column(9, { page: 'current' }).data().reduce((a, b) => a + intVal(b), 0);
+                    let totalAdv = api.column(10, { page: 'current' }).data().reduce((a, b) => a + intVal(b), 0);
+                    let totalCgst = api.column(11, { page: 'current' }).data().reduce((a, b) => a + intVal(b), 0);
+                    let totalSgst = api.column(12, { page: 'current' }).data().reduce((a, b) => a + intVal(b), 0);
+                    let totalPaid = api.column(13, { page: 'current' }).data().reduce((a, b) => a + intVal(b), 0);
+                    let totalNet = api.column(14, { page: 'current' }).data().reduce((a, b) => a + (b ? intVal(b.paid_amt) : 0), 0);
 
-                    if (json && json.totals) {
-                        $('#base_amt').text(Number(json.totals.base_amt).toFixed(2));
-                        $('#advance_amt').text(Number(json.totals.advance_amt).toFixed(2));
-                        $('#cgst').text(Number(json.totals.cgst).toFixed(2));
-                        $('#sgst').text(Number(json.totals.sgst).toFixed(2));
-                        $('#paid_amt').text(Number(json.totals.paid_amt).toFixed(2));
-                        // $('#other_chrges').text(Number(json.totals.other_charges).toFixed(2));
-                        $('#tot_amt').text(Number(json.totals.tot_amt).toFixed(2));
+                    $(api.column(9).footer()).html(totalBase.toFixed(2));
+                    $(api.column(10).footer()).html(totalAdv.toFixed(2));
+                    $(api.column(11).footer()).html(totalCgst.toFixed(2));
+                    $(api.column(12).footer()).html(totalSgst.toFixed(2));
+                    $(api.column(13).footer()).html(totalPaid.toFixed(2));
+                    $(api.column(14).footer()).html(totalNet.toFixed(2));
+                    
+                    let pay_mode = $('#pay_mode').val();
+                    let allData = api.rows({ search: 'applied' }).data();
+                    let grandUPI = 0;
+                    let grandCash = 0;
+                    
+                    allData.each(function(rowObj) {
+                        let net = rowObj ? intVal(rowObj.paid_amt) : 0;
+                        if (rowObj && rowObj.pay_mode === 'U') grandUPI += net;
+                        if (rowObj && rowObj.pay_mode === 'C') grandCash += net;
+                    });
 
-                        if (pay_mode == 'A') {
-                            $('#tot_upi').parent().show();
-                            $('#tot_cash').parent().show();
-                            $('#tot_upi').text(Number(json.grandTotals.tot_upi).toFixed(2));
-                            $('#tot_cash').text(Number(json.grandTotals.tot_cash).toFixed(2));
-                        } else if (pay_mode == 'U') {
-                            $('#tot_upi').parent().show();
-                            $('#tot_cash').parent().hide();
-                            $('#tot_upi').text(Number(json.grandTotals.tot_upi).toFixed(2));
-                            $('#tot_cash').text('0.00');
-                        } else if (pay_mode == 'C') {
-                            $('#tot_upi').parent().hide();
-                            $('#tot_cash').parent().show();
-                            $('#tot_upi').text('0.00');
-                            $('#tot_cash').text(Number(json.grandTotals.tot_cash).toFixed(2));
-                        }
+                    if (pay_mode === 'A') {
+                        $('#tot_upi').parent().show();
+                        $('#tot_cash').parent().show();
+                        $('#tot_upi').text(grandUPI.toFixed(2));
+                        $('#tot_cash').text(grandCash.toFixed(2));
+                    } else if (pay_mode === 'U') {
+                        $('#tot_upi').parent().show();
+                        $('#tot_cash').parent().hide();
+                        $('#tot_upi').text(grandUPI.toFixed(2));
+                        $('#tot_cash').text('0.00');
+                    } else if (pay_mode === 'C') {
+                        $('#tot_upi').parent().hide();
+                        $('#tot_cash').parent().show();
+                        $('#tot_upi').text('0.00');
+                        $('#tot_cash').text(grandCash.toFixed(2));
                     }
                 }
             });
@@ -1878,11 +1896,14 @@ function updateTotals(base, advance, cgst, sgst, other, total_amt, tot_upi, tot_
 
 <script>
     $('#btnVehicleSearch').on('click', function () {
-        if (!$('#vehicleSearch').val().trim()) {
+        var searchTerm = $('#vehicleSearch').val().trim();
+        if (!searchTerm) {
             alert("Please enter vehicle number");
             return;
         }
-        table.ajax.reload();   // ✅ triggers server-side search
+        if (typeof table !== 'undefined') {
+            table.column(6).search(searchTerm).draw();
+        }
     });
 </script>
 

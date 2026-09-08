@@ -41,22 +41,18 @@
                     </div>
                   </div>
                   
-                  <!-- <div class="row mt-3 justify-content-center"> -->
+                  <div class="row mt-3 justify-content-center">
                     <!-- Search Button -->
-                    <div class="col-md-4 text-center mt-3">
+                    <div class="col-md-12 text-center">
                       <div class="d-flex justify-content-center">
-                        <button type="button" class="btn flex-grow-1 text-white shadow-sm" id="btnSubmit" style="height: 45px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
+                        <button type="button" class="btn flex-grow-1 text-white shadow-sm" id="btnSubmit" style="height: 45px; max-width: 200px; background: linear-gradient(45deg, #3a8b64, #367e61); border: none; border-radius: 6px;">
                           <i class="fa fa-search me-2"></i> Fetch Details
                         </button>
-                        <a href="/report/usr_wise_repo_new" class="btn shadow-sm" style="height: 35px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;" title="Refresh">
+                        <a href="/report/usr_wise_repo_new" class="btn shadow-sm" style="height: 45px; width: 45px; margin-left: 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #ffffff; color: #065f46; border: 1px solid #065f46; text-decoration: none; flex-shrink: 0;" title="Refresh">
                           <i class="fas fa-sync-alt"></i>
                         </a>
-                        </div>
-                    </div>
-
-
                       </div>
-                    <!-- </div> -->
+                    </div>
                   </div>
                 </div>
 
@@ -550,7 +546,7 @@
             url: "/report/get_user_wise_report_new",
             data: { frm_dt, to_dt, custId, start: 0, length: 10000 },
             success: function(response) {
-                if (response.suc > 0 && response.data.length > 0) {
+                if (response.data && response.data.length > 0) {
                     let excelData = [];
                     let gt_vehi = 0, gt_base = 0, gt_adv = 0, gt_cgst = 0, gt_sgst = 0, gt_igst = 0, gt_paid = 0, gt_net = 0;
 
@@ -636,7 +632,7 @@
             url: "/report/get_user_wise_report_new",
             data: { frm_dt, to_dt, custId, start: 0, length: 10000 },
             success: function(response) {
-                if (response.suc > 0 && response.data.length > 0) {
+                if (response.data && response.data.length > 0) {
                     let printHtml = `
                     <html>
                     <head>
