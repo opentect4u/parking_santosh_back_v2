@@ -17,6 +17,100 @@ const {
   outpass_advance_receipt_update,
 } = require("../../../module/V12/car_in_out_receipt");
 
+// const car_in = async (req, res) => {
+//   try {
+//     const schema = Joi.object({
+//       vehicle_id: Joi.required(),
+//       vehicle_no: Joi.string().required(),
+//       base_amt: Joi.required(),
+//       cgst: Joi.required(),
+//       sgst: Joi.required(),
+//       igst: Joi.required(),
+//       paid_amt: Joi.required(),
+//       gst_flag: Joi.string().valid("Y", "N").required(),
+//     });
+//     const { error, value } = schema.validate(req.body, { abortEarly: false });
+
+//     if (error) {
+//       const errors = {};
+//       error.details.forEach((detail) => {
+//         errors[detail.context.key] = detail.message;
+//       });
+//       return res.json(sendErrorResponce(null, errors));
+//     }
+
+//     const userData = req.user;
+
+//     let device_id = userData.device_id;
+//     let customer_id = userData.customer_id;
+//     let user_id = userData.id;
+//     let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
+//     let where = `customer_id=${customer_id} AND app_id='${device_id}'`;
+//     const md_setting = await db_Select("*", "md_setting", where, null);
+//     // console.log("-------------------", md_setting);
+//     if (md_setting.msg.length != 0) {
+//       let md_setting_data = md_setting.msg[0];
+//       let receipt_number = 1;
+
+//       const check_payment = await db_Select(
+//         "b.*,a.paid_amt",
+//         "td_vehicle_in b LEFT JOIN td_receipt a ON b.receipt_no = a.receipt_no",
+//         `b.vehicle_no = '${value.vehicle_no}'`,
+//         `ORDER BY b.receipt_no DESC LIMIT 1`,
+//       );
+//       console.log("check_payment", check_payment);
+//       if (
+//         check_payment.msg.length > 0 &&
+//         check_payment.msg[0].paid_amt == null
+//       ) {
+//         return res.json({
+//           status: false,
+//           message: `Vehicle No. ${value.vehicle_no} has an unpaid parking receipt. Please clear the previous payment before allowing a new Vehicle In.`,
+//           data: check_payment.msg[0],
+//         });
+//       }
+//       if (md_setting_data.dev_mod == "D" || md_setting_data.dev_mod == "R") {
+//         console.log("🚗 Device Mode:", md_setting_data.dev_mod);
+//         let td_vehicle_in = await vehicle_in(
+//           userData,
+//           value.vehicle_id,
+//           value.vehicle_no,
+//           md_setting_data.dev_mod,
+//           md_setting_data.parking_entry_type,
+//         );
+
+//         console.log(td_vehicle_in.receipt_number, "***********");
+//         if (md_setting_data.adv_pay == "Y") {
+//           let receipt = await insert_advance_receipt_update(
+//             userData,
+//             td_vehicle_in.receipt_number,
+//             0,
+//             value.base_amt,
+//             value.cgst,
+//             value.sgst,
+//             value.igst,
+//             value.paid_amt,
+//             value.gst_flag,
+//             "A",
+//           );
+//         }
+
+//         if (td_vehicle_in.td_vehicle_in.suc == 1) {
+//           res.json(sendOkResponce({ td_vehicle_in, receipt_number }, null));
+//         } else {
+//           res.json(sendErrorResponce(null, { message: td_vehicle_in }));
+//         }
+//       }
+//     } else {
+//       return res.json(
+//         sendErrorResponce(null, { message: "Please set general setting" }),
+//       );
+//     }
+//   } catch (error) {
+//     res.json(sendErrorResponce(error));
+//   }
+// };
+
 const car_in = async (req, res) => {
   try {
     const schema = Joi.object({
@@ -55,7 +149,7 @@ const car_in = async (req, res) => {
       const check_payment = await db_Select(
         "b.*,a.paid_amt",
         "td_vehicle_in b LEFT JOIN td_receipt a ON b.receipt_no = a.receipt_no",
-        `b.vehicle_no = '${value.vehicle_no}'`,
+        `b.customer_id = ${customer_id} AND b.vehicle_no = '${value.vehicle_no}' AND b.intype = 'R'`,
         `ORDER BY b.receipt_no DESC LIMIT 1`,
       );
       console.log("check_payment", check_payment);
@@ -191,6 +285,113 @@ const car_subscription = async (req, res) => {
   }
 };
 
+// const monthly_car_in = async (req, res) => {
+//   try {
+//     const schema = Joi.object({
+//       vehicle_id: Joi.required(),
+//       vehicle_no: Joi.string().required(),
+//       base_amt: Joi.required(),
+//       cgst: Joi.required(),
+//       sgst: Joi.required(),
+//       igst: Joi.required(),
+//       paid_amt: Joi.required(),
+//       gst_flag: Joi.string().valid("Y", "N").required(),
+//     });
+
+//     const { error, value } = schema.validate(req.body, { abortEarly: false });
+//     console.log("check_monthly---------", error);
+//     if (error) {
+//       const errors = {};
+//       error.details.forEach((detail) => {
+//         errors[detail.context.key] = detail.message;
+//       });
+//       return res.json(sendErrorResponce(null, errors));
+//     }
+
+//     const userData = req.user;
+//     // console.log("-------------------", userData);
+//     let device_id = userData.device_id;
+//     let customer_id = userData.customer_id;
+//     let user_id = userData.id;
+//     let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
+//     let where = `customer_id=${customer_id} AND app_id='${device_id}'`;
+//     const md_setting = await db_Select("*", "md_setting", where, null);
+//     let subs_where = `vehicle_no = '${value.vehicle_no}' AND STATUS = 'A' AND end_date >= CURDATE()`;
+//     const subscription_dtls = await db_Select(
+//       "receipt_no,no_of_days,start_date, end_date,DATEDIFF(end_date, CURDATE()) AS remaining_days",
+//       "td_vehicle_subscription",
+//       subs_where,
+//       null,
+//     );
+//     var monthly_bill_receipt = "";
+//     var subscription_end_date = "";
+//     var remaining_days = "";
+//     if (subscription_dtls.msg.length == 0) {
+//       return res.json({
+//         status: false,
+//         msg: "subscription Over",
+//         data: subscription_dtls.msg[0],
+//       });
+//     } else {
+//       monthly_bill_receipt = subscription_dtls.msg[0].receipt_no;
+//       var subscription_end_date = subscription_dtls.msg[0].end_date;
+//       var remaining_days = subscription_dtls.msg[0].remaining_days;
+//     }
+
+//     if (md_setting.msg.length != 0) {
+//       let md_setting_data = md_setting.msg[0];
+//       let receipt_number = 1;
+
+//       if (md_setting_data.dev_mod == "D" || md_setting_data.dev_mod == "R") {
+//         console.log("🚗 Device Mode:", md_setting_data.dev_mod);
+
+//         let td_vehicle_in = await vehicle_in_monthly(
+//           userData,
+//           value.vehicle_id,
+//           value.vehicle_no,
+//           monthly_bill_receipt,
+//           subscription_end_date,
+//           md_setting_data.dev_mod,
+//           md_setting_data.parking_entry_type,
+//         );
+
+//         console.log(td_vehicle_in.receipt_number, "***********");
+//         if (md_setting_data.adv_pay == "Y") {
+//           let receipt = await insert_advance_receipt_update(
+//             userData,
+//             td_vehicle_in.receipt_number,
+//             0,
+//             0,
+//             0,
+//             0,
+//             0,
+//             0,
+//             value.gst_flag,
+//             "A",
+//           );
+//         }
+
+//         if (td_vehicle_in.td_vehicle_in.suc == 1) {
+//           res.json(
+//             sendOkResponce(
+//               { td_vehicle_in, receipt_number, remaining_days },
+//               null,
+//             ),
+//           );
+//         } else {
+//           res.json(sendErrorResponce(null, { message: td_vehicle_in }));
+//         }
+//       }
+//     } else {
+//       return res.json(
+//         sendErrorResponce(null, { message: "Please set general setting" }),
+//       );
+//     }
+//   } catch (error) {
+//     res.json(sendErrorResponce(error));
+//   }
+// };
+
 const monthly_car_in = async (req, res) => {
   try {
     const schema = Joi.object({
@@ -220,6 +421,22 @@ const monthly_car_in = async (req, res) => {
     let customer_id = userData.customer_id;
     let user_id = userData.id;
     let datetime = dateFormat(new Date(), "yyyy-mm-dd HH:MM:ss");
+
+    const check_already_in = await db_Select(
+      "a.*",
+      "td_vehicle_in a LEFT JOIN td_vehicle_out c ON a.receipt_no = c.receipt_no",
+      `a.vehicle_no = '${value.vehicle_no}' AND a.customer_id = ${customer_id}  AND a.intype = 'M' AND c.receipt_no IS NULL`,
+      `LIMIT 1`
+    );
+
+    if (check_already_in.msg && check_already_in.msg.length > 0) {
+      return res.json({
+        status: false,
+        msg: `Vehicle No. ${value.vehicle_no} is currently checked in. A new entry cannot be created until the vehicle is checked out.`,
+        data: check_already_in.msg[0],
+      });
+    }
+
     let where = `customer_id=${customer_id} AND app_id='${device_id}'`;
     const md_setting = await db_Select("*", "md_setting", where, null);
     let subs_where = `vehicle_no = '${value.vehicle_no}' AND STATUS = 'A' AND end_date >= CURDATE()`;
@@ -236,7 +453,7 @@ const monthly_car_in = async (req, res) => {
       return res.json({
         status: false,
         msg: "subscription Over",
-        data: subscription_dtls.msg[0],
+        data: "",
       });
     } else {
       monthly_bill_receipt = subscription_dtls.msg[0].receipt_no;
